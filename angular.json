@@ -26,6 +26,9 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
+              "src/assets/images",
+              "src/assets/fonts",
+              "src/assets/i18n",
               {
                 "glob": "**/*",
                 "input": "public"
@@ -38,11 +41,22 @@
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "sourceMap": false,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
               "budgets": [
                 {
                   "type": "initial",
                   "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumError": "4MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -98,5 +112,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "a93a6a04-b816-4bfb-95d1-4518aeb89447"
   }
 }

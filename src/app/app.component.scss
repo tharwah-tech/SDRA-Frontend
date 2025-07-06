@@ -1,0 +1,5 @@
+// In your component SCSS files
+.error-card {
+  background-color: var(--error-color);
+  border-left: 4px solid var(--error-color-dark);
+}
