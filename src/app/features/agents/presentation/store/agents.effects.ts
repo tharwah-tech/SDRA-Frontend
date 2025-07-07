@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
@@ -12,45 +11,9 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class AgentsEffects {
-  loadAgents$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(AgentsActions.loadAgents),
-      mergeMap(() =>
-        this.getAgentsUseCase.execute().pipe(
-          map(agentDtos => {
-            const agents = agentDtos.map(dto => AgentMapper.toEntity(dto));
-            return AgentsActions.loadAgentsSuccess({ agents });
-          }),
-          catchError(error => of(AgentsActions.loadAgentsFailure({ error: error.message })))
-        )
-      )
-    )
-  );
-
-  loadAgent$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(AgentsActions.loadAgent),
-      mergeMap(({ id }) =>
-        this.getAgentByIdUseCase.execute(id).pipe(
-          map(agentDto => {
-            const agent = AgentMapper.toEntity(agentDto);
-            return AgentsActions.loadAgentSuccess({ agent });
-          }),
-          catchError(error => of(AgentsActions.loadAgentFailure({ error: error.message })))
-        )
-      )
-    )
-  );
-
-  configureAgent$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(AgentsActions.configureAgent),
-      tap(({ agentId }) => {
-        // Navigate to agent configuration page
-        this.router.navigate(['/agents', agentId, 'configure']);
-      })
-    ), { dispatch: false }
-  );
+  loadAgents$;
+  loadAgent$;
+  configureAgent$;
 
   constructor(
     private actions$: Actions,
@@ -58,5 +21,56 @@ export class AgentsEffects {
     private getAgentByIdUseCase: GetAgentByIdUseCaseService,
     private configureAgentUseCase: ConfigureAgentUseCaseService,
     private router: Router
-  ) {}
+  ) {
+    this.loadAgents$ = createEffect(() => 
+      this.actions$.pipe(
+        ofType(AgentsActions.loadAgents),
+        mergeMap(() =>
+          this.getAgentsUseCase.execute().pipe(
+            map(agentDtos => {
+              const agents = agentDtos.map(dto => AgentMapper.toEntity(dto));
+              return AgentsActions.loadAgentsSuccess({ agents });
+            }),
+            catchError(error => {
+              console.error('Error loading agents:', error);
+              return of(AgentsActions.loadAgentsFailure({ 
+                error: error.message || 'Failed to load agents' 
+              }));
+            })
+          )
+        )
+      )
+    );
+
+    this.loadAgent$ = createEffect(() => 
+      this.actions$.pipe(
+        ofType(AgentsActions.loadAgent),
+        mergeMap(({ id }) =>
+          this.getAgentByIdUseCase.execute(id).pipe(
+            map(agentDto => {
+              const agent = AgentMapper.toEntity(agentDto);
+              return AgentsActions.loadAgentSuccess({ agent });
+            }),
+            catchError(error => {
+              console.error('Error loading agent:', error);
+              return of(AgentsActions.loadAgentFailure({ 
+                error: error.message || 'Failed to load agent' 
+              }));
+            })
+          )
+        )
+      )
+    );
+
+    this.configureAgent$ = createEffect(() => 
+      this.actions$.pipe(
+        ofType(AgentsActions.configureAgent),
+        tap(({ agentId }) => {
+          // Navigate to agent configuration page
+          this.router.navigate(['/agents', agentId, 'configure']);
+        })
+      ), 
+      { dispatch: false }
+    );
+  }
 }

@@ -1,4 +1,3 @@
-
 import { Injectable, Inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { AgentsRepository } from '../../domain/repositories/agents.repository';
