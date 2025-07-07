@@ -1,12 +1,12 @@
-
 import { Injectable } from '@angular/core';
-import { Observable, of, delay } from 'rxjs';
+import { Observable, of, delay, throwError } from 'rxjs';
 import { AgentEntity, OutputType } from '../../domain/entities/agent.entity';
+import { AgentsRepository } from '../../domain/repositories/agents.repository';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AgentsMockService {
+export class AgentsMockService implements AgentsRepository {
   private mockAgents: AgentEntity[] = [
     {
       id: '1',
@@ -77,8 +77,68 @@ export class AgentsMockService {
   getAgentById(id: string): Observable<AgentEntity> {
     const agent = this.mockAgents.find(a => a.id === id);
     if (!agent) {
-      throw new Error(`Agent with id ${id} not found`);
+      return throwError(() => new Error(`Agent with id ${id} not found`));
     }
     return of(agent).pipe(delay(300));
+  }
+
+  createAgent(agent: Partial<AgentEntity>): Observable<AgentEntity> {
+    const newAgent: AgentEntity = {
+      id: Date.now().toString(),
+      name: agent.name || 'New Agent',
+      role: agent.role || 'Agent',
+      description: agent.description || 'Description',
+      avatarUrl: agent.avatarUrl || 'https://i.pravatar.cc/200?img=10',
+      personality: agent.personality || [],
+      supportedOutputs: agent.supportedOutputs || [],
+      isActive: agent.isActive ?? true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    
+    this.mockAgents.push(newAgent);
+    return of(newAgent).pipe(delay(300));
+  }
+
+  updateAgent(id: string, agent: Partial<AgentEntity>): Observable<AgentEntity> {
+    const index = this.mockAgents.findIndex(a => a.id === id);
+    if (index === -1) {
+      return throwError(() => new Error(`Agent with id ${id} not found`));
+    }
+    
+    const updatedAgent = {
+      ...this.mockAgents[index],
+      ...agent,
+      updatedAt: new Date()
+    };
+    
+    this.mockAgents[index] = updatedAgent;
+    return of(updatedAgent).pipe(delay(300));
+  }
+
+  deleteAgent(id: string): Observable<void> {
+    const index = this.mockAgents.findIndex(a => a.id === id);
+    if (index === -1) {
+      return throwError(() => new Error(`Agent with id ${id} not found`));
+    }
+    
+    this.mockAgents.splice(index, 1);
+    return of(void 0).pipe(delay(300));
+  }
+
+  configureAgent(id: string, configuration: any): Observable<AgentEntity> {
+    const index = this.mockAgents.findIndex(a => a.id === id);
+    if (index === -1) {
+      return throwError(() => new Error(`Agent with id ${id} not found`));
+    }
+    
+    // Mock configuration update
+    const updatedAgent = {
+      ...this.mockAgents[index],
+      updatedAt: new Date()
+    };
+    
+    this.mockAgents[index] = updatedAgent;
+    return of(updatedAgent).pipe(delay(300));
   }
 }
