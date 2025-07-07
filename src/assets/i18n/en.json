@@ -2,5 +2,13 @@
   "General": {
     "primaryBtn": "Primary Button"
   },
+    "agents": {
+    "personality": "Personality",
+    "supportedOutput": "Supported Output",
+    "configureAgent": "Configure Agent",
+    "video": "Video",
+    "audio": "Audio",
+    "transcript": "Transcript"
+  },
   "sidenav": {}
 }

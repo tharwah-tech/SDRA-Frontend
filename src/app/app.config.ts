@@ -18,7 +18,8 @@ import {environment} from '../environments/environment';
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
 import {provideToastr} from 'ngx-toastr';
 import {MAT_DATE_FORMATS, MAT_DATE_LOCALE, provideNativeDateAdapter} from '@angular/material/core';
-
+import { agentsReducer } from './features/agents/presentation/store/agents.reducer';
+import { AgentsEffects } from './features/agents/presentation/store/agents.effects';
 export const BASE_API_URL = new InjectionToken<string>('BASE_API_URL');
 
 export function HttpLoaderFactory(http: HttpClient) {
