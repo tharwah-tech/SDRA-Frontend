@@ -1,1 +1,11 @@
-<p>agent-view-page works!</p>
+ <div class="agents-container">
+      <div *ngIf="loading$ | async" class="loading-container">
+        <mat-spinner></mat-spinner>
+      </div>
+      
+      <div *ngIf="!(loading$ | async)" class="agents-grid">
+        <app-agent-card 
+          [agent]="selectedAgent!">
+        </app-agent-card>
+      </div>
+    </div>

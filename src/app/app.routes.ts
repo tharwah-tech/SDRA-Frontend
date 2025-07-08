@@ -5,6 +5,7 @@ import {NotFoundPageComponent} from './shared/pages/not-found-page/not-found-pag
 import {LandingPageComponent} from './features/LandingPage/presentation/pages/landing-page/landing-page.component';
 import {AUTH_ROUTES} from './features/authentication/auth.routes';
 import {LANDING_ROUTES} from './features/LandingPage/landing.routes';
+import { AGENTS_ROUTES } from './features/agents/agents.routes';
 
 export const routes: Routes = [
   {
@@ -20,6 +21,11 @@ export const routes: Routes = [
   {
     path: ':lang/home',
     children: LANDING_ROUTES,
+    canActivate: [LangGuard],
+  },
+    {
+    path: ':lang/agents',
+    children: AGENTS_ROUTES,
     canActivate: [LangGuard],
   },
   {

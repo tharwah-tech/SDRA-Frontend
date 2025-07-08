@@ -1,5 +1,5 @@
 
-<mat-card class="agent-card" (click)="onCardClick()">
+<mat-card class="agent-card" >
   <div class="agent-card-content">
     <!-- Left Section: Agent Info -->
     <div class="agent-info">
@@ -36,7 +36,7 @@
         <button 
           mat-stroked-button 
           color="primary" 
-          (click)="onConfigureClick(); $event.stopPropagation()">
+          >
           <mat-icon>settings</mat-icon>
           {{ 'agents.configureAgent' | translate }}
         </button>

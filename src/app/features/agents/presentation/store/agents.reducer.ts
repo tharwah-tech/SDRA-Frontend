@@ -29,6 +29,7 @@ export const agentsReducer = createReducer(
   // Load single agent
   on(AgentsActions.loadAgent, (state) => ({
     ...state,
+    selectedAgent: null,
     loading: true,
     error: null
   })),
@@ -44,12 +45,6 @@ export const agentsReducer = createReducer(
     ...state,
     loading: false,
     error
-  })),
-  
-  // Select agent
-  on(AgentsActions.selectAgent, (state, { agent }) => ({
-    ...state,
-    selectedAgent: agent
   })),
   
   on(AgentsActions.clearSelectedAgent, (state) => ({

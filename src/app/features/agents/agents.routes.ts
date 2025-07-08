@@ -1,40 +1,24 @@
 
 import { Routes } from '@angular/router';
+import { AgentViewPageComponent } from './presentation/pages/agent-view-page/agent-view-page.component';
+import { AgentsPageComponent } from './presentation/pages/agents-page/agents-page.component';
+import { provideState } from '@ngrx/store';
+import { AGENTS_FEATURE_KEY } from './presentation/store/agents.state';
+import { agentsReducer } from './presentation/store/agents.reducer';
+import { provideEffects } from '@ngrx/effects';
+import { AgentsEffects } from './presentation/store/agents.effects';
 
-export const agentsRoutes: Routes = [
+export const AGENTS_ROUTES: Routes = [
   {
-    path: '',
-    // Removed all providers since they're now handled globally in app.config.ts
-    children: [
-      {
         path: '',
-        redirectTo: 'list',
-        pathMatch: 'full'
-      },
-      {
-        path: 'list',
-        loadComponent: () => 
-          import('./presentation/pages/agents-list/agents-list.component').then(
-            m => m.AgentsListComponent
-          ),
+        component: AgentsPageComponent,
+        providers: [provideState(AGENTS_FEATURE_KEY,agentsReducer),provideEffects(AgentsEffects)],
         title: 'AI Agents'
-      }
-    //   {
-    //     path: ':id/configure',
-    //     loadComponent: () => 
-    //       import('./presentation/pages/agent-configure/agent-configure.component').then(
-    //         m => m.AgentConfigureComponent
-    //       ),
-    //     title: 'Configure Agent'
-    //   },
-    //   {
-    //     path: ':id',
-    //     loadComponent: () => 
-    //       import('./presentation/pages/agent-detail/agent-detail.component').then(
-    //         m => m.AgentDetailComponent
-    //       ),
-    //     title: 'Agent Details'
-    //   }
-    ]
+  },
+  {
+        path: 'Agent/:id',
+        component: AgentViewPageComponent,
+        title: 'Agent Details',
+        pathMatch: 'full'
   }
 ];

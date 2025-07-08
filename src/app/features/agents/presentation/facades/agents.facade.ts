@@ -31,15 +31,11 @@ export class AgentsFacade {
     this.store.dispatch(AgentsActions.loadAgent({ id }));
   }
 
-  selectAgent(agent: AgentEntity): void {
-    this.store.dispatch(AgentsActions.selectAgent({ agent }));
-  }
+
 
   clearSelectedAgent(): void {
     this.store.dispatch(AgentsActions.clearSelectedAgent());
   }
 
-  configureAgent(agentId: string): void {
-    this.store.dispatch(AgentsActions.configureAgent({ agentId }));
-  }
+
 }

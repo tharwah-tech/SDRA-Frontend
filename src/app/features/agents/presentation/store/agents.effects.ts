@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 export class AgentsEffects {
   loadAgents$;
   loadAgent$;
-  configureAgent$;
+
 
   constructor(
     private actions$: Actions,
@@ -62,15 +62,6 @@ export class AgentsEffects {
       )
     );
 
-    this.configureAgent$ = createEffect(() => 
-      this.actions$.pipe(
-        ofType(AgentsActions.configureAgent),
-        tap(({ agentId }) => {
-          // Navigate to agent configuration page
-          this.router.navigate(['/agents', agentId, 'configure']);
-        })
-      ), 
-      { dispatch: false }
-    );
+
   }
 }

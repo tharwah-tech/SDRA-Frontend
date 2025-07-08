@@ -1,9 +1,9 @@
 // src/app/features/agents/presentation/store/agents.selectors.ts
 
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { AgentsState } from './agents.state';
+import { AGENTS_FEATURE_KEY, AgentsState } from './agents.state';
 
-export const selectAgentsState = createFeatureSelector<AgentsState>('agents');
+export const selectAgentsState = createFeatureSelector<AgentsState>(AGENTS_FEATURE_KEY);
 
 export const selectAllAgents = createSelector(
   selectAgentsState,

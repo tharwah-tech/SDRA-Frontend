@@ -1,5 +1,5 @@
 import { AgentEntity } from '../../domain/entities/agent.entity';
-
+export const AGENTS_FEATURE_KEY = 'agents';
 export interface AgentsState {
   agents: AgentEntity[];
   selectedAgent: AgentEntity | null;

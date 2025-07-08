@@ -26,8 +26,7 @@ import { AgentEntity, OutputType } from '../../../domain/entities/agent.entity';
 })
 export class AgentCardComponent {
   @Input({ required: true }) agent!: AgentEntity;
-  @Output() configureAgent = new EventEmitter<string>();
-  @Output() selectAgent = new EventEmitter<AgentEntity>();
+
 
   // Helper to get icon for output type
   getOutputIcon(type: OutputType): string {
@@ -48,11 +47,5 @@ export class AgentCardComponent {
     return this.agent.supportedOutputs.filter(output => output.isEnabled);
   }
 
-  onConfigureClick(): void {
-    this.configureAgent.emit(this.agent.id);
-  }
 
-  onCardClick(): void {
-    this.selectAgent.emit(this.agent);
-  }
 }
