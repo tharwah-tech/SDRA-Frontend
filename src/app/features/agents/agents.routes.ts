@@ -1,4 +1,3 @@
-
 import { Routes } from '@angular/router';
 import { AgentViewPageComponent } from './presentation/pages/agent-view-page/agent-view-page.component';
 import { AgentsPageComponent } from './presentation/pages/agents-page/agents-page.component';
@@ -10,15 +9,18 @@ import { AgentsEffects } from './presentation/store/agents.effects';
 
 export const AGENTS_ROUTES: Routes = [
   {
-        path: '',
-        component: AgentsPageComponent,
-        providers: [provideState(AGENTS_FEATURE_KEY,agentsReducer),provideEffects(AgentsEffects)],
-        title: 'AI Agents'
+    path: '',
+    component: AgentsPageComponent,
+    providers: [
+      provideState(AGENTS_FEATURE_KEY, agentsReducer),
+      provideEffects(AgentsEffects),
+    ],
+    title: 'AI Agents',
   },
   {
-        path: 'Agent/:id',
-        component: AgentViewPageComponent,
-        title: 'Agent Details',
-        pathMatch: 'full'
-  }
+    path: 'agent/:id',
+    component: AgentViewPageComponent,
+    title: 'Agent Details',
+    pathMatch: 'full',
+  },
 ];

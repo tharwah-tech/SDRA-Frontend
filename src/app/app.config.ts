@@ -68,13 +68,13 @@ export const appConfig: ApplicationConfig = {
     ),
     TranslateService,
     { provide: BASE_API_URL, useValue: environment.apiUrl },
-    
+
     // Add the AGENTS_REPOSITORY provider globally
     {
       provide: AGENTS_REPOSITORY,
       useClass: environment.production ? AgentsService : AgentsMockService
     },
-    
+
     provideAnimations(),
     provideAnimationsAsync(),
     provideToastr({
@@ -87,9 +87,8 @@ export const appConfig: ApplicationConfig = {
       // You can add more global configuration options here
     }),
     provideNativeDateAdapter(),
-    
-
-    
+    provideStore(),
+    provideEffects([]),
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states
       logOnly: !isDevMode(), // Restrict extension to log-only mode
