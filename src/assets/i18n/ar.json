@@ -2,5 +2,12 @@
   "General": {
     "primaryBtn": "الزرار الرئيسي"
   },
+    "agents": {
+    "personality": "الشخصية",
+    "supportedOutput": "المخرجات المدعومة",
+    "configureAgent": "تكوين الوكيل",
+    "video": "فيديو",
+    "audio": "صوت",
+    "transcript": "نص" },
   "sidenav": {}
 }

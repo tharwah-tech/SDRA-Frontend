@@ -19,6 +19,13 @@ import {provideAnimationsAsync} from '@angular/platform-browser/animations/async
 import {provideToastr} from 'ngx-toastr';
 import {MAT_DATE_FORMATS, MAT_DATE_LOCALE, provideNativeDateAdapter} from '@angular/material/core';
 
+// Add these imports for the agents providers and NgRx
+import { AGENTS_REPOSITORY } from './features/agents/data/services/agents.provider';
+import { AgentsService } from './features/agents/data/services/agents.service';
+import { AgentsMockService } from './features/agents/data/services/agents-mock.service';
+import { agentsReducer } from './features/agents/presentation/store/agents.reducer';
+import { AgentsEffects } from './features/agents/presentation/store/agents.effects';
+
 export const BASE_API_URL = new InjectionToken<string>('BASE_API_URL');
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -61,6 +68,13 @@ export const appConfig: ApplicationConfig = {
     ),
     TranslateService,
     { provide: BASE_API_URL, useValue: environment.apiUrl },
+    
+    // Add the AGENTS_REPOSITORY provider globally
+    {
+      provide: AGENTS_REPOSITORY,
+      useClass: environment.production ? AgentsService : AgentsMockService
+    },
+    
     provideAnimations(),
     provideAnimationsAsync(),
     provideToastr({
@@ -73,8 +87,15 @@ export const appConfig: ApplicationConfig = {
       // You can add more global configuration options here
     }),
     provideNativeDateAdapter(),
-    provideStore(),
-    provideEffects(),
+    
+    // Initialize NgRx store with agents state globally
+    provideStore({
+      agents: agentsReducer
+    }),
+    
+    // Initialize Effects with agents effects globally
+    provideEffects([AgentsEffects]),
+    
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states
       logOnly: !isDevMode(), // Restrict extension to log-only mode
@@ -99,4 +120,3 @@ export const appConfig: ApplicationConfig = {
     { provide: MAT_DATE_LOCALE, useValue: 'en-US' },
   ]
 };
-

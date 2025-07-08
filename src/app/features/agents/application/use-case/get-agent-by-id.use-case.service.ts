@@ -1,3 +1,4 @@
+
 import { Injectable, Inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { AgentsRepository } from '../../domain/repositories/agents.repository';
@@ -8,14 +9,14 @@ import { AgentMapper } from '../mappers/agent.mapper';
 @Injectable({
   providedIn: 'root'
 })
-export class GetAgentsUseCaseService {
+export class GetAgentByIdUseCaseService {
   constructor(
     @Inject(AGENTS_REPOSITORY) private agentsRepository: AgentsRepository
   ) {}
 
-  execute(): Observable<AgentDto[]> {
-    return this.agentsRepository.getAgents().pipe(
-      map(agents => AgentMapper.toDtoList(agents))
+  execute(id: string): Observable<AgentDto> {
+    return this.agentsRepository.getAgentById(id).pipe(
+      map(agent => AgentMapper.toDto(agent))
     );
   }
 }

@@ -1,1 +1,51 @@
-<p>agent-card works!</p>
+
+<mat-card class="agent-card" (click)="onCardClick()">
+  <div class="agent-card-content">
+    <!-- Left Section: Agent Info -->
+    <div class="agent-info">
+      <div class="agent-header">
+        <h2 class="agent-name">{{ agent.name }}</h2>
+        <span class="agent-role">{{ agent.role }}</span>
+      </div>
+      
+      <p class="agent-description">{{ agent.description }}</p>
+      
+      <!-- Personality Traits -->
+      <div class="personality-section">
+        <h4 class="section-title">{{ 'agents.personality' | translate }}</h4>
+        <mat-chip-set class="personality-chips">
+          <mat-chip *ngFor="let trait of agent.personality" [disableRipple]="true">
+            {{ trait.trait }}
+          </mat-chip>
+        </mat-chip-set>
+      </div>
+      
+      <!-- Supported Outputs -->
+      <div class="outputs-section">
+        <h4 class="section-title">{{ 'agents.supportedOutput' | translate }}</h4>
+        <div class="output-badges">
+          <div *ngFor="let output of enabledOutputs" class="output-badge">
+            <mat-icon [class.enabled]="output.isEnabled">{{ getOutputIcon(output.type) }}</mat-icon>
+            <span>{{ output.type }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Configure Button -->
+      <div class="actions-section">
+        <button 
+          mat-stroked-button 
+          color="primary" 
+          (click)="onConfigureClick(); $event.stopPropagation()">
+          <mat-icon>settings</mat-icon>
+          {{ 'agents.configureAgent' | translate }}
+        </button>
+      </div>
+    </div>
+    
+    <!-- Right Section: Avatar -->
+    <div class="agent-avatar">
+      <img [src]="agent.avatarUrl" [alt]="agent.name + ' avatar'" />
+    </div>
+  </div>
+</mat-card>
