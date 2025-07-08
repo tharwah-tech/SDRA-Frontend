@@ -88,13 +88,7 @@ export const appConfig: ApplicationConfig = {
     }),
     provideNativeDateAdapter(),
     
-    // Initialize NgRx store with agents state globally
-    provideStore({
-      agents: agentsReducer
-    }),
-    
-    // Initialize Effects with agents effects globally
-    provideEffects([AgentsEffects]),
+
     
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states
