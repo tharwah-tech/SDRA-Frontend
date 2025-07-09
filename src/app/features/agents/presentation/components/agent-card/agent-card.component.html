@@ -1,60 +1,64 @@
-<mat-card>
-  <div class="flex flex-row justify-between items-center w-full">
-    <div class="flex flex-col justify-start items-start gap-[8px]">
-      <h1 class="title-header">{{ agent.name }}</h1>
-    </div>
-    <div>
-      <img src="{{ agent.avatarUrl }}" alt="{{ agent.name + ' avatar' }}">
-    </div>
-  </div>
-</mat-card>
-<mat-card class="agent-card" >
-  <div class="agent-card-content">
+<mat-card class="cursor-pointer transition-all duration-300 ease-in-out mb-4 overflow-hidden bg-white shadow-sm hover:shadow-md">
+  <div class="flex flex-col md:flex-row justify-between items-start p-6 gap-8">
     <!-- Left Section: Agent Info -->
-    <div class="agent-info">
-      <div class="agent-header">
-        <h2 class="agent-name">{{ agent.name }}</h2>
-        <span class="agent-role">{{ agent.role }}</span>
+    <div class="flex-1 space-y-6">
+      <!-- Agent Header -->
+      <div class="flex items-center gap-3">
+        <h2 class="text-2xl font-semibold text-gray-900 m-0">
+          {{ agent.name }}
+        </h2>
+        <span class="text-sm text-blue-600 bg-blue-100 px-3 py-1 rounded-full font-medium">
+          {{ agent.role }}
+        </span>
       </div>
 
-      <p class="agent-description">{{ agent.description }}</p>
+      <!-- Agent Description -->
+      <p class="text-gray-600 leading-relaxed text-base">
+        {{ agent.description }}
+      </p>
 
       <!-- Personality Traits -->
-      <div class="personality-section">
-        <h4 class="section-title">{{ 'agents.personality' | translate }}</h4>
-        <mat-chip-set class="personality-chips">
-          <mat-chip *ngFor="let trait of agent.personality" [disableRipple]="true">
+      <div class="space-y-3">
+        <h4 class="text-sm font-medium text-gray-800 mb-3">
+          {{ 'agents.personality' | translate }}
+        </h4>
+        <div class="flex flex-wrap gap-2">
+          <span
+            *ngFor="let trait of agent.personality"
+            class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-700 font-medium">
             {{ trait.trait }}
-          </mat-chip>
-        </mat-chip-set>
+          </span>
+        </div>
       </div>
 
       <!-- Supported Outputs -->
-      <div class="outputs-section">
-        <h4 class="section-title">{{ 'agents.supportedOutput' | translate }}</h4>
-        <div class="output-badges">
-          <div *ngFor="let output of enabledOutputs" class="output-badge">
-            <mat-icon [class.enabled]="output.isEnabled">{{ getOutputIcon(output.type) }}</mat-icon>
-            <span>{{ output.type }}</span>
+      <div class="space-y-3">
+        <h4 class="text-sm font-medium text-gray-800 mb-3">
+          {{ 'agents.supportedOutput' | translate }}
+        </h4>
+        <div class="flex flex-wrap gap-6">
+          <div *ngFor="let output of enabledOutputs" class="flex items-center gap-2">
+            <mat-icon
+              [class]="getOutputIconClass(output.type)"
+              class="!text-lg !w-5 !h-5">
+              {{ getOutputIcon(output.type) }}
+            </mat-icon>
+            <span class="text-sm text-gray-700 font-medium">
+              {{ output.type }}
+            </span>
           </div>
         </div>
       </div>
 
-      <!-- Configure Button -->
-      <div class="actions-section">
-        <button
-          mat-stroked-button
-          color="primary"
-          >
-          <mat-icon>settings</mat-icon>
-          {{ 'agents.configureAgent' | translate }}
-        </button>
-      </div>
+
     </div>
 
     <!-- Right Section: Avatar -->
-    <div class="agent-avatar">
-      <img [src]="agent.avatarUrl" [alt]="agent.name + ' avatar'" />
+    <div class="flex-shrink-0 w-full md:w-48 h-48 rounded-xl overflow-hidden bg-gray-100">
+      <img
+        [src]="agent.avatarUrl"
+        [alt]="agent.name + ' avatar'"
+        class="w-full h-full object-cover" />
     </div>
   </div>
 </mat-card>

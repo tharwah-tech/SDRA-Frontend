@@ -1,4 +1,3 @@
-
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -22,11 +21,10 @@ import { AgentEntity, OutputType } from '../../../domain/entities/agent.entity';
     TranslateModule
   ],
   templateUrl: './agent-card.component.html',
-  styleUrls: ['./agent-card.component.scss']
+  styleUrls: ['./agent-card.component.scss'] // Optional: include if you need Material overrides
 })
 export class AgentCardComponent {
   @Input({ required: true }) agent!: AgentEntity;
-
 
   // Helper to get icon for output type
   getOutputIcon(type: OutputType): string {
@@ -42,10 +40,22 @@ export class AgentCardComponent {
     }
   }
 
+  // Helper to get icon color class for output type
+  getOutputIconClass(type: OutputType): string {
+    switch (type) {
+      case OutputType.VIDEO:
+        return 'text-blue-600';
+      case OutputType.AUDIO:
+        return 'text-green-600';
+      case OutputType.TRANSCRIPT:
+        return 'text-purple-600';
+      default:
+        return 'text-gray-600';
+    }
+  }
+
   // Helper to get enabled outputs
   get enabledOutputs() {
     return this.agent.supportedOutputs.filter(output => output.isEnabled);
   }
-
-
 }
