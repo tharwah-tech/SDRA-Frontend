@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@use '@angular/material' as mat;
+@use "@angular/material" as mat;
 @import "tailwindcss";
 @import "ngx-toastr/toastr";
 
@@ -7,121 +7,150 @@
 @include mat.core();
 
 // Define custom palettes from your color seeds
-$primary-palette: mat.m2-define-palette((
-        50: #f0f2f5,
-        100: #d9dde5,
-        200: #bfc6d2,
-        300: #a4aebe,
-        400: #8f9bb0,
-        500: #1e293c,
-        600: #1a2334,
-        700: #151c2b,
-        800: #111622,
-        900: #0a0d16,
-        A100: #d9dde5,
-        A200: #bfc6d2,
-        A400: #8f9bb0,
-        A700: #151c2b,
-        contrast: (
-                50: rgba(black, 0.87),
-                100: rgba(black, 0.87),
-                200: rgba(black, 0.87),
-                300: rgba(black, 0.87),
-                400: rgba(black, 0.87),
-                500: rgba(white, 0.87),
-                600: rgba(white, 0.87),
-                700: rgba(white, 0.87),
-                800: rgba(white, 0.87),
-                900: rgba(white, 0.87),
-                A100: rgba(black, 0.87),
-                A200: rgba(black, 0.87),
-                A400: rgba(black, 0.87),
-                A700: rgba(white, 0.87),
-        )
-));
+$accent-palette: mat.m2-define-palette(
+  (
+    50: #f0f2f5,
+    100: #d9dde5,
+    200: #bfc6d2,
+    300: #a4aebe,
+    400: #8f9bb0,
+    500: #1e293c,
+    600: #1a2334,
+    700: #151c2b,
+    800: #111622,
+    900: #0a0d16,
+    A100: #d9dde5,
+    A200: #bfc6d2,
+    A400: #8f9bb0,
+    A700: #151c2b,
+    contrast: (
+      50: rgba(black, 0.87),
+      100: rgba(black, 0.87),
+      200: rgba(black, 0.87),
+      300: rgba(black, 0.87),
+      400: rgba(black, 0.87),
+      500: rgba(white, 0.87),
+      600: rgba(white, 0.87),
+      700: rgba(white, 0.87),
+      800: rgba(white, 0.87),
+      900: rgba(white, 0.87),
+      A100: rgba(black, 0.87),
+      A200: rgba(black, 0.87),
+      A400: rgba(black, 0.87),
+      A700: rgba(white, 0.87),
+    ),
+  )
+);
 
-$accent-palette: mat.m2-define-palette((
-        50: #e6fdf9,
-        100: #ccfbf1,
-        200: #99f6e4,
-        300: #5eead4,
-        400: #2dd4bf,
-        500: #00d2b5,
-        600: #00b8a3,
-        700: #009688,
-        800: #00766b,
-        900: #004d40,
-        A100: #ccfbf1,
-        A200: #99f6e4,
-        A400: #2dd4bf,
-        A700: #009688,
-        contrast: (
-                50: rgba(black, 0.87),
-                100: rgba(black, 0.87),
-                200: rgba(black, 0.87),
-                300: rgba(black, 0.87),
-                400: rgba(black, 0.87),
-                500: rgba(black, 0.87),
-                600: rgba(white, 0.87),
-                700: rgba(white, 0.87),
-                800: rgba(white, 0.87),
-                900: rgba(white, 0.87),
-                A100: rgba(black, 0.87),
-                A200: rgba(black, 0.87),
-                A400: rgba(black, 0.87),
-                A700: rgba(white, 0.87),
-        )
-));
+$primary-palette: mat.m2-define-palette(
+  (
+    50: #e6fdf9,
+    100: #ccfbf1,
+    200: #99f6e4,
+    300: #5eead4,
+    400: #2dd4bf,
+    500: #00d2b5,
+    600: #00b8a3,
+    700: #009688,
+    800: #00766b,
+    900: #004d40,
+    A100: #ccfbf1,
+    A200: #99f6e4,
+    A400: #2dd4bf,
+    A700: #009688,
+    contrast: (
+      50: rgba(black, 0.87),
+      100: rgba(black, 0.87),
+      200: rgba(black, 0.87),
+      300: rgba(black, 0.87),
+      400: rgba(black, 0.87),
+      500: rgba(black, 0.87),
+      600: rgba(white, 0.87),
+      700: rgba(white, 0.87),
+      800: rgba(white, 0.87),
+      900: rgba(white, 0.87),
+      A100: rgba(black, 0.87),
+      A200: rgba(black, 0.87),
+      A400: rgba(black, 0.87),
+      A700: rgba(white, 0.87),
+    ),
+  )
+);
 
-$warn-palette: mat.m2-define-palette((
-        50: #fff3e0,
-        100: #ffe0b2,
-        200: #ffcc80,
-        300: #ffb74d,
-        400: #ffa726,
-        500: #ff9800,
-        600: #fb8c00,
-        700: #f57c00,
-        800: #ef6c00,
-        900: #e65100,
-        A100: #ffd180,
-        A200: #ffab40,
-        A400: #ff9100,
-        A700: #ff6d00,
-        contrast: (
-                50: rgba(black, 0.87),
-                100: rgba(black, 0.87),
-                200: rgba(black, 0.87),
-                300: rgba(black, 0.87),
-                400: rgba(black, 0.87),
-                500: rgba(black, 0.87),
-                600: rgba(black, 0.87),
-                700: rgba(black, 0.87),
-                800: rgba(white, 0.87),
-                900: rgba(white, 0.87),
-                A100: rgba(black, 0.87),
-                A200: rgba(black, 0.87),
-                A400: rgba(black, 0.87),
-                A700: rgba(black, 0.87),
-        )
-));
+$warn-palette: mat.m2-define-palette(
+  (
+    50: #fff3e0,
+    100: #ffe0b2,
+    200: #ffcc80,
+    300: #ffb74d,
+    400: #ffa726,
+    500: #ff9800,
+    600: #fb8c00,
+    700: #f57c00,
+    800: #ef6c00,
+    900: #e65100,
+    A100: #ffd180,
+    A200: #ffab40,
+    A400: #ff9100,
+    A700: #ff6d00,
+    contrast: (
+      50: rgba(black, 0.87),
+      100: rgba(black, 0.87),
+      200: rgba(black, 0.87),
+      300: rgba(black, 0.87),
+      400: rgba(black, 0.87),
+      500: rgba(black, 0.87),
+      600: rgba(black, 0.87),
+      700: rgba(black, 0.87),
+      800: rgba(white, 0.87),
+      900: rgba(white, 0.87),
+      A100: rgba(black, 0.87),
+      A200: rgba(black, 0.87),
+      A400: rgba(black, 0.87),
+      A700: rgba(black, 0.87),
+    ),
+  )
+);
 
 // Define the theme
-$theme: mat.m2-define-light-theme((
-        color: (
-                primary: $primary-palette,
-                accent: $accent-palette,
-                warn: $warn-palette,
-        ),
-        typography: mat.m2-define-typography-config(),
-        density: 0,
-));
+$theme: mat.m2-define-light-theme(
+  (
+    color: (
+      primary: $primary-palette,
+      accent: $accent-palette,
+      warn: $warn-palette,
+    ),
+    typography: mat.m2-define-typography-config(),
+    density: 0,
+  )
+);
 
 // Include theme styles for core and each component used in your app
 @include mat.all-component-themes($theme);
 
 // Custom success color CSS variable (since Angular Material doesn't have a built-in success palette)
 :root {
+  --primary-color: #00d2b5;
+  --primary-color-dark: #00b8a3;
+  --primary-color-light: #99f6e4;
+  --accent-color: #1e293c;
+  --accent-color-dark: #151c2b;
+  --accent-color-light: #d9dde5;
+  --warn-color: #ff9800;
+  --warn-color-dark: #fb8c00;
+  --warn-color-light: #ffcc80;
+  --Gray-100: #f8f9fa;
+  --Gray-200: #f1f5f9;
+  --Gray-300: #d0d5dd;
+  --Gray-400: #9ca3af;
+  --Gray-500: #667085;
+  --Gray-600: #475467;
+  --Gray-700: #344054;
+  --Gray-800: #101828;
+  --Gray-900: #0f0624;
+  --Gray-950: #0a0d16;
+  --Gray-1000: #000000;
+
   --success-color: #e8f5e9;
   --success-color-dark: #4caf50;
   --success-color-light: #c8e6c9;
@@ -130,6 +159,62 @@ $theme: mat.m2-define-light-theme((
   --error-color-dark: #f44336;
   --error-color-light: #ffcdd2;
 
+  @include mat.form-field-overrides(
+    (
+      outlined-outline-color: var(--Gray-300, #d0d5dd),
+      outlined-input-text-placeholder-color: var(--Gray-500, #667085),
+      outlined-outline-width: 1px,
+      outlined-container-shape: 8px,
+      error-text-color: var(--warn-color, #ff9800),
+    )
+  );
+  @include mat.table-overrides(
+    (
+      background-color: #ffffff,
+      header-headline-color: #344054,
+      row-item-label-text-color: #101828,
+      header-container-height: 56px,
+      row-item-container-height: 56px,
+    )
+  );
+  @include mat.progress-spinner-overrides(
+    (
+      size: 60px,
+      active-indicator-width: 4px,
+    )
+  );
+  @include mat.fab-overrides(
+    (
+      container-elevation-shadow: rgba(0, 0, 0, 0),
+      container-shape: 8px,
+      focus-container-elevation-shadow: rgba(0, 0, 0, 0),
+      hover-container-elevation-shadow: rgba(0, 0, 0, 0),
+      disabled-state-container-color: rgba(0, 0, 0, 0),
+      disabled-state-foreground-color: rgb(151, 151, 151),
+    )
+  );
+  @include mat.snack-bar-overrides(
+    (
+      container-color: white,
+      supporting-text-color: #475467,
+      container-shape: 20px,
+    )
+  );
+  @include mat.expansion-overrides(
+    (
+      container-shape: 20px,
+      container-background-color: #ffffff,
+    )
+  );
+  @include mat.progress-bar-overrides(
+    (
+      active-indicator-color: var(--primary-color),
+      track-color: grey,
+      active-indicator-height: 14px,
+      track-height: 14px,
+      track-shape: 7px,
+    )
+  );
 }
 
 // Helper classes for success color
@@ -150,14 +235,9 @@ $theme: mat.m2-define-light-theme((
   background-color: var(--error-color) !important;
 }
 
-
-// Include TailwindCSS
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 // Global styles
-html, body {
+html,
+body {
   height: 100%;
 }
 

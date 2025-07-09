@@ -1,4 +1,13 @@
-
+<mat-card>
+  <div class="flex flex-row justify-between items-center w-full">
+    <div class="flex flex-col justify-start items-start gap-[8px]">
+      <h1 class="title-header">{{ agent.name }}</h1>
+    </div>
+    <div>
+      <img src="{{ agent.avatarUrl }}" alt="{{ agent.name + ' avatar' }}">
+    </div>
+  </div>
+</mat-card>
 <mat-card class="agent-card" >
   <div class="agent-card-content">
     <!-- Left Section: Agent Info -->
@@ -7,9 +16,9 @@
         <h2 class="agent-name">{{ agent.name }}</h2>
         <span class="agent-role">{{ agent.role }}</span>
       </div>
-      
+
       <p class="agent-description">{{ agent.description }}</p>
-      
+
       <!-- Personality Traits -->
       <div class="personality-section">
         <h4 class="section-title">{{ 'agents.personality' | translate }}</h4>
@@ -19,7 +28,7 @@
           </mat-chip>
         </mat-chip-set>
       </div>
-      
+
       <!-- Supported Outputs -->
       <div class="outputs-section">
         <h4 class="section-title">{{ 'agents.supportedOutput' | translate }}</h4>
@@ -30,19 +39,19 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Configure Button -->
       <div class="actions-section">
-        <button 
-          mat-stroked-button 
-          color="primary" 
+        <button
+          mat-stroked-button
+          color="primary"
           >
           <mat-icon>settings</mat-icon>
           {{ 'agents.configureAgent' | translate }}
         </button>
       </div>
     </div>
-    
+
     <!-- Right Section: Avatar -->
     <div class="agent-avatar">
       <img [src]="agent.avatarUrl" [alt]="agent.name + ' avatar'" />

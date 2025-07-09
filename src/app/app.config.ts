@@ -1,6 +1,5 @@
 import {
   ApplicationConfig,
-  provideZoneChangeDetection,
   isDevMode,
   InjectionToken,
   importProvidersFrom
@@ -23,8 +22,10 @@ import {MAT_DATE_FORMATS, MAT_DATE_LOCALE, provideNativeDateAdapter} from '@angu
 import { AGENTS_REPOSITORY } from './features/agents/data/services/agents.provider';
 import { AgentsService } from './features/agents/data/services/agents.service';
 import { AgentsMockService } from './features/agents/data/services/agents-mock.service';
-import { agentsReducer } from './features/agents/presentation/store/agents.reducer';
-import { AgentsEffects } from './features/agents/presentation/store/agents.effects';
+import { AuthEffects } from './features/authentication/presentation/store/auth.effects';
+import { authReducer } from './features/authentication/presentation/store/auth.reducer';
+import { AuthService } from './features/authentication/data/services/auth.service';
+import { AUTH_REPOSITORY } from './features/authentication/data/providers/auth-repositories.provider';
 
 export const BASE_API_URL = new InjectionToken<string>('BASE_API_URL');
 
@@ -74,6 +75,10 @@ export const appConfig: ApplicationConfig = {
       provide: AGENTS_REPOSITORY,
       useClass: environment.production ? AgentsService : AgentsMockService
     },
+    {
+      provide: AUTH_REPOSITORY,
+      useClass: AuthService,
+    },
 
     provideAnimations(),
     provideAnimationsAsync(),
@@ -87,8 +92,10 @@ export const appConfig: ApplicationConfig = {
       // You can add more global configuration options here
     }),
     provideNativeDateAdapter(),
-    provideStore(),
-    provideEffects([]),
+    provideStore({
+      auth: authReducer,
+    }),
+    provideEffects([AuthEffects]),
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states
       logOnly: !isDevMode(), // Restrict extension to log-only mode
