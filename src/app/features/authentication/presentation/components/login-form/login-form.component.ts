@@ -1,6 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,6 +20,7 @@ import { strongPasswordValidation } from '../../../../../shared/utils/strong-pas
 import { selectAuthLoading } from '../../store/auth.selectors';
 import { AuthActions } from '../../store/auth.actions';
 import { MatCardModule } from '@angular/material/card';
+import { Output, EventEmitter } from '@angular/core';
 
 type loginForm = FormGroup<{
   email: FormControl<string>;
@@ -33,10 +40,11 @@ type loginForm = FormGroup<{
     MatProgressSpinnerModule,
   ],
   templateUrl: './login-form.component.html',
-  styleUrl: './login-form.component.scss'
+  styleUrl: './login-form.component.scss',
 })
 export class LoginFormComponent {
-loading$: Observable<boolean>;
+  @Output() navigateToRegisteration = new EventEmitter<void>();
+  loading$: Observable<boolean>;
   form: loginForm;
   credentials!: Credentials;
   hidePassword: boolean = true;
@@ -60,7 +68,7 @@ loading$: Observable<boolean>;
     });
   }
 
-   ngOnInit() {}
+  ngOnInit() {}
   get emailControl() {
     return this.form.controls.email;
   }
@@ -135,5 +143,8 @@ loading$: Observable<boolean>;
     this.form.reset();
     this.router.navigate(['/']);
   }
-
+  goToRegister() {
+    this.form.reset();
+    this.navigateToRegisteration.emit();
+  }
 }

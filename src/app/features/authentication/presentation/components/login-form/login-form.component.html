@@ -106,11 +106,11 @@
           </button>
           }
           <div class="w-full text-center mt-[8px] mb-[16px]">
-            <span class="register-txt"
+            <h3 class="register-txt"
               >Don’t have an account?
-              <a class="text-[var(--primary-color)]" routerLink="/auth/register"
-                >Sign up</a
-              ></span
+              <span class="text-[var(--primary-color)] cursor-pointer" (click)="goToRegister()"
+                >Sign up</span
+              ></h3
             >
           </div>
         </div>

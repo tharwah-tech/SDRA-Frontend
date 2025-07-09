@@ -22,7 +22,7 @@ export class RouteRedirectionService {
     const lang = ['en', 'ar'].includes(urlSegments[1]) ? urlSegments[1] : 'en';
 
     if (!user) {
-      this.router.navigate([`/${lang}/login`]);
+      this.router.navigate([`/${lang}/auth/login`]);
       return;
     }
 
@@ -36,7 +36,7 @@ export class RouteRedirectionService {
         this.router.navigateByUrl(returnUrl);
       } else {
         // Default to dashboard for other roles
-        this.router.navigate([`/${lang}`]);
+        this.router.navigate([`/${lang}/agents`]);
       }
     }
   }
