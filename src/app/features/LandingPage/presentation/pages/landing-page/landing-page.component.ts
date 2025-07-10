@@ -1,3 +1,5 @@
+import { Router } from '@angular/router';
+import { routes } from './../../../../../app.routes';
 import {Component, input} from '@angular/core';
 
 @Component({
@@ -8,4 +10,11 @@ import {Component, input} from '@angular/core';
 })
 export class LandingPageComponent {
  lang= input.required<string>();
+ constructor(private routes: Router) {}
+ goToLogin() {
+   this.routes.navigate([`${this.lang()}/auth/login`]);
+ }
+ goToRegister() {
+   this.routes.navigate([this.lang(),"auth","register"]);
+ }
 }
