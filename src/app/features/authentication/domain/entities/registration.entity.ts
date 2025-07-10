@@ -2,5 +2,7 @@ export interface RegistrationEntity{
   email: string;
   password: string;
   confirmPassword: string;
-  userName: string;
+  firstName: string;
+  lastName: string;
+  organization: string;
 }

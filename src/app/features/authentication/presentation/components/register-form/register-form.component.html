@@ -1,1 +1,167 @@
-<p>register-form works!</p>
+<div class="flex flex-col items-center justify-center w-full">
+  <form
+    [formGroup]="form"
+    (submit)="register()"
+    class="w-[360px] overflow-y-auto"
+  >
+    <div class="flex flex-col justify-start items-center gap-[8px]">
+      <img
+        class="w-[181px] h-[53px] mb-[45px]"
+        src="../../../../../../assets/images/Sdra-logo 1.svg"
+        alt="logo"
+      />
+      <div class="flex flex-col justify-start items-center gap-[4px]">
+        <h1 class="sign-up-txt">Sign Up</h1>
+        <h3 class="welcoming-txt">Enter information below to gain access!</h3>
+      </div>
+    </div>
+
+    <div name="emailFieldContainer">
+      <label mat-label class="txt-field-label">Email</label>
+      <mat-form-field
+        appearance="outline"
+        [hideRequiredMarker]="true"
+        class="w-full"
+      >
+        <input
+          matInput
+          type="email"
+          placeholder="Email"
+          formControlName="email"
+        />
+        <mat-error *ngIf="emailRequired"> Email is required </mat-error>
+        <mat-error *ngIf="validEmail"> Email is not valid </mat-error>
+      </mat-form-field>
+    </div>
+    <div name="firstNameFieldContainer" class="flex flex-col w-full">
+      <label mat-label class="txt-field-label">First Name</label>
+      <mat-form-field
+        appearance="outline"
+        [hideRequiredMarker]="true"
+        class="w-full"
+      >
+        <input matInput placeholder="First Name" formControlName="firstName" />
+        <mat-error *ngIf="firstNameRequired">
+          First Name is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div name="lastNameFieldContainer" class="flex flex-col w-full">
+      <label mat-label class="txt-field-label">Last Name</label>
+      <mat-form-field
+        appearance="outline"
+        [hideRequiredMarker]="true"
+        class="w-full"
+      >
+        <input matInput placeholder="Last Name" formControlName="lastName" />
+        <mat-error *ngIf="lastNameRequired">Last Name is required</mat-error>
+      </mat-form-field>
+    </div>
+    <div name="organizationFieldContainer" class="flex flex-col w-full">
+      <label mat-label class="txt-field-label">Organization</label>
+      <mat-form-field
+        appearance="outline"
+        [hideRequiredMarker]="true"
+        class="w-full"
+      >
+        <input
+          matInput
+          placeholder="Organization"
+          formControlName="organization"
+        />
+        <mat-error *ngIf="organizationRequired">
+          Organization is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div
+      name="passwordFieldContainer"
+      class="flex flex-col items-start justify-start w-full"
+    >
+      <label mat-label class="txt-field-label">Password</label>
+      <mat-form-field
+        appearance="outline"
+        [hideRequiredMarker]="true"
+        class="w-full"
+      >
+        <input
+          matInput
+          placeholder="Password"
+          formControlName="password"
+          [type]="hidePassword ? 'password' : 'text'"
+        />
+        <button
+          type="button"
+          mat-icon-button
+          matSuffix
+          (click)="togglePasswordVisibility()"
+        >
+          <mat-icon>{{
+            hidePassword ? "visibility_off" : "visibility"
+          }}</mat-icon>
+        </button>
+
+        <mat-error *ngIf="passwordRequired"> Password is required </mat-error>
+        <mat-error *ngIf="passwordWeakError">
+          Password must include lowercase, uppercase letters, numbers and
+          special characters.
+        </mat-error>
+        <mat-error *ngIf="passwordMinLengthError && !passwordWeakError">
+          Password must be at least 6 characters.
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div name="confirmPasswordFieldContainer" class="flex flex-col w-full">
+      <label mat-label class="txt-field-label">Confirm Password</label>
+      <mat-form-field
+        appearance="outline"
+        [hideRequiredMarker]="true"
+        class="w-full"
+      >
+        <input
+          matInput
+          placeholder="Confirm Password"
+          formControlName="confirmPassword"
+          [type]="hidePassword ? 'password' : 'text'"
+        />
+        <mat-error *ngIf="confirmPasswordRequired">
+          Confirm Password is required
+        </mat-error>
+        <mat-error *ngIf="confirmPasswordMismatchError">
+          Passwords do not match
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-col w-full gap-[12px]">
+      @if(loading$ | async){
+      <!-- Spinner -->
+      <div
+        class="spinner-container top-0 left-0 w-full h-full self-center flex justify-center items-center z-10"
+      >
+        <mat-spinner mode="indeterminate" diameter="40"></mat-spinner>
+      </div>
+      }@else {
+      <button
+        mat-raised-button
+        type="submit"
+        color="primary"
+        class="w-full h-[54px]"
+        [disabled]="!form.valid"
+      >
+        Sign Up
+      </button>
+      }
+      <div class="w-full text-center mt-[8px] mb-[16px]">
+        <h3 class="register-txt">
+          Don’t have an account?
+          <span
+            class="text-[var(--primary-color)] cursor-pointer"
+            (click)="goToLogin()"
+            >Logn in</span
+          >
+        </h3>
+      </div>
+    </div>
+  </form>
+</div>
