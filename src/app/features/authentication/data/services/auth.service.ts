@@ -28,22 +28,22 @@ export class AuthService implements AuthRepository {
   login(credentials: Credentials): Observable<AuthUser> {
     const url = `${this.apiUrl}/login/`;
     const response: Observable<ApiResponse<{loginResponse: LoginResponseModel, expirationDate: Date | null}>> = this.http
-      .post<LoginResponseModel>(url, credentials)
+      .post<ApiResponse<LoginResponseModel>>(url, credentials)
       .pipe(
-        map((response) => {
+        map((apiResponse) => {
           // If tokenExpiration is not provided by API, try to extract it from JWT
           let authUser!: AuthUser;
           if (
-            response.user &&
-            response.token
+            apiResponse.data.user &&
+            apiResponse.data.token
           ) {
             const expirationDate = this.getTokenExpirationDate(
-              response.token
+              apiResponse.data.token
             );
             if (expirationDate) {
               authUser = {
-                ...response.user,
-                token: response.token,
+                ...apiResponse.data.user,
+                token: apiResponse.data.token,
                 role: 'admin',
                 tokenExpiration: new Date(expirationDate),
               };
@@ -51,12 +51,9 @@ export class AuthService implements AuthRepository {
             }
           }
           return {
-            success: true,
-            message: '',
-            statusCode: 200,
-            errors: [],
-            data: {loginResponse: response, expirationDate: this.getTokenExpirationDate(response.token) || null }
-          };
+            ... apiResponse,
+            data: {loginResponse: apiResponse.data, expirationDate: this.getTokenExpirationDate(apiResponse.data.token) }
+          } as ApiResponse<{loginResponse: LoginResponseModel, expirationDate: Date | null}>;
         })
       );
       return handleResponse<{loginResponse: LoginResponseModel, expirationDate: Date | null}, AuthUser>(response, (model) => {
