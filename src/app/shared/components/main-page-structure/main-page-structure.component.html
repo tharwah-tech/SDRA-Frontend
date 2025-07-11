@@ -1,0 +1,43 @@
+<div
+  class="flex flex-row justify-start items-start w-screen h-screen min-h-600px bg-[var(--accent-color)] rounded-20px"
+>
+  <!-- Desktop Sidenav -->
+  <app-home-page-sidenav
+    [currentUser]="currentUser"
+    [currentActiveTab]="currentActiveTab()"
+    class="h-full hidden md:block"
+  />
+
+  <!-- Mobile Sidenav Drawer -->
+  <div
+    class="fixed inset-0 z-50 bg-[var(--overlay-color)] transition-opacity duration-200"
+    *ngIf="isMobileSidenavOpen"
+    (click)="isMobileSidenavOpen = false"
+  >
+    <div
+      class="absolute left-0 top-0 h-full w-64 bg-[var(--accent-color)] transition-transform duration-300"
+      (click)="$event.stopPropagation()"
+      [ngClass]="{'-translate-x-full': !isMobileSidenavOpen, 'translate-x-0': isMobileSidenavOpen}"
+      style="transform: translateX(0);"
+    >
+      <app-home-page-sidenav
+        [currentUser]="currentUser"
+        [currentActiveTab]="currentActiveTab()"
+        class="h-full"
+      />
+    </div>
+  </div>
+  <div
+    class="flex flex-col gap-2 bg-[#FFF] w-full h-[calc(100%-2.5rem)] min-h-[calc(600px-2.5rem)] m-5 ml-0 p-5 rounded-[20px] overflow-hidden border-[2px] border-solid border-[#ECECEC]"
+  >
+  <div class="flex flex-row justify-start items-center w-full h-[44px]">
+    <button class="block md:hidden mr-4" aria-label="Open menu" (click)="toggleSidenav()">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+    <app-page-navigation-routes class="h-[44px]" [routesList]="routesLinks()" />
+  </div>
+    <ng-content class="h-full" select="[page-content]"></ng-content>
+  </div>
+</div>

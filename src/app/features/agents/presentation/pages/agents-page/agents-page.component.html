@@ -1,1 +1,8 @@
-<p>agents-page works!</p>
+<app-main-page-structure
+  [routesLinks]="[]"
+  [currentActiveTab]="SideNavTabs.SYSTEM_AGENTS"
+>
+  <ng-content page-content>
+    agents list cards
+  </ng-content>
+</app-main-page-structure>

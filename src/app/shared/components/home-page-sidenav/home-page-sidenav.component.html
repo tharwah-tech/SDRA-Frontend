@@ -1,3 +1,94 @@
-<div>
-  <div><h1> agents lab</h1></div>
+<div
+  class="flex flex-col justify-start items-start h-full w-[250px] py-[24px] gap-[24px]"
+>
+  <div class="flex flex-row justify-start items-center pt-[24px] px-[24px]">
+    <img
+      src="../../../../assets/images/Sdra-logo-White 1.svg"
+      alt="SDRA_LOGO"
+    />
+  </div>
+  <div class="flex flex-col w-full h-full justify-between items-start">
+    <div class="flex flex-col gap-[8px] w-full h-auto">
+      <app-sidnave-item
+        [isActive]="currentActiveTab() === SideNavTabs.SYSTEM_AGENTS"
+        tabTitle="Agents Lab"
+        icon="./../../../../assets/images/icons/SVG.svg"
+        iconActive="./../../../../assets/images/icons/SVG.svg"
+        [tabLink]="getTabNavigateList(SideNavTabs.SYSTEM_AGENTS)"
+        [isDisabled]="false"
+      />
+      <app-sidnave-item
+        [isActive]="currentActiveTab() === SideNavTabs.AI_AGENTS"
+        tabTitle="AI Agent"
+        icon="./../../../../assets/images/icons/user-square.svg"
+        iconActive="./../../../../assets/images/icons/user-square.svg"
+        [tabLink]="getTabNavigateList(SideNavTabs.AI_AGENTS)"
+        [isDisabled]="false"
+      />
+      <app-sidnave-item
+        [isActive]="currentActiveTab() === SideNavTabs.GYM"
+        tabTitle="Gym"
+        icon="./../../../../assets/images/icons/bar-chart-square-up.svg"
+        iconActive="./../../../../assets/images/icons/bar-chart-square-up.svg"
+        [tabLink]="getTabNavigateList(SideNavTabs.GYM)"
+        [isDisabled]="false"
+      />
+      <app-sidnave-item
+        [isActive]="currentActiveTab() === SideNavTabs.HOSPITAL"
+        tabTitle="Hospital"
+        icon="./../../../../assets/images/icons/activity-heart.svg"
+        iconActive="./../../../../assets/images/icons/activity-heart.svg"
+        [tabLink]="getTabNavigateList(SideNavTabs.HOSPITAL)"
+        [isDisabled]="false"
+      />
+      <app-sidnave-item
+        [isActive]="currentActiveTab() === SideNavTabs.GRAVEYARD"
+        tabTitle="Graveyard"
+        icon="./../../../../assets/images/icons/graveyard.svg"
+        iconActive="./../../../../assets/images/icons/graveyard.svg"
+        [tabLink]="getTabNavigateList(SideNavTabs.GRAVEYARD)"
+        [isDisabled]="false"
+      />
+      <app-sidnave-item
+        [isActive]="currentActiveTab() === SideNavTabs.SCHOOL"
+        tabTitle="School"
+        icon="./../../../../assets/images/icons/book-open-02.svg"
+        iconActive="./../../../../assets/images/icons/book-open-02.svg"
+        [tabLink]="getTabNavigateList(SideNavTabs.SCHOOL)"
+        [isDisabled]="false"
+      />
+      <app-sidnave-item
+        [isActive]="currentActiveTab() === SideNavTabs.ANALYTICS"
+        tabTitle="Analytics"
+        icon="./../../../../assets/images/icons/analytics.svg"
+        iconActive="./../../../../assets/images/icons/analytics.svg"
+        [tabLink]="getTabNavigateList(SideNavTabs.ANALYTICS)"
+        [isDisabled]="false"
+      />
+      <app-sidnave-item
+        [isActive]="currentActiveTab() === SideNavTabs.SETTINGS"
+        tabTitle="Settings"
+        icon="./../../../../assets/images/icons/settings-gear.svg"
+        iconActive="./../../../../assets/images/icons/settings-gear.svg"
+        [tabLink]="getTabNavigateList(SideNavTabs.SETTINGS)"
+        [isDisabled]="false"
+      />
+    </div>
+    <div
+      class="flex flex-row justify-start items-center w-full gap-[16px] px-[24px]"
+    >
+      <div
+        class="flex flex-row justify-center items-center w-[28px] h-[28px] bg-white rounded-full user-initials-txt"
+      >
+        {{ getInitials() }}
+      </div>
+      <div class="flex flex-col justify-start items-start">
+        <h1 class="username-txt">
+          {{ currentUser().first_name }} {{ currentUser().last_name }}
+        </h1>
+        <h3 class="user-plan-txt">{{ "Free Plan" }}</h3>
+        <!-- <h3 class="user-plan-txt">{{ currentUser().plan }}</h3> -->
+      </div>
+    </div>
+  </div>
 </div>
