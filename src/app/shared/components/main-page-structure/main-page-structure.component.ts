@@ -3,7 +3,7 @@ import { SideNavTabs } from '../../../core/enums/side-nave-tabs.enum';
 import { HomePageSidenavComponent } from '../home-page-sidenav/home-page-sidenav.component';
 import {
   PageNavigationRoutesComponent,
-  routeLink,
+  RouteLink,
 } from '../page-navigation-routes/page-navigation-routes.component';
 import { User } from '../../../features/authentication/domain/entities/auth-user.entity';
 import { Store } from '@ngrx/store';
@@ -25,7 +25,7 @@ export class MainPageStructureComponent implements OnInit {
   toggleSidenav() {
     this.isMobileSidenavOpen = !this.isMobileSidenavOpen;
   }
-  routesLinks = input.required<routeLink[]>();
+  routesLinks = input.required<RouteLink[]>();
   currentActiveTab = input.required<SideNavTabs>();
   currentUser$!: Observable<User | undefined>;
   currentUser!: User;

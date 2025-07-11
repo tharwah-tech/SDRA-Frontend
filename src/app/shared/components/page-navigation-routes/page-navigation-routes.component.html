@@ -1,1 +1,10 @@
-<p>page-navigation-routes works!</p>
+<div class="page-navigation-routes">
+  <ng-container
+    *ngFor="let route of routesList(); let i = index; let last = last"
+  >
+    <a [routerLink]="route.path">{{ route.label }}</a>
+    <mat-icon *ngIf="!last" class="separator"
+      ><img src="../../../../assets/images/icons/chevron-right.svg" alt=""
+    /></mat-icon>
+  </ng-container>
+</div>
