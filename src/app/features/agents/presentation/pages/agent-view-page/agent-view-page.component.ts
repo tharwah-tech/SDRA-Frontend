@@ -4,13 +4,11 @@ import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, input, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
 import { filter, tap } from 'rxjs';
 
 // Components
 import { AgentCardComponent } from '../../components/agent-card/agent-card.component';
+import { InterviewListComponent } from '../../components/interview-list/interview-list/interview-list.component';
 
 // Facades
 import { AgentsFacade } from '../../facades/agents.facade';
@@ -21,15 +19,24 @@ import { AgentEntity } from '../../../domain/entities/agent.entity';
 import { MainPageStructureComponent } from "../../../../../shared/components/main-page-structure/main-page-structure.component";
 import { RouteLink } from '../../../../../shared/components/page-navigation-routes/page-navigation-routes.component';
 import { SideNavTabs } from '../../../../../core/enums/side-nave-tabs.enum';
+
 @Component({
   selector: 'app-agent-view-page',
-  imports: [CommonModule, AgentCardComponent, MatProgressSpinnerModule, MainPageStructureComponent],
+  imports: [
+    CommonModule, 
+    AgentCardComponent, 
+    InterviewListComponent,  // Add this import
+    MatProgressSpinnerModule, 
+    MainPageStructureComponent
+  ],
   templateUrl: './agent-view-page.component.html',
   styleUrl: './agent-view-page.component.scss',
 })
 export class AgentViewPageComponent implements OnInit {
   SideNavTabs = SideNavTabs;
   lang = input.required<string>();
+  
+  // Agent observables
   agent$;
   agentLoading$;
   agentError$;
@@ -71,7 +78,7 @@ export class AgentViewPageComponent implements OnInit {
     // Load agent details
     this.agentsFacade.loadAgent(agentId);
     
-    // Load interviews (in a real app, you might filter by agent)
+    // Load interviews (could be filtered by agentId in future)
     this.interviewsFacade.loadInterviews();
   }
 
@@ -109,12 +116,11 @@ export class AgentViewPageComponent implements OnInit {
       )
       .subscribe();
   }
-  CurrentPagePath(): RouteLink[]{
+
+  CurrentPagePath(): RouteLink[] {
     return [
       { path: `/${this.lang()}/agents`, label: 'AI Agents' },
       { path: `/${this.lang()}/agents/agent/${this.id()}`, label: this.selectedAgent?.name || 'Agent Details' }
     ];
   }
 }
-
-

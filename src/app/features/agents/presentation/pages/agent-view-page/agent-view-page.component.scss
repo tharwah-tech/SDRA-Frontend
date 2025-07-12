@@ -1,16 +1,53 @@
-    .agents-container {
-      // padding: 2rem;
+.agent-view-container {
+  padding: 0;
+  min-height: 100vh;
+
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+  }
+
+  .agent-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    .agent-details-section {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+      border: 1px solid #e5e7eb;
     }
 
-    .loading-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 400px;
-    }
+    .agent-interviews-section {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+      border: 1px solid #e5e7eb;
+      overflow: hidden;
 
-    .agents-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
-      gap: 1.5rem;
+      app-interview-list {
+        display: block;
+        width: 100%;
+      }
     }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .agent-view-container {
+    .agent-content {
+      gap: 1rem;
+      
+      .agent-details-section,
+      .agent-interviews-section {
+        border-radius: 8px;
+        padding: 1rem;
+      }
+    }
+  }
+}

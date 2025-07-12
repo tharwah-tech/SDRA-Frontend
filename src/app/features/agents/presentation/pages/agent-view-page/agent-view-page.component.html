@@ -1,18 +1,26 @@
-
 <app-main-page-structure
   [routesLinks]="CurrentPagePath()"
   [currentActiveTab]="SideNavTabs.SYSTEM_AGENTS"
 >
   <ng-content page-content>
-    <div class="agents-container">
-  <div *ngIf="loading$ | async" class="loading-container">
-    <mat-spinner></mat-spinner>
-  </div>
+    <div class="agent-view-container">
+      <!-- Loading State -->
+      <div *ngIf="agentLoading$ | async" class="loading-container">
+        <mat-spinner></mat-spinner>
+      </div>
 
-  <div *ngIf="!(loading$ | async)" class="agents-grid">
-    <app-agent-card [agent]="selectedAgent!"> </app-agent-card>
-  </div>
-</div>
+      <!-- Main Content -->
+      <div *ngIf="!(agentLoading$ | async)" class="agent-content">
+        <!-- Agent Details Section -->
+        <div class="agent-details-section mb-6">
+          <app-agent-card [agent]="selectedAgent!"></app-agent-card>
+        </div>
+
+        <!-- Agent Interviews Section -->
+        <div class="agent-interviews-section">
+          <app-interview-list></app-interview-list>
+        </div>
+      </div>
+    </div>
   </ng-content>
 </app-main-page-structure>
-
