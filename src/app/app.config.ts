@@ -105,14 +105,7 @@ export const appConfig: ApplicationConfig = {
       provide: AUTH_REPOSITORY,
       useClass: AuthService,
     },
-    {
-      provide: AGENTS_REPOSITORY,
-      useClass: environment.production ? AgentsService : AgentsMockService,
-    },
-    {
-      provide: INTERVIEWS_REPOSITORY,
-      useClass: InterviewsService,
-    },
+
     // Animation providers
     provideAnimations(),
     provideAnimationsAsync(),

@@ -24,7 +24,7 @@ export class InterviewsService implements InterviewsRepository {
     this.apiUrl = `${this.baseUrl}/agents_lab/interviews`;
     this.headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': 'Token cf1104de4961e3d367de709ba2c4a7a1e09c6dd2'
+      'Authorization': 'Token 0e1034d8fd7ca52f2e3a346117f9af22e6925111'
     });
   }
 
