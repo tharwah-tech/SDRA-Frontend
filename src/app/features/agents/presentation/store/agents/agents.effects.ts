@@ -3,10 +3,10 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { map, mergeMap, catchError, tap } from 'rxjs/operators';
 import { AgentsActions } from './agents.actions';
-import { GetAgentsUseCaseService } from '../../application/use-case/get-agents.use-case.service';
-import { GetAgentByIdUseCaseService } from '../../application/use-case/get-agent-by-id.use-case.service';
-import { ConfigureAgentUseCaseService } from '../../application/use-case/configure-agent.use-case.service';
-import { AgentMapper } from '../../application/mappers/agent.mapper';
+import { GetAgentsUseCaseService } from '../../../application/use-case/get-agents.use-case.service';
+import { GetAgentByIdUseCaseService } from '../../../application/use-case/get-agent-by-id.use-case.service';
+import { ConfigureAgentUseCaseService } from '../../../application/use-case/configure-agent.use-case.service';
+import { AgentMapper } from '../../../application/mappers/agent.mapper';
 import { Router } from '@angular/router';
 
 @Injectable()

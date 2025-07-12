@@ -1,11 +1,155 @@
- <div class="agents-container">
-      <div *ngIf="loading$ | async" class="loading-container">
-        <mat-spinner></mat-spinner>
-      </div>
-      
-      <div *ngIf="!(loading$ | async)" class="agents-grid">
-        <app-agent-card 
-          [agent]="selectedAgent!">
-        </app-agent-card>
+
+<div class="agent-view-page-container">
+  <!-- Loading State -->
+  <div *ngIf="agentLoading$ | async" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p class="loading-text">Loading agent details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="agentError$ | async as error" class="error-container">
+    <div class="error-content">
+      <mat-icon class="error-icon">error</mat-icon>
+      <h3>Error Loading Agent</h3>
+      <p>{{ error }}</p>
+      <button mat-raised-button color="primary" (click)="onRefreshData()">
+        <mat-icon>refresh</mat-icon>
+        Retry
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!(agentLoading$ | async) && !(agentError$ | async)" class="main-content">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <div class="header-info">
+          <h1 class="page-title">Agent Details</h1>
+          <p class="page-subtitle" *ngIf="selectedAgent">
+            Viewing details for {{ selectedAgent.name }}
+          </p>
+        </div>
+        <div class="header-actions">
+          <button 
+            mat-icon-button 
+            matTooltip="Refresh data"
+            (click)="onRefreshData()"
+            class="refresh-btn">
+            <mat-icon>refresh</mat-icon>
+          </button>
+          <button 
+            mat-button 
+            color="primary" 
+            (click)="onEditAgent()"
+            *ngIf="selectedAgent">
+            <mat-icon>edit</mat-icon>
+            Edit Agent
+          </button>
+          <button 
+            mat-button 
+            color="warn" 
+            (click)="onDeleteAgent()"
+            *ngIf="selectedAgent">
+            <mat-icon>delete</mat-icon>
+            Delete Agent
+          </button>
+        </div>
       </div>
     </div>
+
+    <!-- Content Tabs -->
+    <div class="content-tabs">
+      <mat-tab-group mat-align-tabs="start" class="agent-tabs">
+        <!-- Agent Overview Tab -->
+        <mat-tab label="Overview">
+          <ng-template matTabContent>
+            <div class="tab-content overview-tab">
+              <div class="agent-details-section">
+                <app-agent-card 
+                  *ngIf="selectedAgent"
+                  [agent]="selectedAgent"
+                  class="agent-card">
+                </app-agent-card>
+                
+                <div *ngIf="!selectedAgent" class="no-agent-message">
+                  <mat-icon class="no-agent-icon">person_off</mat-icon>
+                  <h3>No Agent Selected</h3>
+                  <p>Please select an agent to view its details.</p>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </mat-tab>
+
+        <!-- Interviews Tab -->
+        <mat-tab label="Interviews">
+          <ng-template matTabContent>
+            <div class="tab-content interviews-tab">
+              <div class="interviews-section">
+                <div class="section-header">
+                  <h2 class="section-title">Agent Interviews</h2>
+                  <p class="section-subtitle">
+                    Manage and monitor interviews conducted by this agent
+                  </p>
+                </div>
+                
+                <div class="interviews-content">
+                  <app-interview-list></app-interview-list>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </mat-tab>
+
+        <!-- Configuration Tab -->
+        <mat-tab label="Configuration">
+          <ng-template matTabContent>
+            <div class="tab-content configuration-tab">
+              <div class="configuration-section">
+                <div class="section-header">
+                  <h2 class="section-title">Agent Configuration</h2>
+                  <p class="section-subtitle">
+                    Configure agent settings and behavior
+                  </p>
+                </div>
+                
+                <div class="configuration-content">
+                  <div class="coming-soon">
+                    <mat-icon class="coming-soon-icon">settings</mat-icon>
+                    <h3>Configuration Panel</h3>
+                    <p>Agent configuration options will be available here.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </mat-tab>
+
+        <!-- Analytics Tab -->
+        <mat-tab label="Analytics">
+          <ng-template matTabContent>
+            <div class="tab-content analytics-tab">
+              <div class="analytics-section">
+                <div class="section-header">
+                  <h2 class="section-title">Performance Analytics</h2>
+                  <p class="section-subtitle">
+                    View agent performance metrics and insights
+                  </p>
+                </div>
+                
+                <div class="analytics-content">
+                  <div class="coming-soon">
+                    <mat-icon class="coming-soon-icon">analytics</mat-icon>
+                    <h3>Analytics Dashboard</h3>
+                    <p>Performance metrics and analytics will be displayed here.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

@@ -1,13 +1,9 @@
 export interface PaginatedModel<T> {
-  items: T[];
-  pageNumber: number;
-  pageSize: number;
-  totalCount: number;
-  totalPages: number;
-  hasPreviousPage: boolean;
-  hasNextPage: boolean;
-  firstItemIndex: number;
-  lastItemIndex: number;
+  total_count: number;
+  pages_count: number;
+  current_page: number;
+  current_page_size: number;
+  results: T[];
 }
 export function isPaginatedModel<T>(obj: any): obj is PaginatedModel<T> {
   return (

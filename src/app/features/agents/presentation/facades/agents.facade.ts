@@ -1,11 +1,10 @@
-// A facade service to simplify component interaction with the store
 
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AgentEntity } from '../../domain/entities/agent.entity';
-import { AgentsActions } from '../store/agents.actions';
-import { selectAllAgents, selectSelectedAgent, selectAgentsLoading, selectAgentsError } from '../store/agents.selectors';
+import { selectAllAgents, selectSelectedAgent, selectAgentsLoading, selectAgentsError } from '../store/agents/agents.selectors';
+import { AgentsActions } from '../store/agents/agents.actions';
 
 @Injectable({
   providedIn: 'root'

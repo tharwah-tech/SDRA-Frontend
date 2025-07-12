@@ -1,5 +1,5 @@
 import { createActionGroup, emptyProps, props } from "@ngrx/store";
-import { AgentEntity } from "../../domain/entities/agent.entity";
+import { AgentEntity } from "../../../domain/entities/agent.entity";
 import { AGENTS_FEATURE_KEY } from "./agents.state";
 
 export const AgentsActions = createActionGroup({
@@ -16,3 +16,6 @@ export const AgentsActions = createActionGroup({
     'Clear Selected Agent': emptyProps(),
   }
   });
+
+
+  
