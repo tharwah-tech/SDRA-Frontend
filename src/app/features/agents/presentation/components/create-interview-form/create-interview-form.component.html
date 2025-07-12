@@ -1,0 +1,228 @@
+<div class="flex flex-col items-start justify-start w-full h-full gap-4">
+  <h1 class="page-title-txt">Create New Interview</h1>
+  <form
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()"
+    class="w-full max-w-[996px] flex flex-col justify-start items-start gap-4"
+  >
+    <mat-card
+      name="candidate-information"
+      class="flex flex-col w-full gap-2 p-4 bg-white !rounded-lg"
+      [formGroupName]="'CandidateInformationFormGroup'"
+    >
+      <mat-card-title
+        class="!flex !flex-row !justify-start !items-center !gap-2"
+        ><mat-icon
+          ><img
+            src="../../../../../../assets/images/icons/user-01.svg"
+            alt="user-icon"
+        /></mat-icon>
+        Candidate Information</mat-card-title
+      >
+      <mat-card-content>
+        <!-- full name and email -->
+        <div class="flex flex-row w-full gap-2">
+          <div class="flex flex-col w-full gap-1">
+            <label mat-label class="field-label-txt">Full Name *</label>
+            <mat-form-field appearance="outline" class="w-full">
+              <input
+                matInput
+                placeholder="Full Name"
+                formControlName="candidateFullName"
+                #candidateFullName
+              />
+              <mat-hint align="end"
+                >{{ candidateFullName.value.length }} / {{ maxTitle }}</mat-hint
+              >
+              <mat-error *ngIf="candidateFullNameRequired">
+                Full name is required
+              </mat-error>
+              <mat-error *ngIf="candidateFullNameMaxLength">
+                Full name must be at most {{ maxTitle }} chars long
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="flex flex-col w-full gap-1">
+            <label mat-label class="field-label-txt">Email *</label>
+            <mat-form-field appearance="outline" class="w-full">
+              <input
+                matInput
+                placeholder="Email"
+                formControlName="candidateEmail"
+                #candidateEmail
+              />
+              <mat-hint align="end"
+                >{{ candidateEmail.value.length }} / {{ maxTitle }}</mat-hint
+              >
+              <mat-error *ngIf="candidateEmailRequired">
+                Email is required
+              </mat-error>
+              <mat-error *ngIf="candidateEmailInvalid">
+                Email must be a valid email address
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <!-- phone number and gender -->
+        <div class="flex flex-row w-full gap-2">
+          <div class="flex flex-col w-full gap-1">
+            <label mat-label class="field-label-txt">Phone Number *</label>
+            <div class="flex gap-0">
+              <!-- Country Code Dropdown -->
+              <mat-form-field appearance="outline" class="w-32">
+                <mat-select
+                  formControlName="candidateCountryCode"
+                  placeholder="Code"
+                >
+                  <mat-option
+                    *ngFor="let country of countryPhoneCodes"
+                    [value]="country.code"
+                  >
+                    {{ country.label }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <!-- Phone Number Input -->
+              <mat-form-field appearance="outline" class="flex-1">
+                <input
+                  matInput
+                  placeholder="Phone Number"
+                  formControlName="candidatePhone"
+                  #candidatePhone
+                  type="tel"
+                />
+                <mat-hint align="end">
+                  {{ candidatePhone.value?.length || 0 }} / {{ maxTitle }}
+                </mat-hint>
+                <mat-error *ngIf="candidatePhoneRequired">
+                  Phone number is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="flex flex-col w-full gap-1">
+            <label mat-label class="field-label-txt">Gender *</label>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-select
+                formControlName="candidateGender"
+                placeholder="Select Gender"
+                #candidateGender
+              >
+                <mat-option
+                  *ngFor="let gender of GenderTypeValues"
+                  [value]="gender"
+                >
+                  {{ gender }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="candidateGenderRequired">
+                Gender is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card
+      name="job-information"
+      class="flex flex-col w-full gap-2 p-4 bg-white !rounded-lg"
+      [formGroupName]="'JobInformationFormGroup'"
+    >
+      <label mat-label class="field-label-txt">Job Title *</label>
+      <mat-form-field appearance="outline" class="w-full">
+        <input
+          matInput
+          placeholder="Job Title"
+          formControlName="jobTitle"
+          #jobTitle
+        />
+        <mat-hint align="end"
+          >{{ jobTitle.value.length }} / {{ maxTitle }}</mat-hint
+        >
+        <mat-error *ngIf="jobTitleRequired"> Job title is required </mat-error>
+        <mat-error *ngIf="jobTitleMaxLength">
+          Job title must be at most {{ maxTitle }} chars long
+        </mat-error>
+      </mat-form-field>
+      <label mat-label class="field-title-txt">Job Description *</label>
+      <mat-form-field appearance="outline" class="w-full h-auto">
+        <textarea
+          matInput
+          placeholder="Describe the role, responsibilities, and what you are looking for..."
+          formControlName="jobDescription"
+          cdkTextareaAutosize="true"
+          cdkAutosizeMinRows="4"
+          cdkAutosizeMaxRows="8"
+          #JobDescription
+        ></textarea>
+        <mat-hint align="end"
+          >{{ JobDescription.value.length }} / {{ maxDescription }}</mat-hint
+        >
+        <mat-error *ngIf="jobDescriptionRequired">
+          Job description is required
+        </mat-error>
+        <mat-error *ngIf="jobDescriptionMaxLength">
+          Job description must be at most {{ maxDescription }} chars long
+        </mat-error>
+      </mat-form-field>
+    </mat-card>
+    <mat-card
+      name="Interview-Questions"
+      class="flex flex-col w-full gap-2 p-4 bg-white !rounded-lg"
+      [formArrayName]="'InterviewQuestionsFormArray'"
+    >
+      <mat-card-title
+        class="!flex !flex-row !justify-start !items-center !gap-2"
+      >
+        <mat-icon
+          ><img
+            src="../../../../../../assets/images/icons/message-question-square.svg"
+            alt="user-icon"
+        /></mat-icon>
+        Interview Questions</mat-card-title
+      >
+      <mat-card-subtitle>
+        Ask specific, open-ended questions that allow candidates to showcase
+        their skills and experience. Saleh will
+      </mat-card-subtitle>
+      <mat-card-content>
+        <div class="flex flex-col w-full gap-2">
+          @for (question of interviewQuestions.controls; track $index) {
+          <ng-container>
+            <div class="flex flex-col w-full gap-1">
+              <label mat-label class="field-label-txt"
+                >Question {{ $index + 1 }}</label
+              >
+              <mat-form-field appearance="outline" class="w-full">
+                <input
+                  matInput
+                  [placeholder]="'Enter your question here'"
+                  [formControlName]="$index"
+                />
+                <mat-error
+                  *ngIf="question.controls.question.hasError('required')"
+                >
+                  Question is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </ng-container>
+          }
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button
+          mat-stroked-button
+          color="accent"
+          (click)="addInterviewQuestion()"
+        >
+          Add Question
+        </button>
+      </mat-card-actions>
+    </mat-card>
+    <button mat-flat-button color="primary" type="submit">
+      Create Interview
+    </button>
+  </form>
+</div>

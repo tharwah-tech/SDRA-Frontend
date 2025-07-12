@@ -6,6 +6,7 @@ import { AGENTS_FEATURE_KEY } from './presentation/store/agents.state';
 import { agentsReducer } from './presentation/store/agents.reducer';
 import { provideEffects } from '@ngrx/effects';
 import { AgentsEffects } from './presentation/store/agents.effects';
+import { CreateInterviewPageComponent } from './presentation/pages/create-interview-page/create-interview-page.component';
 
 export const AGENTS_ROUTES: Routes = [
   {
@@ -23,4 +24,10 @@ export const AGENTS_ROUTES: Routes = [
     title: 'Agent Details',
     pathMatch: 'full',
   },
+  {
+    path: 'agent/:id/create-interview',
+    component: CreateInterviewPageComponent,
+    title: 'Create Interview',
+    pathMatch: 'full',
+  }
 ];

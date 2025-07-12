@@ -1,6 +1,5 @@
 import { Component, input } from '@angular/core';
 import { AgentSummary } from '../../../domain/entities/agent.entity';
-import { f } from '../../../../../../../node_modules/@angular/material/icon-module.d-COXCrhrh';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -16,7 +15,7 @@ import { AgentType } from '../../../../../core/enums/agents-type.enum';
 export class AgentSummaryCardComponent {
   agent = input.required<AgentSummary>();
   AgentType = AgentType;
-  constructor(private route: ActivatedRoute) {
+  constructor() {
     // You can initialize any additional properties or services here if needed
   }
 }

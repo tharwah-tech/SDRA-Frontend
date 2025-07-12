@@ -1,0 +1,8 @@
+<app-main-page-structure
+  [routesLinks]="CurrentPagePath()"
+  [currentActiveTab]="SideNavTabs.SYSTEM_AGENTS"
+>
+  <ng-content page-content>
+    <app-create-interview-form class="w-full h-full overflow-auto" />
+  </ng-content>
+</app-main-page-structure>

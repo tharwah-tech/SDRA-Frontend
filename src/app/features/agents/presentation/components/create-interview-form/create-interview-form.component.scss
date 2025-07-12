@@ -1,0 +1,42 @@
+.page-title-txt {
+  color: #000;
+  font-family: Inter;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24.5px; /* 122.5% */
+}
+.field-label-txt {
+  color: var(--Gray-700, #414651);
+
+  /* Text sm/Medium */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px; /* 142.857% */
+}
+/* Custom styles for the integrated approach */
+.phone-field-container {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  transition: border-color 0.3s ease;
+}
+
+.phone-field-container:focus-within {
+  border-color: #3f51b5;
+  box-shadow: 0 0 0 1px #3f51b5;
+}
+
+.phone-field-container .mat-select {
+  border: none !important;
+  outline: none !important;
+}
+
+.phone-field-container input {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
