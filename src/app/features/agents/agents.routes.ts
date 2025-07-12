@@ -5,6 +5,7 @@ import { AgentViewPageComponent } from './presentation/pages/agent-view-page/age
 import { AgentsPageComponent } from './presentation/pages/agents-page/agents-page.component';
 import { CreateAgentPageComponent } from './presentation/pages/create-agent-page/create-agent-page.component';
 import { agentsFeatureProviders } from './agents.providers';
+import { CreateInterviewPageComponent } from './presentation/pages/create-interview-page/create-interview-page.component';
 
 export const AGENTS_ROUTES: Routes = [
   {
@@ -29,6 +30,12 @@ export const AGENTS_ROUTES: Routes = [
       {
         path: '**',
         redirectTo: '',
+      },
+      {
+        path: 'agent/:id/create-interview',
+        component: CreateInterviewPageComponent,
+        title: 'Create Interview',
+        pathMatch: 'full',
       },
     ],
   },
