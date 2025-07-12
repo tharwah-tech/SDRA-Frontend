@@ -1,12 +1,12 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+// Updated Agent Card Component TypeScript
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
-import { MatBadgeModule } from '@angular/material/badge';
+import { MatButtonModule } from '@angular/material/button';
 import { TranslateModule } from '@ngx-translate/core';
-import { AgentEntity, OutputType } from '../../../domain/entities/agent.entity';
+
+import { AgentEntity, SupportedOutput, OutputType } from '../../../domain/entities/agent.entity';
 
 @Component({
   selector: 'app-agent-card',
@@ -14,48 +14,49 @@ import { AgentEntity, OutputType } from '../../../domain/entities/agent.entity';
   imports: [
     CommonModule,
     MatCardModule,
-    MatButtonModule,
-    MatChipsModule,
     MatIconModule,
-    MatBadgeModule,
+    MatButtonModule,
     TranslateModule
   ],
   templateUrl: './agent-card.component.html',
-  styleUrls: ['./agent-card.component.scss'] // Optional: include if you need Material overrides
+  styleUrls: ['./agent-card.component.scss']
 })
-export class AgentCardComponent {
-  @Input({ required: true }) agent!: AgentEntity;
+export class AgentCardComponent implements OnInit {
+  @Input() agent!: AgentEntity;
+  enabledOutputs: SupportedOutput[] = [];
 
-  // Helper to get icon for output type
+  ngOnInit(): void {
+    this.loadEnabledOutputs();
+  }
+
+  private loadEnabledOutputs(): void {
+    this.enabledOutputs = this.agent.supportedOutputs?.filter(output => output.isEnabled) || [];
+  }
+
   getOutputIcon(type: OutputType): string {
-    switch (type) {
-      case OutputType.VIDEO:
-        return 'videocam';
-      case OutputType.AUDIO:
-        return 'mic';
-      case OutputType.TRANSCRIPT:
-        return 'description';
-      default:
-        return 'help_outline';
-    }
+    const icons: { [key in OutputType]: string } = {
+      [OutputType.VIDEO]: 'videocam',
+      [OutputType.AUDIO]: 'mic',
+      [OutputType.TRANSCRIPT]: 'description'
+    };
+    return icons[type] || 'help';
   }
 
-  // Helper to get icon color class for output type
   getOutputIconClass(type: OutputType): string {
-    switch (type) {
-      case OutputType.VIDEO:
-        return 'text-blue-600';
-      case OutputType.AUDIO:
-        return 'text-green-600';
-      case OutputType.TRANSCRIPT:
-        return 'text-purple-600';
-      default:
-        return 'text-gray-600';
-    }
+    const classes: { [key in OutputType]: string } = {
+      [OutputType.VIDEO]: 'text-blue-600',
+      [OutputType.AUDIO]: 'text-green-600',
+      [OutputType.TRANSCRIPT]: 'text-purple-600'
+    };
+    return classes[type] || 'text-gray-600';
   }
 
-  // Helper to get enabled outputs
-  get enabledOutputs() {
-    return this.agent.supportedOutputs.filter(output => output.isEnabled);
+  getOutputIconBackgroundClass(type: OutputType): string {
+    const classes: { [key in OutputType]: string } = {
+      [OutputType.VIDEO]: 'bg-blue-50',
+      [OutputType.AUDIO]: 'bg-green-50',
+      [OutputType.TRANSCRIPT]: 'bg-purple-50'
+    };
+    return classes[type] || 'bg-gray-50';
   }
 }

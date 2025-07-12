@@ -1,19 +1,20 @@
-
+import { Component, OnInit, signal, computed, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Observable } from 'rxjs';
+
+// Angular Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatBadgeModule } from '@angular/material/badge';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { filter, tap } from 'rxjs';
+
+// Entities & Enums
 import { InterviewEntity, InterviewStatus } from '../../../../domain/entities/interview.entity';
+
+// Facades
 import { InterviewsFacade } from '../../../facades/interviews.facade';
 
 @Component({
@@ -23,35 +24,32 @@ import { InterviewsFacade } from '../../../facades/interviews.facade';
     CommonModule,
     MatButtonModule,
     MatIconModule,
-    MatListModule,
-    MatProgressSpinnerModule,
     MatSelectModule,
     MatFormFieldModule,
-    MatTooltipModule,
-    MatMenuModule,
-    MatBadgeModule,
-    MatPaginatorModule
+    MatProgressSpinnerModule,
+    MatTooltipModule
   ],
   templateUrl: './interview-list.component.html',
-  styleUrl: './interview-list.component.scss'
+  styleUrls: ['./interview-list.component.scss']
 })
 export class InterviewListComponent implements OnInit {
-  interviews$;
-  loading$;
-  error$;
-  count$;
-  pagination$;
+  // Component state
+  currentPage = signal(1);
+  pageSize = signal(10);
+  selectedStatus = signal('all');
 
-  selectedStatus = signal<string>('all');
-  currentPage = signal<number>(1); // 1-based for API
-  pageSize = signal<number>(10);
-  
-  readonly InterviewStatus = InterviewStatus;
-  readonly statusOptions = [
+  // Observables
+  interviews$: Observable<InterviewEntity[]>;
+  loading$: Observable<boolean>;
+  error$: Observable<any>;
+  count$: Observable<number>;
+
+  // Status filter options
+  statusOptions = [
     { value: 'all', label: 'All Status' },
     { value: InterviewStatus.SCHEDULED, label: 'Scheduled' },
-    { value: InterviewStatus.PROCESSED, label: 'Processed' },
     { value: InterviewStatus.IN_PROGRESS, label: 'In Progress' },
+    { value: InterviewStatus.PROCESSED, label: 'Processed' },
     { value: InterviewStatus.TAKEN, label: 'Taken' }
   ];
 
@@ -63,112 +61,130 @@ export class InterviewListComponent implements OnInit {
     this.loading$ = this.interviewsFacade.loading$;
     this.error$ = this.interviewsFacade.error$;
     this.count$ = this.interviewsFacade.count$;
-    this.pagination$ = this.interviewsFacade.pagination$;
   }
 
   ngOnInit(): void {
     this.loadInterviews();
-    this.setupSubscriptions();
-  }
-
-  private setupSubscriptions(): void {
-    this.error$
-      .pipe(
-        filter(error => error !== null),
-        takeUntilDestroyed(this.destroyRef),
-        tap(error => console.error('Interview loading error:', error))
-      )
-      .subscribe();
   }
 
   loadInterviews(): void {
     this.interviewsFacade.loadInterviews();
   }
 
+  // Status filter
   onStatusFilterChange(status: string): void {
     this.selectedStatus.set(status);
-    this.currentPage.set(1); // Reset to first page
-    // In a real app, you'd filter server-side
-    // For now, we'll use client-side filtering via selectors
+    this.currentPage.set(1);
+    this.loadInterviews();
   }
 
-  onPageChange(event: PageEvent): void {
-    this.currentPage.set(event.pageIndex + 1); // API uses 1-based indexing
-    this.pageSize.set(event.pageSize);
-    // TODO: Implement server-side pagination with the new API structure
-    // You would call: this.interviewsFacade.loadInterviews(page, pageSize)
-    console.log('Page changed:', { page: event.pageIndex + 1, pageSize: event.pageSize });
-  }
-
+  // Interview actions
   onNewInterview(): void {
-    // Navigate to create new interview page
+    // Navigate to new interview page or open modal
     console.log('Create new interview');
   }
 
   onViewInterview(interview: InterviewEntity): void {
-    console.log('View interview:', interview.id);
-    this.interviewsFacade.setSelectedInterview(interview);
+    console.log('View interview:', interview);
   }
 
   onPlayInterview(interview: InterviewEntity): void {
-    console.log('Play interview:', interview.id);
-    // Navigate to interview player/viewer
+    console.log('Play interview:', interview);
   }
 
   onShareInterview(interview: InterviewEntity): void {
-    console.log('Share interview:', interview.id);
-    // Implement share functionality
+    console.log('Share interview:', interview);
   }
 
   onDeleteInterview(interview: InterviewEntity): void {
-    if (confirm(`Are you sure you want to delete the interview with ${interview.candidateName}?`)) {
+    if (confirm('Are you sure you want to delete this interview?')) {
       this.interviewsFacade.deleteInterview(interview.id);
     }
   }
 
-  onUpdateStatus(interview: InterviewEntity, newStatus: InterviewStatus): void {
-    this.interviewsFacade.updateInterviewStatus(interview.id, newStatus);
+  onViewJob(interview: InterviewEntity, event: Event): void {
+    event.preventDefault();
+    console.log('View job details:', interview.jobTitle);
   }
 
-  getStatusColor(status: InterviewStatus): string {
-    switch (status) {
-      case InterviewStatus.SCHEDULED:
-        return 'text-blue-600 bg-blue-100';
-      case InterviewStatus.PROCESSED:
-        return 'text-green-600 bg-green-100';
-      case InterviewStatus.IN_PROGRESS:
-        return 'text-orange-600 bg-orange-100';
-      case InterviewStatus.TAKEN:
-        return 'text-purple-600 bg-purple-100';
-      default:
-        return 'text-gray-600 bg-gray-100';
+  // Pagination
+  onPageClick(page: number): void {
+    this.currentPage.set(page);
+    this.loadInterviews();
+  }
+
+  onPreviousPage(): void {
+    if (this.currentPage() > 1) {
+      this.currentPage.set(this.currentPage() - 1);
+      this.loadInterviews();
     }
+  }
+
+  onNextPage(): void {
+    if (this.currentPage() < this.getTotalPages()) {
+      this.currentPage.set(this.currentPage() + 1);
+      this.loadInterviews();
+    }
+  }
+
+  getTotalPages(): number {
+    // This should come from your facade/service
+    return Math.ceil(100 / this.pageSize()); // Placeholder - replace with actual count
+  }
+
+  getPageNumbers(): number[] {
+    const totalPages = this.getTotalPages();
+    const currentPage = this.currentPage();
+    const pages: number[] = [];
+
+    // Show up to 5 page numbers around current page
+    const maxPages = 5;
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, startPage + maxPages - 1);
+
+    // Adjust start page if we're near the end
+    if (endPage - startPage + 1 < maxPages) {
+      startPage = Math.max(1, endPage - maxPages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    return pages;
+  }
+
+  // Utility methods
+  trackByInterviewId(index: number, interview: InterviewEntity): string {
+    return interview.id;
+  }
+
+  formatDate(date: string | Date): string {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  }
+
+  getStatusClass(status: InterviewStatus): string {
+    const statusClasses: { [key in InterviewStatus]: string } = {
+      [InterviewStatus.SCHEDULED]: 'scheduled',
+      [InterviewStatus.IN_PROGRESS]: 'in-progress', 
+      [InterviewStatus.PROCESSED]: 'processed',
+      [InterviewStatus.TAKEN]: 'taken'
+    };
+    return statusClasses[status] || 'scheduled';
   }
 
   getStatusDisplayText(status: InterviewStatus): string {
-    switch (status) {
-      case InterviewStatus.SCHEDULED:
-        return 'Scheduled';
-      case InterviewStatus.PROCESSED:
-        return 'Processed';
-      case InterviewStatus.IN_PROGRESS:
-        return 'In Progress';
-      case InterviewStatus.TAKEN:
-        return 'Taken';
-      default:
-        return 'Unknown';
-    }
-  }
-
-  formatDate(date: Date): string {
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    }).format(date);
-  }
-
-  trackByInterviewId(index: number, interview: InterviewEntity): string {
-    return interview.id;
+    const statusTexts: { [key in InterviewStatus]: string } = {
+      [InterviewStatus.SCHEDULED]: 'Scheduled',
+      [InterviewStatus.IN_PROGRESS]: 'In Progress',
+      [InterviewStatus.PROCESSED]: 'Processed',
+      [InterviewStatus.TAKEN]: 'Taken'
+    };
+    return statusTexts[status] || status;
   }
 }

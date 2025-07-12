@@ -1,31 +1,28 @@
-
-<div class="interview-list-container p-6 bg-white rounded-lg shadow-sm">
+<!-- Interview List Component HTML - Exact Match to Screenshot -->
+<div class="interview-list-container">
+  
   <!-- Header Section -->
-  <div class="header-section flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-semibold text-gray-900">Interview list</h1>
-    <div class="header-actions flex items-center gap-4">
+  <div class="list-header">
+    <h2 class="list-title">Interview list</h2>
+    <div class="header-controls">
       <!-- Status Filter -->
       <mat-form-field appearance="outline" class="status-filter">
         <mat-select 
           [value]="selectedStatus()" 
-          (selectionChange)="onStatusFilterChange($event.value)"
-          class="min-w-[150px]">
+          (selectionChange)="onStatusFilterChange($event.value)">
           <mat-option 
             *ngFor="let option of statusOptions" 
             [value]="option.value">
-            <div class="flex items-center gap-2">
-              <mat-icon class="text-sm">filter_list</mat-icon>
-              {{ option.label }}
-            </div>
+            {{ option.label }}
           </mat-option>
         </mat-select>
+        <mat-icon matPrefix class="filter-icon">tune</mat-icon>
       </mat-form-field>
 
       <!-- New Interview Button -->
       <button 
         mat-raised-button 
-        color="primary" 
-        class="new-interview-btn"
+        class="new-interview-button"
         (click)="onNewInterview()">
         <mat-icon>add</mat-icon>
         New Interview
@@ -34,145 +31,116 @@
   </div>
 
   <!-- Loading State -->
-  <div *ngIf="loading$ | async" class="loading-container flex justify-center items-center py-12">
-    <mat-spinner diameter="50"></mat-spinner>
+  <div *ngIf="loading$ | async" class="loading-state">
+    <mat-spinner diameter="40"></mat-spinner>
   </div>
 
   <!-- Error State -->
-  <div *ngIf="error$ | async as error" class="error-container p-4 bg-red-50 border border-red-200 rounded-lg mb-4">
-    <div class="flex items-center gap-2 text-red-700">
-      <mat-icon class="text-red-600">error</mat-icon>
+  <div *ngIf="error$ | async as error" class="error-state">
+    <div class="error-content">
+      <mat-icon>error</mat-icon>
       <span>Error loading interviews: {{ error }}</span>
     </div>
-    <button 
-      mat-button 
-      color="primary" 
-      class="mt-2"
-      (click)="loadInterviews()">
+    <button mat-button (click)="loadInterviews()">
       <mat-icon>refresh</mat-icon>
       Retry
     </button>
   </div>
 
-  <!-- Interview List Table -->
-  <div *ngIf="!(loading$ | async)" class="interview-table-container">
+  <!-- Interview Table -->
+  <div *ngIf="!(loading$ | async)" class="interview-table">
+    
     <!-- Table Header -->
-    <div class="table-header grid grid-cols-12 gap-4 px-4 py-3 bg-gray-50 border-b border-gray-200 rounded-t-lg">
-      <div class="col-span-3 flex items-center gap-2 text-sm font-medium text-gray-700">
+    <div class="table-header">
+      <div class="header-cell candidate-name">
         <span>Candidate Name</span>
-        <mat-icon class="text-gray-400 cursor-pointer hover:text-gray-600">keyboard_arrow_down</mat-icon>
+        <mat-icon class="sort-arrow">keyboard_arrow_down</mat-icon>
       </div>
-      <div class="col-span-3 text-sm font-medium text-gray-700">Job Title</div>
-      <div class="col-span-2 text-sm font-medium text-gray-700">Date</div>
-      <div class="col-span-2 text-sm font-medium text-gray-700">Status</div>
-      <div class="col-span-2 text-sm font-medium text-gray-700">Actions</div>
+      <div class="header-cell job-title">Job Title</div>
+      <div class="header-cell date">Date</div>
+      <div class="header-cell status">Status</div>
+      <div class="header-cell actions">Actions</div>
     </div>
 
     <!-- Table Body -->
     <div class="table-body">
       <div 
         *ngFor="let interview of interviews$ | async; trackBy: trackByInterviewId" 
-        class="table-row grid grid-cols-12 gap-4 px-4 py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors">
+        class="table-row">
         
         <!-- Candidate Name -->
-        <div class="col-span-3 flex items-center">
-          <div class="candidate-info">
-            <div class="candidate-avatar w-8 h-8 rounded-full bg-red-500 flex items-center justify-center text-white text-sm font-medium mr-3">
-              {{ interview.candidateName.charAt(0).toUpperCase() }}
-            </div>
-            <span class="font-medium text-gray-900">{{ interview.candidateName }}</span>
-          </div>
+        <div class="table-cell candidate-name">
+          <span class="candidate-text">{{ interview.candidateName }}</span>
         </div>
 
         <!-- Job Title -->
-        <div class="col-span-3 flex items-center">
-          <span class="text-gray-700">{{ interview.jobTitle }}</span>
+        <div class="table-cell job-title">
+          <a href="#" class="job-link" (click)="onViewJob(interview, $event)">
+            {{ interview.jobTitle }}
+          </a>
         </div>
 
         <!-- Date -->
-        <div class="col-span-2 flex items-center">
-          <span class="text-gray-700">{{ formatDate(interview.creationDate) }}</span>
+        <div class="table-cell date">
+          <span class="date-text">{{ formatDate(interview.creationDate) }}</span>
         </div>
 
         <!-- Status -->
-        <div class="col-span-2 flex items-center">
+        <div class="table-cell status">
           <span 
-            class="status-badge px-3 py-1 rounded-full text-xs font-medium"
-            [class]="getStatusColor(interview.status)">
+            class="status-badge"
+            [ngClass]="getStatusClass(interview.status)">
             {{ getStatusDisplayText(interview.status) }}
           </span>
         </div>
 
         <!-- Actions -->
-        <div class="col-span-2 flex items-center gap-2">
-          <button 
-            mat-icon-button 
-            matTooltip="View interview"
-            (click)="onViewInterview(interview)"
-            class="action-btn hover:bg-gray-100">
-            <mat-icon class="text-gray-600">visibility</mat-icon>
-          </button>
+        <div class="table-cell actions">
+          <div class="action-buttons">
+            <button 
+              mat-icon-button 
+              matTooltip="View interview"
+              (click)="onViewInterview(interview)"
+              class="action-btn view-btn">
+              <mat-icon>visibility</mat-icon>
+            </button>
 
-          <button 
-            mat-icon-button 
-            matTooltip="Play interview"
-            (click)="onPlayInterview(interview)"
-            class="action-btn hover:bg-gray-100">
-            <mat-icon class="text-gray-600">play_arrow</mat-icon>
-          </button>
+            <button 
+              mat-icon-button 
+              matTooltip="Play interview"
+              (click)="onPlayInterview(interview)"
+              class="action-btn play-btn">
+              <mat-icon>play_arrow</mat-icon>
+            </button>
 
-          <button 
-            mat-icon-button 
-            matTooltip="Share interview"
-            (click)="onShareInterview(interview)"
-            class="action-btn hover:bg-gray-100">
-            <mat-icon class="text-gray-600">share</mat-icon>
-          </button>
+            <button 
+              mat-icon-button 
+              matTooltip="Share interview"
+              (click)="onShareInterview(interview)"
+              class="action-btn share-btn">
+              <mat-icon>share</mat-icon>
+            </button>
 
-          <!-- More Actions Menu -->
-          <button 
-            mat-icon-button 
-            [matMenuTriggerFor]="moreActionsMenu"
-            matTooltip="More actions"
-            class="action-btn hover:bg-gray-100">
-            <mat-icon class="text-gray-600">more_vert</mat-icon>
-          </button>
-
-          <mat-menu #moreActionsMenu="matMenu">
-            <button mat-menu-item (click)="onUpdateStatus(interview, InterviewStatus.SCHEDULED)">
-              <mat-icon>schedule</mat-icon>
-              <span>Mark as Scheduled</span>
+            <button 
+              mat-icon-button 
+              matTooltip="Delete interview"
+              (click)="onDeleteInterview(interview)"
+              class="action-btn delete-btn">
+              <mat-icon>delete</mat-icon>
             </button>
-            <button mat-menu-item (click)="onUpdateStatus(interview, InterviewStatus.PROCESSED)">
-              <mat-icon>check_circle</mat-icon>
-              <span>Mark as Processed</span>
-            </button>
-            <button mat-menu-item (click)="onUpdateStatus(interview, InterviewStatus.IN_PROGRESS)">
-              <mat-icon>pending</mat-icon>
-              <span>Mark as In Progress</span>
-            </button>
-            <button mat-menu-item (click)="onUpdateStatus(interview, InterviewStatus.TAKEN)">
-              <mat-icon>done_all</mat-icon>
-              <span>Mark as Taken</span>
-            </button>
-            <mat-divider></mat-divider>
-            <button mat-menu-item (click)="onDeleteInterview(interview)" class="text-red-600">
-              <mat-icon class="text-red-600">delete</mat-icon>
-              <span>Delete Interview</span>
-            </button>
-          </mat-menu>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Empty State -->
-    <div *ngIf="(interviews$ | async)?.length === 0" class="empty-state py-12 text-center">
-      <mat-icon class="text-gray-400 text-6xl mb-4">interview</mat-icon>
-      <h3 class="text-lg font-medium text-gray-900 mb-2">No interviews found</h3>
-      <p class="text-gray-600 mb-4">Get started by creating your first interview.</p>
+    <div *ngIf="(interviews$ | async)?.length === 0" class="empty-state">
+      <mat-icon class="empty-icon">assignment</mat-icon>
+      <h3>No interviews found</h3>
+      <p>Get started by creating your first interview.</p>
       <button 
         mat-raised-button 
-        color="primary" 
+        class="new-interview-button"
         (click)="onNewInterview()">
         <mat-icon>add</mat-icon>
         Create New Interview
@@ -181,15 +149,37 @@
   </div>
 
   <!-- Pagination -->
-  <div *ngIf="(interviews$ | async)?.length && (interviews$ | async)!.length > 0" class="pagination-container mt-6">
-    <mat-paginator 
-      [length]="count$ | async"
-      [pageSize]="pageSize()"
-      [pageIndex]="currentPage() - 1"
-      [pageSizeOptions]="[5, 10, 25, 50]"
-      [showFirstLastButtons]="true"
-      (page)="onPageChange($event)"
-      class="border-t border-gray-200 pt-4">
-    </mat-paginator>
+  <div *ngIf="(interviews$ | async)?.length && (interviews$ | async)!.length > 0" class="pagination-section">
+    <div class="pagination-controls">
+      <button 
+        mat-button 
+        class="pagination-nav"
+        [disabled]="currentPage() === 1"
+        (click)="onPreviousPage()">
+        <mat-icon>chevron_left</mat-icon>
+        Previous
+      </button>
+      
+      <div class="page-numbers">
+        <button 
+          *ngFor="let page of getPageNumbers()" 
+          mat-button 
+          class="page-number"
+          [class.active]="page === currentPage()"
+          (click)="onPageClick(page)">
+          {{ page }}
+        </button>
+        <span *ngIf="getTotalPages() > 5" class="page-ellipsis">...</span>
+      </div>
+
+      <button 
+        mat-button 
+        class="pagination-nav"
+        [disabled]="currentPage() === getTotalPages()"
+        (click)="onNextPage()">
+        Next
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
   </div>
 </div>
