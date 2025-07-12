@@ -6,7 +6,7 @@ export interface User {
     full_name:         string;
     organization:      string;
     organization_name: string;
-    department:        null;
+    department:        string | null;
     status:            string;
     date_joined:       Date;
 }

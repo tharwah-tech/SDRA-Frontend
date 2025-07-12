@@ -1,0 +1,18 @@
+.page-navigation-routes {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+
+  a {
+    color: #535862;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24.5px; /* 153.125% */
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

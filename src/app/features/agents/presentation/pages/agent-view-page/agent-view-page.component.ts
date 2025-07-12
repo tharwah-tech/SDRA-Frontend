@@ -18,25 +18,18 @@ import { InterviewsFacade } from '../../facades/interviews.facade';
 
 // Entities
 import { AgentEntity } from '../../../domain/entities/agent.entity';
-import { InterviewListComponent } from '../../components/interview-list/interview-list/interview-list.component';
-
+import { MainPageStructureComponent } from "../../../../../shared/components/main-page-structure/main-page-structure.component";
+import { RouteLink } from '../../../../../shared/components/page-navigation-routes/page-navigation-routes.component';
+import { SideNavTabs } from '../../../../../core/enums/side-nave-tabs.enum';
 @Component({
   selector: 'app-agent-view-page',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatProgressSpinnerModule,
-    MatTabsModule,
-    MatIconModule,
-    MatButtonModule,
-    AgentCardComponent,
-    InterviewListComponent
-  ],
+  imports: [CommonModule, AgentCardComponent, MatProgressSpinnerModule, MainPageStructureComponent],
   templateUrl: './agent-view-page.component.html',
   styleUrl: './agent-view-page.component.scss',
 })
 export class AgentViewPageComponent implements OnInit {
-  // Agent-related observables
+  SideNavTabs = SideNavTabs;
+  lang = input.required<string>();
   agent$;
   agentLoading$;
   agentError$;
@@ -116,49 +109,12 @@ export class AgentViewPageComponent implements OnInit {
       )
       .subscribe();
   }
-
-  // Public methods for component actions
-  onRefreshData(): void {
-    this.loadInitialData();
-  }
-
-  onEditAgent(): void {
-    if (this.selectedAgent) {
-      console.log('Navigate to edit agent:', this.selectedAgent.id);
-      // Implement navigation to edit agent page
-      // this.router.navigate(['/agents/edit', this.selectedAgent.id]);
-    }
-  }
-
-  onDeleteAgent(): void {
-    if (this.selectedAgent) {
-      const confirmMessage = `Are you sure you want to delete the agent "${this.selectedAgent.name}"?`;
-      if (confirm(confirmMessage)) {
-        console.log('Delete agent:', this.selectedAgent.id);
-        // Implement agent deletion
-        // this.agentsFacade.deleteAgent(this.selectedAgent.id);
-      }
-    }
-  }
-
-  onConfigureAgent(): void {
-    if (this.selectedAgent) {
-      console.log('Configure agent:', this.selectedAgent.id);
-      // Implement agent configuration
-      // this.router.navigate(['/agents/configure', this.selectedAgent.id]);
-    }
-  }
-
-  // Computed properties for template
-  get hasLoadingState(): boolean {
-    return !!(this.agentLoading$ || this.interviewsLoading$);
-  }
-
-  get hasErrorState(): boolean {
-    return !!(this.agentError$ || this.interviewsError$);
-  }
-
-  get isDataLoaded(): boolean {
-    return !!this.selectedAgent;
+  CurrentPagePath(): RouteLink[]{
+    return [
+      { path: `/${this.lang()}/agents`, label: 'AI Agents' },
+      { path: `/${this.lang()}/agents/agent/${this.id()}`, label: this.selectedAgent?.name || 'Agent Details' }
+    ];
   }
 }
+
+

@@ -1,7 +1,7 @@
-import { HttpErrorResponse } from "@angular/common/http";
-import { Observable, map, catchError, throwError } from "rxjs";
-import { ApiError } from "../../core/models/api-error.model";
-import { ApiResponse } from "../../core/models/api-response.model";
+import {HttpErrorResponse} from "@angular/common/http";
+import {catchError, map, Observable, throwError} from "rxjs";
+import {ApiError} from "../../core/models/api-error.model";
+import {ApiErrorRaw, ApiResponse, CustomHttpError, NormalizedApiError} from "../../core/models/api-response.model";
 
 export function handleResponse<M, E>(
   response: Observable<ApiResponse<M>>,
@@ -13,7 +13,7 @@ export function handleResponse<M, E>(
       if (!mResponse.success) {
         throw {
           message: mResponse.message || 'Failed to process response',
-          errors: mResponse.errors || [],
+          errors: mapAPIErrorRowIntoStringList(mResponse.errors),
           statusCode: mResponse.statusCode,
         } as ApiError;
       }
@@ -58,4 +58,16 @@ export function handleResponse<M, E>(
       }
     })
   );
+}
+function mapAPIErrorRowIntoStringList(apiError: ApiErrorRaw[]): string[] {
+  if (apiError.length === 0) { return [];}
+  const errorsStringLIst: string[] = []
+   apiError.map(error => {
+    const keys = Object.keys(error);
+    keys.map(key => {
+      const value: string = error[key];
+      errorsStringLIst.push(`${key}: ${value}`) ;
+    });
+  })
+  return errorsStringLIst;
 }

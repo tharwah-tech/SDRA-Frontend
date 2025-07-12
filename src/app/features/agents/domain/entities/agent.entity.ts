@@ -28,3 +28,11 @@ export enum OutputType {
   AUDIO = 'Audio',
   TRANSCRIPT = 'Transcript'
 }
+
+export interface AgentSummary {
+    id:          string;
+    name:        string;
+    description: string;
+    type:        string;
+    img_url:     string;
+}

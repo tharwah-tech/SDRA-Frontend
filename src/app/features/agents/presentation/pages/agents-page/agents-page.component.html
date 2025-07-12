@@ -1,1 +1,14 @@
-<p>agents-page works!</p>
+<app-main-page-structure
+  [routesLinks]="CurrentPagePath()"
+  [currentActiveTab]="SideNavTabs.SYSTEM_AGENTS"
+>
+  <ng-content page-content>
+    <div></div>
+    <div class="flex flex-row flex-wrap gap-4">
+      <app-agent-summary-card
+      *ngFor="let agent of agentsList"
+      [agent]="agent"
+      ></app-agent-summary-card>
+    </div>
+  </ng-content>
+</app-main-page-structure>

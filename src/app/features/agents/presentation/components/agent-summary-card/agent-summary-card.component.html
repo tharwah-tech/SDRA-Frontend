@@ -1,0 +1,22 @@
+<div class="agent-summary-card">
+  <img [src]="agent().img_url" alt="{{ agent().name }}" />
+  <div class="flex flex-col gap-2 p-2">
+    <div class="flex flex-row justify-between items-center gap-4">
+      <h1>{{ agent().name }}</h1>
+      <div
+        class="flex flex-row items-center justify-center px-1 py-1 rounded-lg border "
+        [ngClass]="{
+          'bg-[#EFF6FF] text-[#1447E6] border-[#BFDBFF]': agent().type === AgentType.Interviewer,
+          'bg-[#10B9810D] text-[#10B981] border-[#C5FFEC]': agent().type === AgentType.Summarizer,
+          'bg-[#F59E0B0D] text-[#F59E0B] border-[#FFF1D9]': agent().type === AgentType.RAG_Agent,
+          'bg-[#8B5CF60D] text-[#8B5CF6] border-[#E7DCFF]': agent().type === AgentType.Responder
+        }">
+        <span>{{ agent().type }}</span>
+      </div>
+    </div>
+    <p>{{ agent().description }}</p>
+    <div>
+      <a [routerLink]="['/en','agents','agent', agent().id]" class="flex items-center gap-2">View Agent <mat-icon>arrow_forward</mat-icon></a>
+    </div>
+  </div>
+</div>
