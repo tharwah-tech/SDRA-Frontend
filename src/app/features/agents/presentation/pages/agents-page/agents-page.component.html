@@ -3,6 +3,12 @@
   [currentActiveTab]="SideNavTabs.SYSTEM_AGENTS"
 >
   <ng-content page-content>
-    agents list cards
+    <div></div>
+    <div class="flex flex-row flex-wrap gap-4">
+      <app-agent-summary-card
+      *ngFor="let agent of agentsList"
+      [agent]="agent"
+      ></app-agent-summary-card>
+    </div>
   </ng-content>
 </app-main-page-structure>
