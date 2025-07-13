@@ -252,70 +252,40 @@ body {
   font-family: Inter, Roboto, "Helvetica Neue", sans-serif;
 }
 
-// This CSS targets all Angular Material form fields globally.
-// Adjusting these properties will set the default height to 44px.
-// It's important to use deep selectors or global overrides as Material components
-// often encapsulate their styles.
-
-mat-form-field {
-  // The .mat-mdc-text-field-wrapper often has default padding that adds to the height.
-  // Setting it to 0 helps in achieving the desired compact height.
-  .mat-mdc-text-field-wrapper {
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-  }
-
-  // This is the main flex container for the input and label.
-  // Setting its min-height and height directly controls the overall visible height.
+// More specific targeting
+.mat-mdc-form-field.mat-form-field-type-mat-select {
   .mat-mdc-form-field-flex {
     min-height: 44px !important;
-    height: 44px !important; // Ensures the height is exactly 44px
+    height: 44px !important;
   }
 
-  // The .mat-mdc-form-field-infix contains the actual input element.
-  // Adjusting its padding is crucial to vertically center the text
-  // within the new 44px height.
-  // (44px total height - ~18px font-size) / 2 = ~13px padding top/bottom
   .mat-mdc-form-field-infix {
-    padding-top: 13px !important;
-    padding-bottom: 13px !important;
-  }
-
-  // Optional: Adjust the subscript wrapper (for hints and errors)
-  // if you find it has too much top margin after reducing the field height.
-  .mat-mdc-form-field-subscript-wrapper {
-    margin-top: 0px !important; // Reduce or remove default margin
-  }
-
-  // Optional: Adjust the floating label position if it appears misaligned.
-  // This might require fine-tuning based on your specific font sizes and design.
-  // .mat-mdc-floating-label {
-  //   top: 12px !important; // Example: Adjust vertical position when not floating
-  //   transform: translateY(-0.75em) scale(0.75) !important; // Example: Adjust when floating
-  // }
-}
-
-// For select components, you might need additional adjustments:
-mat-select {
-  .mat-mdc-select-trigger {
+    padding: 0 !important;
     min-height: 44px !important;
-    height: 44px !important;
-    padding-top: 13px !important;
-    padding-bottom: 13px !important;
-  }
-  .mat-mdc-select-value {
-    line-height: 18px; // Adjust line height if content is cut off
-  }
-}
 
-// For datepicker input:
-mat-datepicker-toggle {
-  .mat-mdc-icon-button {
-    height: 44px !important;
-    width: 44px !important;
-    .mat-mdc-button-touch-target {
-      height: 44px !important;
-      width: 44px !important;
+    .mat-mdc-select {
+      min-height: 44px !important;
+
+      .mat-mdc-select-trigger {
+        min-height: 44px !important;
+        height: 44px !important;
+        padding: 0 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+
+        .mat-mdc-select-value {
+          line-height: normal !important;
+          flex: 1 !important;
+          display: flex !important;
+          align-items: center !important;
+        }
+
+        .mat-mdc-select-arrow-wrapper {
+          display: flex !important;
+          align-items: center !important;
+        }
+      }
     }
   }
 }
