@@ -5,25 +5,27 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { InterviewEntity } from '../../domain/entities/interview.entity';
 import { InterviewsActions } from '../store/interviews/interviews.actions';
-import { 
-  selectAllInterviews, 
-  selectSelectedInterview, 
-  selectInterviewsLoading, 
+import {
+  selectAllInterviews,
+  selectSelectedInterview,
+  selectInterviewsLoading,
   selectInterviewsError,
   selectInterviewsCount,
   selectInterviewsPagination,
   selectInterviewById,
   selectInterviewsByStatus
 } from '../store/interviews/interviews.selectors';
+import { InterviewDetailsEntity } from '../../domain/entities/interview-details.entity';
+import { ApiError } from '../../../../core/models/api-error.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InterviewsFacade {
   interviews$: Observable<InterviewEntity[]>;
-  selectedInterview$: Observable<InterviewEntity | null>;
+  selectedInterview$: Observable<InterviewDetailsEntity | null>;
   loading$: Observable<boolean>;
-  error$: Observable<string | null>;
+  error$: Observable<ApiError | null>;
   count$: Observable<number>;
   pagination$: Observable<{
     totalCount: number;
@@ -61,7 +63,7 @@ export class InterviewsFacade {
     this.store.dispatch(InterviewsActions.clearSelectedInterview());
   }
 
-  setSelectedInterview(interview: InterviewEntity): void {
+  setSelectedInterview(interview: InterviewDetailsEntity): void {
     this.store.dispatch(InterviewsActions.setSelectedInterview({ interview }));
   }
 

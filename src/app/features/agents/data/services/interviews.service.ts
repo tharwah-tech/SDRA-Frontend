@@ -1,17 +1,25 @@
-
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { InterviewsRepository } from '../../domain/repositories/interviews.repository';
-import { InterviewEntity, InterviewsResponse, InterviewStatus } from '../../domain/entities/interview.entity';
+import {
+  InterviewEntity,
+  InterviewsResponse,
+  InterviewStatus,
+} from '../../domain/entities/interview.entity';
 import { InterviewModel } from '../models/interview.model';
 import { ApiResponse } from '../../../../core/models/api-response.model';
 import { PaginatedModel } from '../../../../core/models/paginated.model';
 import { handleResponse } from '../../../../shared/utils/handle-reponses.util';
 import { BASE_API_URL } from '../../../../app.config';
+import {
+  InterviewDetailsEntity,
+  JobInfo,
+} from '../../domain/entities/interview-details.entity';
+import { InterviewDetailsModel } from '../models/interview-details.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class InterviewsService implements InterviewsRepository {
   private readonly apiUrl: string;
@@ -24,59 +32,65 @@ export class InterviewsService implements InterviewsRepository {
     this.apiUrl = `${this.baseUrl}/agents_lab/interviews`;
     this.headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': 'Token 0e1034d8fd7ca52f2e3a346117f9af22e6925111'
+      Authorization: 'Token 0e1034d8fd7ca52f2e3a346117f9af22e6925111',
     });
   }
 
   getInterviews(): Observable<InterviewsResponse> {
-    const response$ = this.http.get<ApiResponse<PaginatedModel<InterviewModel>>>(
-      this.apiUrl, 
-      { headers: this.headers }
-    );
-    
+    const response$ = this.http.get<
+      ApiResponse<PaginatedModel<InterviewModel>>
+    >(this.apiUrl, { headers: this.headers });
+
     return handleResponse<PaginatedModel<InterviewModel>, InterviewsResponse>(
       response$,
       this.mapPaginatedModelToEntity.bind(this)
     );
   }
 
-  getInterviewById(id: string): Observable<InterviewEntity> {
-    const response$ = this.http.get<ApiResponse<InterviewModel>>(
-      `${this.apiUrl}/${id}`, 
+  getInterviewById(id: string): Observable<InterviewDetailsEntity> {
+    const response$ = this.http.get<ApiResponse<InterviewDetailsModel>>(
+      `${this.apiUrl}/${id}`,
       { headers: this.headers }
     );
-    
-    return handleResponse<InterviewModel, InterviewEntity>(
+
+    return handleResponse<InterviewDetailsModel, InterviewDetailsEntity>(
       response$,
-      this.mapModelToEntity.bind(this)
+      this.mapDetailsModelToEntity.bind(this)
     );
   }
 
-  updateInterviewStatus(id: string, status: string): Observable<InterviewEntity> {
-    const response$ = this.http.patch<ApiResponse<InterviewModel>>(
-      `${this.apiUrl}/${id}`, 
-      { status }, 
+  updateInterviewStatus(
+    id: string,
+    status: string
+  ): Observable<InterviewDetailsEntity> {
+    const response$ = this.http.patch<ApiResponse<InterviewDetailsModel>>(
+      `${this.apiUrl}/${id}`,
+      { status },
       { headers: this.headers }
     );
-    
-    return handleResponse<InterviewModel, InterviewEntity>(
+
+    return handleResponse<InterviewDetailsModel, InterviewDetailsEntity>(
       response$,
-      this.mapModelToEntity.bind(this)
+      this.mapDetailsModelToEntity.bind(this)
     );
   }
 
   deleteInterview(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.headers });
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, {
+      headers: this.headers,
+    });
   }
 
   // Private mapper methods
-  private mapPaginatedModelToEntity(paginatedModel: PaginatedModel<InterviewModel>): InterviewsResponse {
+  private mapPaginatedModelToEntity(
+    paginatedModel: PaginatedModel<InterviewModel>
+  ): InterviewsResponse {
     return {
       totalCount: paginatedModel.total_count,
       pagesCount: paginatedModel.pages_count,
       currentPage: paginatedModel.current_page,
       currentPageSize: paginatedModel.current_page_size,
-      results: paginatedModel.results.map(this.mapModelToEntity.bind(this))
+      results: paginatedModel.results.map(this.mapModelToEntity.bind(this)),
     };
   }
 
@@ -86,8 +100,31 @@ export class InterviewsService implements InterviewsRepository {
       candidateName: model.candidate_name,
       jobTitle: model.job_title,
       creationDate: new Date(model.creation_date),
-      status: this.mapStringToStatus(model.status)
+      status: this.mapStringToStatus(model.status),
     };
+  }
+
+  private mapDetailsModelToEntity(
+    model: InterviewDetailsModel
+  ): InterviewDetailsEntity {
+    return {
+      id: model.id,
+      creation_date: model.created_date,
+      status: model.status,
+      candidate_info: {
+        full_name: model.candidate_name,
+        email: model.candidate_email,
+        phone: model.candidate_phone,
+        gender: model.candidate_gender,
+      },
+      job_info: {
+        title: model.job_title,
+        contract_type: model.job_contract_type,
+        job_description: model.job_description,
+        job_requirements: model.job_requirements,
+      } as JobInfo,
+      questions: model.questions,
+    } as InterviewDetailsEntity;
   }
 
   private mapStringToStatus(status: string): InterviewStatus {

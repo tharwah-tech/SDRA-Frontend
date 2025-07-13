@@ -29,6 +29,7 @@ import { GetInterviewsUseCaseService } from './application/use-case/get-intervie
 
 // Environment
 import { environment } from '../../../environments/environment';
+import { GetInterviewDetailsUseCaseService } from './application/use-case/get-interview-details.use-case.service';
 
 export const agentsFeatureProviders = [
   // ✅ 1. FIRST: Provide all services that effects depend on
@@ -48,6 +49,7 @@ export const agentsFeatureProviders = [
   GetAgentByIdUseCaseService,
   ConfigureAgentUseCaseService,
   GetInterviewsUseCaseService,
+  GetInterviewDetailsUseCaseService,
 
   // Direct Service Providers
   InterviewsService,

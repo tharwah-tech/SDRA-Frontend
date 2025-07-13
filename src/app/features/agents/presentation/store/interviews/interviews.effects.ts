@@ -7,6 +7,7 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { InterviewsActions } from './interviews.actions';
 import { GetInterviewsUseCaseService } from '../../../application/use-case/get-interviews.use-case.service';
 import { InterviewsService } from '../../../data/services/interviews.service';
+import { GetInterviewDetailsUseCaseService } from '../../../application/use-case/get-interview-details.use-case.service';
 
 @Injectable()
 export class InterviewsEffects {
@@ -19,13 +20,14 @@ export class InterviewsEffects {
   constructor(
     private actions$: Actions,
     private getInterviewsUseCase: GetInterviewsUseCaseService,
-    private interviewsService: InterviewsService
+    private interviewsService: InterviewsService,
+    private getInterviewDetailsUseCaseService: GetInterviewDetailsUseCaseService
   ) {
     console.log('InterviewsEffects constructor called');
     console.log('actions$:', this.actions$);
     console.log('getInterviewsUseCase:', this.getInterviewsUseCase);
     console.log('interviewsService:', this.interviewsService);
-    
+
     // ✅ Initialize effects INSIDE constructor after services are injected
     this.loadInterviews$ = createEffect(() =>
       this.actions$.pipe(
@@ -49,7 +51,7 @@ export class InterviewsEffects {
       this.actions$.pipe(
         ofType(InterviewsActions.loadInterview),
         switchMap(({ id }) =>
-          this.getInterviewsUseCase.getInterviewById(id).pipe(
+          this.getInterviewDetailsUseCaseService.execute(id).pipe(
             map((interview) =>
               InterviewsActions.loadInterviewSuccess({ interview })
             ),
