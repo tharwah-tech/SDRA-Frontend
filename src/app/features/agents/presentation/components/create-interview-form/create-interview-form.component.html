@@ -67,11 +67,11 @@
         <div class="flex flex-row w-full gap-2">
           <div class="flex flex-col w-full gap-1">
             <label mat-label class="field-label-txt">Phone Number *</label>
-            <div class="flex gap-0">
+            <div class="flex gap-2">
               <!-- Country Code Dropdown -->
-              <mat-form-field appearance="outline" class="w-32">
+              <mat-form-field appearance="outline" class="w-[70px]">
                 <mat-select
-
+                  formControlName="candidateCountryCode"
                   placeholder="Code"
                 >
                   <mat-option
@@ -85,6 +85,10 @@
 
               <!-- Phone Number Input -->
               <mat-form-field appearance="outline" class="flex-1">
+                <span matPrefix>{{
+                  form.get("CandidateInformationFormGroup.candidateCountryCode")
+                    ?.value
+                }}</span>
                 <input
                   matInput
                   placeholder="Phone Number"
@@ -129,43 +133,100 @@
       class="flex flex-col w-full gap-2 p-4 bg-white !rounded-lg"
       [formGroupName]="'JobInformationFormGroup'"
     >
-      <label mat-label class="field-label-txt">Job Title *</label>
-      <mat-form-field appearance="outline" class="w-full">
-        <input
-          matInput
-          placeholder="Job Title"
-          formControlName="jobTitle"
-          #jobTitle
-        />
-        <mat-hint align="end"
-          >{{ jobTitle.value.length }} / {{ maxTitle }}</mat-hint
+      <mat-card-title
+        class="!flex !flex-row !justify-start !items-center !gap-2"
+        ><mat-icon
+          ><img
+            src="../../../../../../assets/images/icons/briefcase-01.svg"
+            alt="job-info-icon"
+        /></mat-icon>
+        Job Information</mat-card-title
+      >
+      <mat-card-content>
+        <div class="flex flex-row w-full gap-2">
+          <div class="flex flex-col w-full gap-1">
+            <label mat-label class="field-label-txt">Job Title *</label>
+            <mat-form-field appearance="outline" class="w-full">
+              <input
+                matInput
+                placeholder="Job Title"
+                formControlName="jobTitle"
+                #jobTitle
+              />
+              <mat-hint align="end"
+                >{{ jobTitle.value.length }} / {{ maxTitle }}</mat-hint
+              >
+              <mat-error *ngIf="jobTitleRequired">
+                Job title is required
+              </mat-error>
+              <mat-error *ngIf="jobTitleMaxLength">
+                Job title must be at most {{ maxTitle }} chars long
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="flex flex-col w-full gap-1">
+            <label mat-label class="field-label-txt">Job Type *</label>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-select
+                formControlName="jobType"
+                placeholder="Select Job Type"
+                #jobType
+              >
+                <mat-option
+                  *ngFor="let jobType of JobTypeValues"
+                  [value]="jobType"
+                >
+                  {{ jobType }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="jobTypeRequired">
+                Job Type is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <label mat-label class="field-title-txt">Job Description *</label>
+        <mat-form-field appearance="outline" class="w-full h-auto">
+          <textarea
+            matInput
+            placeholder="Describe the role, responsibilities, and what you are looking for..."
+            formControlName="jobDescription"
+            cdkTextareaAutosize="true"
+            cdkAutosizeMinRows="4"
+            cdkAutosizeMaxRows="8"
+            #JobDescription
+          ></textarea>
+          <mat-hint align="end"
+            >{{ JobDescription.value.length }} / {{ maxDescription }}</mat-hint
+          >
+          <mat-error *ngIf="jobDescriptionRequired">
+            Job description is required
+          </mat-error>
+          <mat-error *ngIf="jobDescriptionMaxLength">
+            Job description must be at most {{ maxDescription }} chars long
+          </mat-error>
+        </mat-form-field>
+        <label mat-label class="field-title-txt"
+          >Job Requirements (Optional)</label
         >
-        <mat-error *ngIf="jobTitleRequired"> Job title is required </mat-error>
-        <mat-error *ngIf="jobTitleMaxLength">
-          Job title must be at most {{ maxTitle }} chars long
-        </mat-error>
-      </mat-form-field>
-      <label mat-label class="field-title-txt">Job Description *</label>
-      <mat-form-field appearance="outline" class="w-full h-auto">
-        <textarea
-          matInput
-          placeholder="Describe the role, responsibilities, and what you are looking for..."
-          formControlName="jobDescription"
-          cdkTextareaAutosize="true"
-          cdkAutosizeMinRows="4"
-          cdkAutosizeMaxRows="8"
-          #JobDescription
-        ></textarea>
-        <mat-hint align="end"
-          >{{ JobDescription.value.length }} / {{ maxDescription }}</mat-hint
-        >
-        <mat-error *ngIf="jobDescriptionRequired">
-          Job description is required
-        </mat-error>
-        <mat-error *ngIf="jobDescriptionMaxLength">
-          Job description must be at most {{ maxDescription }} chars long
-        </mat-error>
-      </mat-form-field>
+        <mat-form-field appearance="outline" class="w-full h-auto">
+          <textarea
+            matInput
+            placeholder="Required skills, experience, qualifications..."
+            formControlName="jobRequirements"
+            cdkTextareaAutosize="true"
+            cdkAutosizeMinRows="4"
+            cdkAutosizeMaxRows="8"
+            #JobRequirement
+          ></textarea>
+          <mat-hint align="end"
+            >{{ JobRequirement.value.length }} / {{ maxDescription }}</mat-hint
+          >
+          <mat-error *ngIf="jobRequirementsMaxLength">
+            Job Requirement must be at most {{ maxDescription }} chars long
+          </mat-error>
+        </mat-form-field>
+      </mat-card-content>
     </mat-card>
     <mat-card
       name="Interview-Questions"
@@ -191,15 +252,22 @@
           @for (question of interviewQuestions.controls; track $index) {
           <ng-container>
             <div class="flex flex-col w-full gap-1">
-              <label mat-label class="field-label-txt"
-                >Question {{ $index + 1 }}</label
-              >
-              <mat-form-field appearance="outline" class="w-full">
-                <input
+              <div class="flex flex-row justify-between items-center w-full">
+
+                <label mat-label class="field-label-txt"
+                  >Question {{ $index + 1 }}</label
+                >
+                <button mat-icon-button (click)="removeInterviewQuestion($index)"><mat-icon>remove</mat-icon></button>
+              </div>
+              <mat-form-field appearance="outline" class="w-full h-auto">
+                <textarea
                   matInput
-                  [placeholder]="'Enter your question here'"
-                  [formControlName]="$index"
-                />
+                  placeholder="Enter your question here"
+                  formControlName="$index"
+                  cdkTextareaAutosize="true"
+                  cdkAutosizeMinRows="4"
+                  cdkAutosizeMaxRows="8"
+                ></textarea>
                 <mat-error
                   *ngIf="question.controls.question.hasError('required')"
                 >

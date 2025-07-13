@@ -24,6 +24,7 @@ import { MatOptionModule } from '@angular/material/core';
 type CandidateInformationFormGroup = FormGroup<{
   candidateFullName: FormControl<string>;
   candidateEmail: FormControl<string>;
+  candidateCountryCode: FormControl<string>;
   candidatePhone: FormControl<string>;
   candidateGender: FormControl<GenderType>;
 }>;
@@ -119,10 +120,19 @@ export class CreateInterviewFormComponent {
     this.form = fb.group({
       CandidateInformationFormGroup: fb.group({
         candidateFullName: fb.control('', {
-          validators: [Validators.required],
+          validators: [
+            Validators.required,
+            Validators.maxLength(this.maxTitle),
+          ],
         }),
         candidateEmail: fb.control('', {
           validators: [Validators.required, Validators.email],
+        }),
+        candidateCountryCode: fb.control('+966', {
+          validators: [
+            Validators.required,
+            Validators.pattern('^\\+[0-9]{10}$'),
+          ],
         }),
         candidatePhone: fb.control('', {
           validators: [Validators.required, Validators.pattern('^[0-9]{10}$')],
@@ -132,12 +142,24 @@ export class CreateInterviewFormComponent {
         }),
       }),
       JobInformationFormGroup: fb.group({
-        jobTitle: fb.control('', { validators: [Validators.required] }),
-        jobDescription: fb.control('', { validators: [Validators.required] }),
-        jobType: fb.control<JobType>(JobType.FullTime, {
+        jobTitle: fb.control('', {
+          validators: [
+            Validators.required,
+            Validators.maxLength(this.maxTitle),
+          ],
+        }),
+        jobDescription: fb.control('', {
+          validators: [
+            Validators.required,
+            Validators.maxLength(this.maxDescription),
+          ],
+        }),
+        jobType: fb.control<JobType>('' as JobType, {
           validators: [Validators.required],
         }),
-        jobRequirements: fb.control('', { validators: [Validators.required] }),
+        jobRequirements: fb.control('', {
+          validators: [Validators.maxLength(this.maxDescription)],
+        }),
       }),
       InterviewQuestionsFormArray: fb.array<InterviewQuestionFormGroup>([]),
     });
@@ -242,9 +264,6 @@ export class CreateInterviewFormComponent {
 
   get jobRequirements() {
     return this.form.controls.JobInformationFormGroup.controls.jobRequirements;
-  }
-  get jobRequirementsRequired() {
-    return this.jobRequirements.hasError('required');
   }
   get jobRequirementsMaxLength() {
     return this.jobRequirements.hasError('maxlength');

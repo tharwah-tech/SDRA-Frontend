@@ -40,10 +40,10 @@ export class MainPageStructureComponent implements OnInit {
         tap((user) => {
           if (!user) {
             this.currentUser = {
-              id:                '0',
+              id:                '1',
               email:             'Ahmed.Magdi@Tharwah.net',
-              first_name:        'Bojy',
-              last_name:         'Ahmed',
+              first_name:        'Ahmed',
+              last_name:         'Magdi',
               full_name:         'Ahmed Magdi',
               organization:      'Tharwah',
               organization_name: 'Tharwah',
