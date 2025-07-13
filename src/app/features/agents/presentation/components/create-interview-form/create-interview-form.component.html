@@ -252,9 +252,13 @@
           @for (question of interviewQuestions.controls; track $index) {
           <ng-container>
             <div class="flex flex-col w-full gap-1">
-              <label mat-label class="field-label-txt"
-                >Question {{ $index + 1 }}</label
-              >
+              <div class="flex flex-row justify-between items-center w-full">
+
+                <label mat-label class="field-label-txt"
+                  >Question {{ $index + 1 }}</label
+                >
+                <button mat-icon-button (click)="removeInterviewQuestion($index)"><mat-icon>remove</mat-icon></button>
+              </div>
               <mat-form-field appearance="outline" class="w-full h-auto">
                 <textarea
                   matInput
