@@ -20,7 +20,7 @@
             </div>
             <h1 class="completion-title">Interview Completed!</h1>
             <p class="completion-subtitle">
-              Thank you for taking the time to complete this interview. Your responses have 
+              Thank you for taking the time to complete this interview. Your responses have
               been recorded successfully.
             </p>
           </div>
@@ -30,9 +30,9 @@
             <div class="progress-label">
               Interview submitted successfully - 100% Complete
             </div>
-            <mat-progress-bar 
-              mode="determinate" 
-              value="100" 
+            <mat-progress-bar
+              mode="determinate"
+              value="100"
               class="completion-progress">
             </mat-progress-bar>
           </div>
@@ -58,9 +58,9 @@
 
           <!-- Action Button -->
           <div class="action-section">
-            <button 
-              mat-raised-button 
-              color="primary" 
+            <button
+              mat-raised-button
+              color="primary"
               class="exit-button"
               (click)="exitInterview()">
               Exit Interview
@@ -93,11 +93,11 @@
             </div>
             <div class="info-row" *ngIf="selectedInterview">
               <span class="info-label">Position:</span>
-              <span class="info-value">{{ selectedInterview.jobTitle }}</span>
+              <span class="info-value">{{ selectedInterview.job_info.title }}</span>
             </div>
             <div class="info-row" *ngIf="selectedInterview">
               <span class="info-label">Candidate:</span>
-              <span class="info-value">{{ selectedInterview.candidateName }}</span>
+              <span class="info-value">{{ selectedInterview.candidate_info.full_name }}</span>
             </div>
           </div>
         </mat-card>

@@ -23,6 +23,7 @@ import { AgentEntity } from '../../../domain/entities/agent.entity';
 // Enums
 import { SideNavTabs } from '../../../../../core/enums/side-nave-tabs.enum';
 import { MainPageStructureComponent } from '../../../../../shared/components/main-page-structure/main-page-structure.component';
+import { InterviewDetailsEntity } from '../../../domain/entities/interview-details.entity';
 
 @Component({
   selector: 'app-complete-interview-page',
@@ -39,14 +40,14 @@ import { MainPageStructureComponent } from '../../../../../shared/components/mai
 })
 export class CompleteInterviewPageComponent implements OnInit {
   SideNavTabs = SideNavTabs;
-  
+
   // Input signals for route parameters
   lang = input.required<string>();
   id = input.required<string>(); // agent id
 
   // Component state
   selectedAgent: AgentEntity | null = null;
-  selectedInterview: InterviewEntity | null = null;
+  selectedInterview: InterviewDetailsEntity | null = null;
   interviewId: string | null = null;
   completionDate: string | null = null;
 
@@ -78,10 +79,10 @@ export class CompleteInterviewPageComponent implements OnInit {
 
   private loadInitialData(): void {
     const agentId = this.id();
-    
+
     // Load agent details
     this.agentsFacade.loadAgent(agentId);
-    
+
     // Load interview if interviewId is available
     if (this.interviewId) {
       this.interviewsFacade.loadInterview(this.interviewId);
@@ -118,7 +119,7 @@ export class CompleteInterviewPageComponent implements OnInit {
       .subscribe(params => {
         this.interviewId = params.get('interview-id');
         this.completionDate = params.get('completeDate');
-        
+
         // Reload interview if interviewId is available
         if (this.interviewId) {
           this.interviewsFacade.loadInterview(this.interviewId);
