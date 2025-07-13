@@ -2,10 +2,7 @@
   [routesLinks]="CurrentPagePath()"
   [currentActiveTab]="SideNavTabs.SYSTEM_AGENTS"
 >
-  <ng-content
-    page-content
-    class="flex flex-col justify-start items-start w-full h-full overflow-y-auto"
-  >
+  <ng-content page-content class="w-full h-full">
     <!-- candidate name , job title , interview statu, and share btn -->
     <div class="flex flex-row justify-between items-center w-full">
       <div class="flex flex-row justify-start items-center gap-2">
@@ -31,7 +28,7 @@
       </div>
       <div class="flex flex-row justify-start items-center gap-2">
         <div
-          class="flex justify-center items-center px-3 py-1 border border-[#BFDBFF] rounded-[8px] bg-[#EFF6FF] status-txt"
+          class="flex justify-center items-center px-3 py-[2px] border border-[#BFDBFF] rounded-[12px] bg-[#EFF6FF] status-txt"
         >
           {{ interviewDetails?.status }}
         </div>
@@ -45,53 +42,171 @@
         </button>
       </div>
     </div>
-
-    <!-- candidate ,and job info cards -->
-    <div class="flex flex-row justify-start items-start gap-4 w-full">
-      <mat-card class="flex-grow">
-        <mat-card-title class="!flex !flex-row !justify-start !items-center !gap-2"
-          ><mat-icon
-            ><img
-              src="../../../../../../assets/images/icons/user-01.svg"
-              alt="user-icon"
-          /></mat-icon>
-          Candidate Infromation</mat-card-title
-        >
-        <mat-card-content>
-          <div class="flex flex-col items-start justify-start w-full gap-2">
-            <h2 class="param-title-txt">Full Name</h2>
-            <span class="parm-value-txt">{{
-              interviewDetails?.candidate_info?.full_name
-            }}</span>
-          </div>
-        </mat-card-content>
-      </mat-card>
-      <mat-card class="flex-grow">
-        <mat-card-title class="!flex !flex-row !justify-start !items-center !gap-2"
-          ><mat-icon
-            ><img
-              src="../../../../../../assets/images/icons/briefcase-01.svg"
-              alt="briefcase-icon"
-          /></mat-icon>
-          Job Infromation</mat-card-title
-        >
-        <mat-card-content>
-          <div class="flex flex-col items-start justify-start w-full gap-2">
-            <h2 class="param-title-txt">Job Title</h2>
-            <span class="parm-value-txt">{{
-              interviewDetails?.job_info?.title
-            }}</span>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-
-    <!-- Loading indicator overlay -->
     <div
-      *ngIf="loading$ | async"
-      class="absolute inset-0 bg-white bg-opacity-70 z-10 flex items-center justify-center"
+      class="!flex !flex-col !justify-start !items-start !gap-4 w-full h-full overflow-y-auto"
     >
-      <mat-spinner diameter="40"></mat-spinner>
+      <!-- candidate ,and job info cards -->
+      <div class="flex flex-row justify-start items-start gap-4 w-full h-auto">
+        <mat-card
+          name="candidate-information"
+          class="flex flex-col flex-grow w-full h-full gap-2 p-4 bg-white !rounded-lg"
+        >
+          <mat-card-title
+            class="!flex !flex-row !justify-start !items-center !gap-2"
+            ><mat-icon
+              ><img
+                src="../../../../../../assets/images/icons/user-01.svg"
+                alt="user-icon"
+            /></mat-icon>
+            Candidate Infromation</mat-card-title
+          >
+          <mat-card-content
+            class="!flex !flex-col !justify-start !items-start !gap-4"
+          >
+            <div class="flex flex-col items-start justify-start w-full gap-1">
+              <h2 class="param-title-txt">Full Name</h2>
+              <span class="parm-value-txt">{{
+                interviewDetails?.candidate_info?.full_name
+              }}</span>
+            </div>
+            <div class="flex flex-col items-start justify-start w-full gap-1">
+              <h2 class="param-title-txt">E-mail Address</h2>
+              <span class="parm-value-txt">{{
+                interviewDetails?.candidate_info?.email
+              }}</span>
+            </div>
+            <div class="flex flex-col items-start justify-start w-full gap-1">
+              <h2 class="param-title-txt">Phone Number</h2>
+              <span class="parm-value-txt">{{
+                interviewDetails?.candidate_info?.phone
+              }}</span>
+            </div>
+            <div class="flex flex-col items-start justify-start w-full gap-1">
+              <h2 class="param-title-txt">Gender</h2>
+              <span class="parm-value-txt">{{
+                interviewDetails?.candidate_info?.gender
+              }}</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        <mat-card
+          name="job-information"
+          class="flex flex-col w-full h-full gap-2 p-4 bg-white !rounded-lg"
+        >
+          <mat-card-title
+            class="!flex !flex-row !justify-start !items-center !gap-2"
+            ><mat-icon
+              ><img
+                src="../../../../../../assets/images/icons/briefcase-01.svg"
+                alt="briefcase-icon"
+            /></mat-icon>
+            Job Infromation</mat-card-title
+          >
+          <mat-card-content
+            class="!flex !flex-col !justify-start !items-start !gap-4"
+          >
+            <div class="flex flex-col items-start justify-start w-full gap-1">
+              <h2 class="param-title-txt">Job Title</h2>
+              <span class="parm-value-txt">{{
+                interviewDetails?.job_info?.title
+              }}</span>
+            </div>
+            <div class="flex flex-col items-start justify-start w-full gap-1">
+              <h2 class="param-title-txt">Contract Type</h2>
+              <span class="parm-value-txt">{{
+                interviewDetails?.job_info?.contract_type
+              }}</span>
+            </div>
+            <div class="flex flex-col items-start justify-start w-full gap-1">
+              <h2 class="param-title-txt">Date Created</h2>
+              <span class="parm-value-txt">{{
+                interviewDetails?.creation_date | date : "MMM dd, yyy"
+              }}</span>
+            </div>
+            <div class="flex flex-col items-start justify-start w-full gap-1">
+              <h2 class="param-title-txt">Status</h2>
+              <div
+                class="flex justify-center items-center px-3 py-[2px] border border-[#BFDBFF] rounded-[12px] bg-[#EFF6FF] status-txt"
+              >
+                {{ interviewDetails?.status }}
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Job description ,and job Requiements cards -->
+      <div class="flex flex-row justify-start items-start gap-4 w-full h-auto">
+        <mat-card
+          name="candidate-information"
+          class="flex flex-col flex-grow w-full h-full gap-2 p-4 bg-white !rounded-lg"
+        >
+          <mat-card-title
+            class="!flex !flex-row !justify-start !items-center !gap-2"
+          >
+            Job Description</mat-card-title
+          >
+          <mat-card-content
+            class="!flex !flex-col !justify-start !items-start !gap-4"
+          >
+            {{ interviewDetails?.job_info?.job_description }}
+          </mat-card-content>
+        </mat-card>
+        <mat-card
+          name="candidate-information"
+          class="flex flex-col flex-grow w-full h-full gap-2 p-4 bg-white !rounded-lg"
+        >
+          <mat-card-title
+            class="!flex !flex-row !justify-start !items-center !gap-2"
+          >
+            Job Requirements</mat-card-title
+          >
+          <mat-card-content
+            class="!flex !flex-col !justify-start !items-start !gap-4"
+          >
+            {{ interviewDetails?.job_info?.job_requirements }}
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-card
+        name="candidate-information"
+        class="flex flex-col w-full h-auto gap-2 p-4 bg-white !rounded-lg"
+      >
+        <mat-card-title
+          class="!flex !flex-row !justify-start !items-center !gap-2"
+          ><mat-icon
+            ><img
+              src="../../../../../../assets/images/icons/message-question-square.svg"
+              alt="quistion-message-icon"
+          /></mat-icon>
+          Interview Questions</mat-card-title
+        >
+        <mat-card-content
+          class="!flex !flex-col !justify-start !items-start !gap-4"
+        >
+          @for (quistion of interviewDetails?.questions; track $index) {
+          <div
+            class="flex flex-row justify-start items-center w-full gap-4 px-[12px] py-[8px] bg-[#1E293C0D] rounded-[8px]"
+          >
+            <div
+              class="flex flex-row justify-center items-center p-[8px] w-[24px] h-[24px] rounded-full bg-[var(--primary-color)] text-[#fff]"
+            >
+              {{ quistion.question_number }}
+            </div>
+            <span class="quistion-txt ">{{ quistion.question }}</span>
+          </div>
+          }
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Loading indicator overlay -->
+      <div
+        *ngIf="loading$ | async"
+        class="absolute inset-0 bg-white bg-opacity-70 z-10 flex items-center justify-center"
+      >
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
     </div>
   </ng-content>
 </app-main-page-structure>
