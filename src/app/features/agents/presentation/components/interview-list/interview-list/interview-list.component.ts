@@ -16,6 +16,7 @@ import { InterviewEntity, InterviewStatus } from '../../../../domain/entities/in
 
 // Facades
 import { InterviewsFacade } from '../../../facades/interviews.facade';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-interview-list',
@@ -55,6 +56,7 @@ export class InterviewListComponent implements OnInit {
 
   constructor(
     private interviewsFacade: InterviewsFacade,
+    private router: Router,
     private destroyRef: DestroyRef
   ) {
     this.interviews$ = this.interviewsFacade.interviews$;
@@ -82,6 +84,9 @@ export class InterviewListComponent implements OnInit {
   onNewInterview(): void {
     // Navigate to new interview page or open modal
     console.log('Create new interview');
+    const currentUrl = this.router.url;
+    console.log('Current URL:', currentUrl);
+    this.router.navigate([currentUrl, 'create-interview']);
   }
 
   onViewInterview(interview: InterviewEntity): void {
@@ -171,7 +176,7 @@ export class InterviewListComponent implements OnInit {
   getStatusClass(status: InterviewStatus): string {
     const statusClasses: { [key in InterviewStatus]: string } = {
       [InterviewStatus.SCHEDULED]: 'scheduled',
-      [InterviewStatus.IN_PROGRESS]: 'in-progress', 
+      [InterviewStatus.IN_PROGRESS]: 'in-progress',
       [InterviewStatus.PROCESSED]: 'processed',
       [InterviewStatus.TAKEN]: 'taken'
     };
