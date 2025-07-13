@@ -93,7 +93,7 @@
                   type="tel"
                 />
                 <mat-hint align="end">
-                  {{ candidatePhone.value?.length || 0 }} / {{ maxTitle }}
+                  {{ candidatePhone.value.length || 0 }} / {{ maxTitle }}
                 </mat-hint>
                 <mat-error *ngIf="candidatePhoneRequired">
                   Phone number is required

@@ -6,6 +6,9 @@ import { AgentsPageComponent } from './presentation/pages/agents-page/agents-pag
 import { CreateAgentPageComponent } from './presentation/pages/create-agent-page/create-agent-page.component';
 import { agentsFeatureProviders } from './agents.providers';
 import { CreateInterviewPageComponent } from './presentation/pages/create-interview-page/create-interview-page.component';
+import { ViewInterviewDetailsPageComponent } from './presentation/pages/view-interview-details-page/view-interview-details-page.component';
+import { StartInterviewPageComponent } from './presentation/pages/start-interview-page/start-interview-page.component';
+import { CompleteInterviewPageComponent } from './presentation/pages/complete-interview-page/complete-interview-page.component';
 
 export const AGENTS_ROUTES: Routes = [
   {
@@ -18,7 +21,7 @@ export const AGENTS_ROUTES: Routes = [
         title: 'AI Agents',
       },
       {
-        path: 'create',
+        path: 'create-agent',
         component: CreateAgentPageComponent,
         title: 'Create Agent',
       },
@@ -27,15 +30,33 @@ export const AGENTS_ROUTES: Routes = [
         component: AgentViewPageComponent,
         title: 'Agent Details',
       },
-      {
-        path: '**',
-        redirectTo: '',
-      },
+
       {
         path: 'agent/:id/create-interview',
         component: CreateInterviewPageComponent,
         title: 'Create Interview',
-        pathMatch: 'full',
+      },
+      {
+        path: 'agent/:id/interview-details/:interviewId',
+        component: ViewInterviewDetailsPageComponent,
+        title: 'Interview Details',
+      },
+      {
+        path: 'agent/:id/StartInterview',
+        component: StartInterviewPageComponent,
+        title: 'Start Interview',
+      },
+      {
+        // The route for complete-interview with query parameters
+        path: 'agent/:id/complete-interview',
+        component: CompleteInterviewPageComponent,
+        title: 'Complete Interview',
+        // Query parameters like interview-id and completeDate are not defined in the path,
+        // but can be accessed in the component using ActivatedRoute's queryParamMap.
+      },
+      {
+        path: '**',
+        redirectTo: '',
       },
     ],
   },

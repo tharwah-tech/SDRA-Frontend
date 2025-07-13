@@ -32,7 +32,7 @@ import { environment } from '../../../environments/environment';
 
 export const agentsFeatureProviders = [
   // ✅ 1. FIRST: Provide all services that effects depend on
-  
+
   // Repository Implementations
   {
     provide: AGENTS_REPOSITORY,
@@ -42,22 +42,22 @@ export const agentsFeatureProviders = [
     provide: INTERVIEWS_REPOSITORY,
     useClass: InterviewsService,
   },
-  
+
   // Use Case Services
   GetAgentsUseCaseService,
   GetAgentByIdUseCaseService,
   ConfigureAgentUseCaseService,
   GetInterviewsUseCaseService,
-  
+
   // Direct Service Providers
   InterviewsService,
   AgentsService,
   AgentsMockService,
-  
+
   // ✅ 2. SECOND: Provide the store state
   provideState(AGENTS_FEATURE_KEY, agentsReducer),
   provideState(INTERVIEWS_FEATURE_KEY, interviewsReducer),
-  
+
   // ✅ 3. LAST: Provide effects AFTER all dependencies are available
   provideEffects([AgentsEffects, InterviewsEffects]),
 ];
