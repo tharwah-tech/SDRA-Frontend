@@ -1,1 +1,99 @@
-<p>start-interview-page works!</p>
+
+<div class="interview-container">
+  <div class="interview-card">
+    <!-- Loading State -->
+    <div *ngIf="loading()" class="loading-container">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p class="loading-text">Preparing your interview...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error() && !loading()" class="error-container">
+      <mat-icon class="error-icon">error</mat-icon>
+      <h3>Unable to Load Interview</h3>
+      <p class="error-message">{{ error() }}</p>
+      <button mat-raised-button color="primary" (click)="onRetry()">
+        <mat-icon>refresh</mat-icon>
+        Try Again
+      </button>
+    </div>
+
+    <!-- Interview Ready State -->
+    <div *ngIf="!loading() && !error() && interviewUrl()" class="interview-content">
+      <!-- Header -->
+      <div class="interview-header">
+        <h2>Senior Frontend Developer Interview</h2>
+        <p class="interview-subtitle">Welcome to your AI-powered interview with Saleh</p>
+      </div>
+
+      <!-- Instructions -->
+      <div class="interview-instructions">
+        <h3>Interview Instructions:</h3>
+        <ul class="instructions-list">
+          <li>You will be asked 5 questions about your experience and skills</li>
+          <li>Each question has a 5-minute time limit</li>
+          <li>Please speak clearly and look at the camera</li>
+          <li>You cannot skip any questions</li>
+          <li>The interview will be recorded for evaluation</li>
+        </ul>
+      </div>
+
+      <!-- Status Indicators -->
+      <div class="status-indicators">
+        <div class="status-item">
+          <mat-icon class="status-icon ready">videocam</mat-icon>
+          <span class="status-text">Camera Ready</span>
+        </div>
+        <div class="status-item">
+          <mat-icon class="status-icon ready">mic</mat-icon>
+          <span class="status-text">Microphone Ready</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button 
+          mat-raised-button 
+          color="primary" 
+          class="start-button"
+          (click)="onStartInterview()">
+          Start Interview
+        </button>
+        
+        <a 
+          mat-button 
+          color="accent" 
+          class="back-link"
+          [routerLink]="['../../../agent', routeSnapshot.snapshot.params['id']]">
+          Go Back
+        </a>
+      </div>
+
+      <!-- Interview URL Display (for debugging/admin purposes) -->
+      <div *ngIf="interviewUrl()" class="interview-url-container">
+        <h4>Interview Link:</h4>
+        <div class="url-display">
+          <input 
+            readonly 
+            [value]="interviewUrl()" 
+            class="url-input"
+            #urlInput>
+          <button 
+            mat-icon-button 
+            class="copy-button"
+            (click)="copyToClipboard(urlInput)">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Privacy Notice -->
+      <div class="privacy-notice">
+        <p>
+          By continuing, you agree to the recording and processing of this interview. 
+          Your privacy is protected and recordings are used solely for evaluation purposes.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

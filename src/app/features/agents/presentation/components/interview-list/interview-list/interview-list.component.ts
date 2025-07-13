@@ -12,11 +12,14 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Entities & Enums
-import { InterviewEntity, InterviewStatus } from '../../../../domain/entities/interview.entity';
+import {
+  InterviewEntity,
+  InterviewStatus,
+} from '../../../../domain/entities/interview.entity';
 
 // Facades
 import { InterviewsFacade } from '../../../facades/interviews.facade';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-interview-list',
@@ -28,10 +31,10 @@ import { Router } from '@angular/router';
     MatSelectModule,
     MatFormFieldModule,
     MatProgressSpinnerModule,
-    MatTooltipModule
+    MatTooltipModule,
   ],
   templateUrl: './interview-list.component.html',
-  styleUrls: ['./interview-list.component.scss']
+  styleUrls: ['./interview-list.component.scss'],
 })
 export class InterviewListComponent implements OnInit {
   // Component state
@@ -51,12 +54,13 @@ export class InterviewListComponent implements OnInit {
     { value: InterviewStatus.SCHEDULED, label: 'Scheduled' },
     { value: InterviewStatus.IN_PROGRESS, label: 'In Progress' },
     { value: InterviewStatus.PROCESSED, label: 'Processed' },
-    { value: InterviewStatus.TAKEN, label: 'Taken' }
+    { value: InterviewStatus.TAKEN, label: 'Taken' },
   ];
 
   constructor(
     private interviewsFacade: InterviewsFacade,
     private router: Router,
+    private route: ActivatedRoute,
     private destroyRef: DestroyRef
   ) {
     this.interviews$ = this.interviewsFacade.interviews$;
@@ -95,6 +99,23 @@ export class InterviewListComponent implements OnInit {
 
   onPlayInterview(interview: InterviewEntity): void {
     console.log('Play interview:', interview);
+
+    // Get the current agent ID from the route
+    const agentId = this.route.snapshot.params['id'];
+
+    if (!agentId) {
+      console.error('Agent ID not found in route parameters');
+      return;
+    }
+    console.log('Agent ID:', agentId);
+    console.log('Interview ID:', interview.id);
+    const currentUrl = this.router.url;
+    const urlSegments = currentUrl.split('/');
+    const lang = urlSegments[1] || 'en';
+    // Navigate to start-interview-page with interview_id as query parameter
+    this.router.navigate([`/${lang}/agents/agent/${agentId}/StartInterview`], {
+      queryParams: { interview_id: interview.id },
+    });
   }
 
   onShareInterview(interview: InterviewEntity): void {
@@ -169,7 +190,7 @@ export class InterviewListComponent implements OnInit {
     return dateObj.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
-      year: 'numeric'
+      year: 'numeric',
     });
   }
 
@@ -178,7 +199,7 @@ export class InterviewListComponent implements OnInit {
       [InterviewStatus.SCHEDULED]: 'scheduled',
       [InterviewStatus.IN_PROGRESS]: 'in-progress',
       [InterviewStatus.PROCESSED]: 'processed',
-      [InterviewStatus.TAKEN]: 'taken'
+      [InterviewStatus.TAKEN]: 'taken',
     };
     return statusClasses[status] || 'scheduled';
   }
@@ -188,7 +209,7 @@ export class InterviewListComponent implements OnInit {
       [InterviewStatus.SCHEDULED]: 'Scheduled',
       [InterviewStatus.IN_PROGRESS]: 'In Progress',
       [InterviewStatus.PROCESSED]: 'Processed',
-      [InterviewStatus.TAKEN]: 'Taken'
+      [InterviewStatus.TAKEN]: 'Taken',
     };
     return statusTexts[status] || status;
   }

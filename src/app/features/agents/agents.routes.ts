@@ -55,6 +55,13 @@ export const AGENTS_ROUTES: Routes = [
         // but can be accessed in the component using ActivatedRoute's queryParamMap.
       },
       {
+        path: 'agent/:id/StartInterview',
+        component: StartInterviewPageComponent,
+        title: 'Start Interview',
+        // This route expects interview_id as a query parameter
+        // Example: /agent/123/StartInterview?interview_id=456
+      },
+      {
         path: '**',
         redirectTo: '',
       },
