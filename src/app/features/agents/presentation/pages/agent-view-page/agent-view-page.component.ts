@@ -1,3 +1,4 @@
+import { AgentType } from './../../../../../core/enums/agents-type.enum';
 // src/app/features/agents/presentation/pages/agent-view-page/agent-view-page.component.ts
 
 import { CommonModule } from '@angular/common';
@@ -19,34 +20,37 @@ import { AgentEntity } from '../../../domain/entities/agent.entity';
 import { MainPageStructureComponent } from "../../../../../shared/components/main-page-structure/main-page-structure.component";
 import { RouteLink } from '../../../../../shared/components/page-navigation-routes/page-navigation-routes.component';
 import { SideNavTabs } from '../../../../../core/enums/side-nave-tabs.enum';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-agent-view-page',
   imports: [
-    CommonModule, 
-    AgentCardComponent, 
+    CommonModule,
+    AgentCardComponent,
     InterviewListComponent,  // Add this import
-    MatProgressSpinnerModule, 
-    MainPageStructureComponent
+    MatProgressSpinnerModule,
+    MainPageStructureComponent,
+    MatCardModule
   ],
   templateUrl: './agent-view-page.component.html',
   styleUrl: './agent-view-page.component.scss',
 })
 export class AgentViewPageComponent implements OnInit {
   SideNavTabs = SideNavTabs;
+  AgentType = AgentType;
   lang = input.required<string>();
-  
+
   // Agent observables
   agent$;
   agentLoading$;
   agentError$;
-  
+
   // Interview-related observables
   interviews$;
   interviewsLoading$;
   interviewsError$;
   interviewsCount$;
-  
+
   // Component state
   selectedAgent: AgentEntity | null = null;
   id = input.required<string>();
@@ -74,10 +78,10 @@ export class AgentViewPageComponent implements OnInit {
 
   private loadInitialData(): void {
     const agentId = this.id();
-    
+
     // Load agent details
     this.agentsFacade.loadAgent(agentId);
-    
+
     // Load interviews (could be filtered by agentId in future)
     this.interviewsFacade.loadInterviews();
   }

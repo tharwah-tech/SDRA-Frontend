@@ -10,16 +10,16 @@
       </div>
 
       <!-- Main Content -->
-      <div *ngIf="!(agentLoading$ | async)" class="agent-content">
+      <div *ngIf="!(agentLoading$ | async)" class="flex flex-col justify-start items-start gap-4 w-full h-full">
         <!-- Agent Details Section -->
-        <div class="agent-details-section mb-6">
-          <app-agent-card [agent]="selectedAgent!"></app-agent-card>
-        </div>
-
+          <app-agent-card [agent]="selectedAgent!" class=" w-full"></app-agent-card>
         <!-- Agent Interviews Section -->
-        <div class="agent-interviews-section">
-          <app-interview-list></app-interview-list>
-        </div>
+        <mat-card
+          class="flex fles-row justify-start items-start w-full p-4 !rounded-lg"
+          *ngIf="(agent$ | async)?.role === AgentType.Interviewer"
+        >
+          <app-interview-list class="w-full"></app-interview-list>
+        </mat-card>
       </div>
     </div>
   </ng-content>
