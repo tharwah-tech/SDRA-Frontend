@@ -12,11 +12,14 @@
       <!-- Main Content -->
       <div *ngIf="!(agentLoading$ | async)" class="flex flex-col justify-start items-start gap-4 w-full h-full">
         <!-- Agent Details Section -->
-          <app-agent-card [agent]="selectedAgent!" class=" w-full"></app-agent-card>
+        <div *ngIf="selectedAgent">
+          <app-agent-card [agent]="selectedAgent" class="w-full"></app-agent-card>
+        </div>
+        
         <!-- Agent Interviews Section -->
         <mat-card
           class="flex fles-row justify-start items-start w-full p-4 !rounded-lg"
-          *ngIf="(agent$ | async)?.role === AgentType.Interviewer"
+          *ngIf="selectedAgent?.role === 'Interviewer'"
         >
           <app-interview-list class="w-full"></app-interview-list>
         </mat-card>

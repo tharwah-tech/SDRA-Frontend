@@ -42,6 +42,7 @@ export class AgentsPageComponent implements OnInit, AfterViewInit {
   error$: Observable<ApiError | null>;
   agents$: Observable<AgentSummaryEntity[]>;
   agentsList!: AgentSummaryEntity[];
+  
   constructor(
     public translateService: TranslateService,
     public languageService: LanguageService,
@@ -55,7 +56,11 @@ export class AgentsPageComponent implements OnInit, AfterViewInit {
     this.loading$ = this.store.select(selectAgentsLoading);
     this.error$ = this.store.select(selectAgentsError);
   }
+  
   ngOnInit() {
+    // Move the dispatch here to avoid change detection issues
+    this.store.dispatch(AgentsActions.loadAgents());
+    
     this.agents$
       .pipe(
         takeUntilDestroyed(this.destroyRef),
@@ -63,6 +68,7 @@ export class AgentsPageComponent implements OnInit, AfterViewInit {
         tap((agents) => (this.agentsList = agents))
       )
       .subscribe();
+      
     this.error$
       .pipe(
         takeUntilDestroyed(this.destroyRef),
@@ -71,9 +77,10 @@ export class AgentsPageComponent implements OnInit, AfterViewInit {
       )
       .subscribe();
   }
-  ngAfterViewInit(){
-    this.store.dispatch(AgentsActions.loadAgents())
+  
+  ngAfterViewInit() {
   }
+  
   CurrentPagePath(): RouteLink[] {
     return [{ path: `/${this.lang()}/agents`, label: 'AI Agents' }];
   }

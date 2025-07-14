@@ -32,10 +32,7 @@ export class InterviewShareService {
     @Inject(BASE_API_URL) private baseUrl: string
   ) {
     this.baseShareUrl = `${this.baseUrl}/agents_lab/interviews`;
-    this.headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': 'Token 0e1034d8fd7ca52f2e3a346117f9af22e6925111'
-    });
+    this.headers = new HttpHeaders();
   }
 
   /**
@@ -66,12 +63,14 @@ export class InterviewShareService {
     const formData = new FormData();
     formData.append('interview_id', interviewId);
 
-
+    // Don't set Content-Type header for FormData - browser will set it automatically
     const response$ = this.http.post<ApiResponse<ShareTokenResponse>>(
       `${this.baseShareUrl}/share/`,
-      formData
+      formData,
+      { headers: this.headers }
     );
-
+    console.log('resoinse$', response$.pipe(
+      map(response => response.data.token)));
     return handleResponse<ShareTokenResponse, string>(
       response$,
       (model) => model.token
