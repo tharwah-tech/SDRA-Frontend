@@ -22,19 +22,19 @@ export class AgentsEffects {
     private configureAgentUseCase: ConfigureAgentUseCaseService,
     private router: Router
   ) {
-    this.loadAgents$ = createEffect(() => 
+    this.loadAgents$ = createEffect(() =>
       this.actions$.pipe(
         ofType(AgentsActions.loadAgents),
         mergeMap(() =>
           this.getAgentsUseCase.execute().pipe(
-            map(agentDtos => {
-              const agents = agentDtos.map(dto => AgentMapper.toEntity(dto));
-              return AgentsActions.loadAgentsSuccess({ agents });
+            map(agentsSummary => {
+
+              return AgentsActions.loadAgentsSuccess({ agents: agentsSummary });
             }),
             catchError(error => {
               console.error('Error loading agents:', error);
-              return of(AgentsActions.loadAgentsFailure({ 
-                error: error.message || 'Failed to load agents' 
+              return of(AgentsActions.loadAgentsFailure({
+                error: error.message || 'Failed to load agents'
               }));
             })
           )
@@ -42,7 +42,7 @@ export class AgentsEffects {
       )
     );
 
-    this.loadAgent$ = createEffect(() => 
+    this.loadAgent$ = createEffect(() =>
       this.actions$.pipe(
         ofType(AgentsActions.loadAgent),
         mergeMap(({ id }) =>
@@ -53,8 +53,8 @@ export class AgentsEffects {
             }),
             catchError(error => {
               console.error('Error loading agent:', error);
-              return of(AgentsActions.loadAgentFailure({ 
-                error: error.message || 'Failed to load agent' 
+              return of(AgentsActions.loadAgentFailure({
+                error: error.message || 'Failed to load agent'
               }));
             })
           )

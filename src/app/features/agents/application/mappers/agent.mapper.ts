@@ -1,5 +1,5 @@
 
-import { AgentEntity } from '../../domain/entities/agent.entity';
+import { AgentEntity, AgentSummaryEntity } from '../../domain/entities/agent.entity';
 import { AgentDto } from '../dtos/agent.dto';
 
 export class AgentMapper {

@@ -1,10 +1,11 @@
-import { AgentEntity } from '../../../domain/entities/agent.entity';
+import { ApiError } from '../../../../../core/models/api-error.model';
+import { AgentEntity, AgentSummaryEntity } from '../../../domain/entities/agent.entity';
 export const AGENTS_FEATURE_KEY = 'agents';
 export interface AgentsState {
-  agents: AgentEntity[];
+  agents: AgentSummaryEntity[];
   selectedAgent: AgentEntity | null;
   loading: boolean;
-  error: string | null;
+  error: ApiError | null;
 }
 
 export const initialAgentsState: AgentsState = {

@@ -36,7 +36,7 @@ export const agentsFeatureProviders = [
   // Repository Implementations
   {
     provide: AGENTS_REPOSITORY,
-    useClass: environment.production ? AgentsService : AgentsMockService,
+    useClass: AgentsService,//environment.production ? AgentsService : AgentsMockService,
   },
   {
     provide: INTERVIEWS_REPOSITORY,

@@ -1,3 +1,4 @@
+import { AgentType } from "../../../../core/enums/agents-type.enum";
 
 export interface AgentEntity {
   id: string;
@@ -29,10 +30,10 @@ export enum OutputType {
   TRANSCRIPT = 'Transcript'
 }
 
-export interface AgentSummary {
+export interface AgentSummaryEntity {
     id:          string;
     name:        string;
     description: string;
-    type:        string;
+    type:        AgentType;
     img_url:     string;
 }

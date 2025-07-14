@@ -1,6 +1,8 @@
-
-import { OutputType } from '../../domain/entities/agent.entity';
-
+import {
+  AgentSummaryEntity,
+  OutputType,
+} from '../../domain/entities/agent.entity';
+export interface AgentSummaryDto extends AgentSummaryEntity{}
 export interface AgentDto {
   id: string;
   name: string;
