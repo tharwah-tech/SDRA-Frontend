@@ -1,4 +1,3 @@
-
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -61,8 +60,9 @@ export class InterviewShareService {
    * Step 1: Get the share token for the interview
    * @param interviewId - The ID of the interview
    * @returns Observable<string> - The token
+   * NOTE: Now PUBLIC method to be used in interview-list.component.ts
    */
-  private getShareToken(interviewId: string): Observable<string> {
+  getShareToken(interviewId: string): Observable<string> {
     const formData = new FormData();
     formData.append('interview_id', interviewId);
 
@@ -87,8 +87,9 @@ export class InterviewShareService {
    * Step 2: Get the interview URL using the token
    * @param token - The token from step 1
    * @returns Observable<string> - The interview URL
+   * NOTE: Now PUBLIC method to be used in start-interview-page.component.ts
    */
-  private getInterviewLink(token: string): Observable<string> {
+  getInterviewLink(token: string): Observable<string> {
     const response$ = this.http.get<ApiResponse<InterviewLinkResponse>>(
       `${this.baseShareUrl}/link/?token=${token}`,
       { headers: this.headers }
