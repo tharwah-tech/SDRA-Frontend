@@ -1,1 +1,31 @@
-<p>notification-card works!</p>
+<div class="notification-card" [ngClass]="notificationData.type" [@flyInOut]>
+    <div class="notification-icon-container">
+        <!-- Success Icon -->
+        <mat-icon *ngIf="notificationData.type === 'success'" class="notification-icon success-icon">check_circle</mat-icon>
+        <!-- Error Icon -->
+        <mat-icon *ngIf="notificationData.type === 'error'" class="notification-icon error-icon">error</mat-icon>
+        <!-- Info Icon -->
+        <mat-icon *ngIf="notificationData.type === 'info'" class="notification-icon info-icon">info</mat-icon>
+    </div>
+
+    <div class="notification-content">
+        <ng-container *ngIf="notificationData.type === 'success' || notificationData.type === 'info'">
+            <h3 class="notification-title">{{ notificationData.title }}</h3>
+            <p *ngIf="notificationData.description" class="notification-description">{{ notificationData.description }}</p>
+        </ng-container>
+        <ng-container *ngIf="notificationData.type === 'error'">
+            <h3 class="notification-title">{{ errorTitle }}</h3>
+            <ul *ngIf="errorMessages && errorMessages.length > 0" class="notification-error-list">
+                <li *ngFor="let errMsg of errorMessages">{{ errMsg }}</li>
+            </ul>
+            <!-- Fallback if no specific errors array but error object exists -->
+            <p *ngIf="!errorMessages && notificationData.error && notificationData.error.message && !notificationData.error.errors?.length" class="notification-description">{{ notificationData.error.message }}</p>
+        </ng-container>
+    </div>
+
+    <div class="notification-actions">
+        <button mat-icon-button (click)="close()" class="notification-close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+    </div>
+</div>
