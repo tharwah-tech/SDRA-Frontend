@@ -1,4 +1,3 @@
-
 import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -6,8 +5,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { Subject, takeUntil } from 'rxjs';
-import { InterviewShareService, InterviewShareResult } from '../../../data/services/interview-share.service';
+import { InterviewShareService } from '../../../data/services/interview-share.service';
 
 @Component({
   selector: 'app-start-interview-page',
@@ -17,6 +18,8 @@ import { InterviewShareService, InterviewShareResult } from '../../../data/servi
     MatCardModule,
     MatProgressSpinnerModule,
     MatIconModule,
+    MatInputModule,
+    MatFormFieldModule,
     RouterModule
   ],
   templateUrl: './start-interview-page.component.html',
@@ -24,9 +27,8 @@ import { InterviewShareService, InterviewShareResult } from '../../../data/servi
 })
 export class StartInterviewPageComponent implements OnInit, OnDestroy {
   // Component state signals
-  interviewId = signal<string | null>(null);
-  interviewUrl = signal<string | null>(null);
   token = signal<string | null>(null);
+  interviewUrl = signal<string | null>(null);
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
 
@@ -52,38 +54,37 @@ export class StartInterviewPageComponent implements OnInit, OnDestroy {
   }
 
   private loadInterviewData(): void {
-    // Get interview_id from query parameters
     this.route.queryParams.pipe(
       takeUntil(this.destroy$)
     ).subscribe(params => {
-      const interviewId = params['interview_id'];
+      const token = params['token'];
       
-      if (interviewId) {
-        this.interviewId.set(interviewId);
-        this.fetchInterviewShareUrl(interviewId);
+      if (token) {
+        this.token.set(token);
+        this.fetchInterviewUrl(token);
       } else {
-        this.error.set('Interview ID not found in URL parameters');
+        this.error.set('Token not found in URL parameters');
       }
     });
   }
 
-  private fetchInterviewShareUrl(interviewId: string): void {
+  private fetchInterviewUrl(token: string): void {
     this.loading.set(true);
     this.error.set(null);
 
-    this.interviewShareService.getInterviewShareUrl(interviewId).pipe(
+    // Step 2: Get the interview URL using the token
+    this.interviewShareService.getInterviewLink(token).pipe(
       takeUntil(this.destroy$)
     ).subscribe({
-      next: (result: InterviewShareResult) => {
-        this.interviewUrl.set(result.interviewUrl);
-        this.token.set(result.token);
+      next: (interviewUrl: string) => {
+        this.interviewUrl.set(interviewUrl);
         this.loading.set(false);
-        console.log('Interview share data loaded successfully:', result);
+        console.log('Interview URL loaded successfully:', interviewUrl);
       },
       error: (error) => {
-        this.error.set(error.message || 'Failed to load interview data');
+        this.error.set(error.message || 'Failed to load interview URL');
         this.loading.set(false);
-        console.error('Error loading interview share data:', error);
+        console.error('Error loading interview URL:', error);
       }
     });
   }
@@ -99,9 +100,9 @@ export class StartInterviewPageComponent implements OnInit, OnDestroy {
   }
 
   onRetry(): void {
-    const interviewId = this.interviewId();
-    if (interviewId) {
-      this.fetchInterviewShareUrl(interviewId);
+    const token = this.token();
+    if (token) {
+      this.fetchInterviewUrl(token);
     }
   }
 
