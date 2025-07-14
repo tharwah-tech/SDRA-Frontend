@@ -10,9 +10,12 @@ import { TokenExpirationService } from './token-expiration.service';
 import { LoginResponseModel } from '../models/login-response.model';
 import { handleResponse } from '../../../../shared/utils/handle-reponses.util';
 import { ApiResponse } from '../../../../core/models/api-response.model';
+import { RegisterResponseModel } from '../models/register-response.model';
+import { LogoutReponseModel } from '../models/logut-response.model';
+import { AUTH_TOKEN } from '../../presentation/store/auth.store';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService implements AuthRepository {
   private apiUrl: string;
@@ -27,57 +30,85 @@ export class AuthService implements AuthRepository {
 
   login(credentials: Credentials): Observable<AuthUser> {
     const url = `${this.apiUrl}/login/`;
-    const response: Observable<ApiResponse<{loginResponse: LoginResponseModel, expirationDate: Date | null}>> = this.http
-      .post<ApiResponse<LoginResponseModel>>(url, credentials)
-      .pipe(
-        map((apiResponse) => {
-          // If tokenExpiration is not provided by API, try to extract it from JWT
-          let authUser!: AuthUser;
-          if (
-            apiResponse.data.user &&
+    const response: Observable<
+      ApiResponse<{
+        loginResponse: LoginResponseModel;
+        expirationDate: Date | null;
+      }>
+    > = this.http.post<ApiResponse<LoginResponseModel>>(url, credentials).pipe(
+      map((apiResponse) => {
+        // If tokenExpiration is not provided by API, try to extract it from JWT
+        let authUser!: AuthUser;
+        if (apiResponse.data.user && apiResponse.data.token) {
+          const expirationDate = this.getTokenExpirationDate(
             apiResponse.data.token
-          ) {
-            const expirationDate = this.getTokenExpirationDate(
-              apiResponse.data.token
-            );
-            if (expirationDate) {
-              authUser = {
-                ...apiResponse.data.user,
-                token: apiResponse.data.token,
-                role: 'admin',
-                tokenExpiration: new Date(expirationDate),
-              };
-              this.tokenExpirationService.setTokenExpiration(expirationDate);
-            }
+          );
+          if (expirationDate) {
+            authUser = {
+              ...apiResponse.data.user,
+              token: apiResponse.data.token,
+              role: 'admin',
+              tokenExpiration: new Date(expirationDate),
+            };
+            this.tokenExpirationService.setTokenExpiration(expirationDate);
           }
-          return {
-            ... apiResponse,
-            data: {loginResponse: apiResponse.data, expirationDate: this.getTokenExpirationDate(apiResponse.data.token) }
-          } as ApiResponse<{loginResponse: LoginResponseModel, expirationDate: Date | null}>;
+        }
+        return {
+          ...apiResponse,
+          data: {
+            loginResponse: apiResponse.data,
+            expirationDate: this.getTokenExpirationDate(apiResponse.data.token),
+          },
+        } as ApiResponse<{
+          loginResponse: LoginResponseModel;
+          expirationDate: Date | null;
+        }>;
+      })
+    );
+    return handleResponse<
+      { loginResponse: LoginResponseModel; expirationDate: Date | null },
+      AuthUser
+    >(response, (model) => {
+      // Map the LoginResponseModel to AuthUser
+      return {
+        ...model.loginResponse.user,
+        token: model.loginResponse.token,
+        role: 'admin',
+        tokenExpiration: model.expirationDate ?? undefined,
+      };
+    });
+  }
+
+  register(credentials: RegistrationEntity): Observable<string> {
+    const url = `${this.apiUrl}/register/`;
+    const response = this.http.post<ApiResponse<RegisterResponseModel>>(url, {
+      email: credentials.email,
+      first_name: credentials.firstName,
+      last_name: credentials.lastName,
+      organization: credentials.organization,
+      password: credentials.password,
+      confirm_password: credentials.confirmPassword,
+    });
+    return handleResponse<RegisterResponseModel, string>(
+      response,
+      (model) => model.user_id
+    );
+  }
+
+  logout(): Observable<boolean> {
+    const url = `${this.apiUrl}/logout/`;
+    const response = this.http
+      .post<ApiResponse<LogoutReponseModel>>(url, {})
+      .pipe(
+        tap(() => {
+          this.tokenExpirationService.clearTokenExpiration();
+          localStorage.removeItem(AUTH_TOKEN);
+          // this.currentUserSubject.next(undefined);
         })
       );
-      return handleResponse<{loginResponse: LoginResponseModel, expirationDate: Date | null}, AuthUser>(response, (model) => {
-        // Map the LoginResponseModel to AuthUser
-        return {
-          ...model.loginResponse.user,
-          token: model.loginResponse.token,
-          role: 'admin',
-          tokenExpiration: model.expirationDate ?? undefined
-        };
-      });
-  }
-
-  register(credentials: RegistrationEntity): Observable<AuthUser> {
-   return throwError(() => new Error('Method not implemented.'));
-  }
-
-  logout(): Observable<void> {
-     return this.http.post<void>(`${this.apiUrl}/logout/`, {}).pipe(
-      tap(() => {
-        this.tokenExpirationService.clearTokenExpiration();
-        // localStorage.removeItem(this.tokenKey);
-        // this.currentUserSubject.next(undefined);
-      })
+    return handleResponse<LogoutReponseModel, boolean>(
+      response,
+      (model) => model.success
     );
   }
 
@@ -102,4 +133,3 @@ export class AuthService implements AuthRepository {
     }
   }
 }
-

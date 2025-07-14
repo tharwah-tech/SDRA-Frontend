@@ -4,6 +4,7 @@
   <div class="flex flex-col items-center justify-center w-full md:w-1/2 h-full">
     <app-register-form
       (navigateToLogin)="goToLogin()"
+      (submitFormData)="register($event)"
       class="w-full max-h-[calc(100%-32px)] overflow-y-auto"
     ></app-register-form>
   </div>

@@ -5,7 +5,7 @@ import { RegistrationEntity } from "../entities/registration.entity";
 
 export interface AuthRepository {
   login(credentials: Credentials): Observable<AuthUser>;
-  register(credentials: RegistrationEntity): Observable<AuthUser>;
-  logout(): Observable<void>;
+  register(credentials: RegistrationEntity): Observable<string>;
+  logout(): Observable<boolean>;
   getCurrentUser(): Observable<AuthUser | undefined>;
 }

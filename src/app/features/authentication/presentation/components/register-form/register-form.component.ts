@@ -19,6 +19,7 @@ import { Observable } from 'rxjs';
 import { strongPasswordValidation } from '../../../../../shared/utils/strong-password-validation.util';
 import { Credentials } from '../../../domain/entities/credentials.entity';
 import { selectAuthLoading } from '../../store/auth.selectors';
+import { RegistrationEntity } from '../../../domain/entities/registration.entity';
 
 type registrationForm = FormGroup<{
   email: FormControl<string>;
@@ -46,9 +47,9 @@ type registrationForm = FormGroup<{
 })
 export class RegisterFormComponent {
   @Output() navigateToLogin = new EventEmitter<void>();
+  @Output() submitFormData = new EventEmitter<RegistrationEntity>();
   loading$: Observable<boolean>;
   form: registrationForm;
-  credentials!: Credentials;
   hidePassword: boolean = true;
 
   constructor(
@@ -147,35 +148,40 @@ export class RegisterFormComponent {
   }
   get confirmPasswordRequired() {
     return (
-      (this.confirmPasswordControl?.touched || this.confirmPasswordControl?.dirty) &&
+      (this.confirmPasswordControl?.touched ||
+        this.confirmPasswordControl?.dirty) &&
       this.confirmPasswordControl?.hasError('required')
     );
   }
   get confirmPasswordMinLengthError() {
     return (
       this.confirmPasswordControl?.value &&
-      (this.confirmPasswordControl?.touched || this.confirmPasswordControl?.dirty) &&
+      (this.confirmPasswordControl?.touched ||
+        this.confirmPasswordControl?.dirty) &&
       this.confirmPasswordControl?.hasError('minlength')
     );
   }
   get confirmPasswordWeakError() {
     return (
       this.confirmPasswordControl?.value &&
-      (this.confirmPasswordControl?.touched || this.confirmPasswordControl?.dirty) &&
+      (this.confirmPasswordControl?.touched ||
+        this.confirmPasswordControl?.dirty) &&
       this.confirmPasswordControl?.hasError('weakPassword')
     );
   }
   get confirmPasswordSpecialCharError() {
     return (
       this.confirmPasswordControl?.value &&
-      (this.confirmPasswordControl?.touched || this.confirmPasswordControl?.dirty) &&
+      (this.confirmPasswordControl?.touched ||
+        this.confirmPasswordControl?.dirty) &&
       this.confirmPasswordControl?.hasError('doesNotContainSpecialChar')
     );
   }
   get confirmPasswordMismatchError() {
     return (
       this.confirmPasswordControl?.value &&
-      (this.confirmPasswordControl?.touched || this.confirmPasswordControl?.dirty) &&
+      (this.confirmPasswordControl?.touched ||
+        this.confirmPasswordControl?.dirty) &&
       this.confirmPasswordControl?.hasError('passwordMismatch')
     );
   }
@@ -231,7 +237,22 @@ export class RegisterFormComponent {
     return this.form.valid;
   }
 
-  register(){}
+  register() {
+    if (this.form.valid) {
+      const val = this.form.value;
+      const credentials = {
+        email: val.email,
+        password: val.password,
+        confirmPassword: val.confirmPassword,
+        firstName: val.firstName,
+        lastName: val.lastName,
+        organization: val.organization,
+      } as RegistrationEntity;
+      this.submitFormData.emit(credentials);
+    } else {
+      this.form.markAllAsTouched();
+    }
+  }
   goToLogin() {
     this.form.reset();
     this.navigateToLogin.emit();
