@@ -66,15 +66,10 @@ export class InterviewShareService {
     const formData = new FormData();
     formData.append('interview_id', interviewId);
 
-    // Note: When using FormData, don't set Content-Type header - browser will set it automatically
-    const headers = new HttpHeaders({
-      'Authorization': 'Token 0e1034d8fd7ca52f2e3a346117f9af22e6925111'
-    });
 
     const response$ = this.http.post<ApiResponse<ShareTokenResponse>>(
       `${this.baseShareUrl}/share/`,
-      formData,
-      { headers }
+      formData
     );
 
     return handleResponse<ShareTokenResponse, string>(
