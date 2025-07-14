@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { InterviewsRepository } from '../../domain/repositories/interviews.repository';
 import {
@@ -23,23 +23,19 @@ import { InterviewDetailsModel } from '../models/interview-details.model';
 })
 export class InterviewsService implements InterviewsRepository {
   private readonly apiUrl: string;
-  private readonly headers: HttpHeaders;
 
   constructor(
     private http: HttpClient,
     @Inject(BASE_API_URL) private baseUrl: string
   ) {
     this.apiUrl = `${this.baseUrl}/agents_lab/interviews`;
-    this.headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: 'Token 0e1034d8fd7ca52f2e3a346117f9af22e6925111',
-    });
+
   }
 
   getInterviews(): Observable<InterviewsResponse> {
     const response$ = this.http.get<
       ApiResponse<PaginatedModel<InterviewModel>>
-    >(this.apiUrl, { headers: this.headers });
+    >(this.apiUrl);
 
     return handleResponse<PaginatedModel<InterviewModel>, InterviewsResponse>(
       response$,
@@ -49,8 +45,7 @@ export class InterviewsService implements InterviewsRepository {
 
   getInterviewById(id: string): Observable<InterviewDetailsEntity> {
     const response$ = this.http.get<ApiResponse<InterviewDetailsModel>>(
-      `${this.apiUrl}/${id}`,
-      { headers: this.headers }
+      `${this.apiUrl}/${id}`
     );
 
     return handleResponse<InterviewDetailsModel, InterviewDetailsEntity>(
@@ -65,8 +60,7 @@ export class InterviewsService implements InterviewsRepository {
   ): Observable<InterviewDetailsEntity> {
     const response$ = this.http.patch<ApiResponse<InterviewDetailsModel>>(
       `${this.apiUrl}/${id}`,
-      { status },
-      { headers: this.headers }
+      { status }
     );
 
     return handleResponse<InterviewDetailsModel, InterviewDetailsEntity>(
@@ -76,9 +70,7 @@ export class InterviewsService implements InterviewsRepository {
   }
 
   deleteInterview(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`, {
-      headers: this.headers,
-    });
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
   // Private mapper methods

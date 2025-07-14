@@ -1,22 +1,25 @@
-import { Inject, Injectable } from "@angular/core";
-import { Router } from "@angular/router";
-import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { Store } from "@ngrx/store";
-import { ToastrService } from "ngx-toastr";
-import { Observable, switchMap, map, catchError, of, tap } from "rxjs";
-import { TokenExpirationService } from "../../data/services/token-expiration.service";
-import { Credentials } from "../../domain/entities/credentials.entity";
-import { AuthActions } from "./auth.actions";
-import { AUTH_TOKEN, CURRENT_AUTH_USER } from "./auth.store";
-import { AuthRepository } from "../../domain/repositories/auth.repository";
-import { RouteRedirectionService } from "../../../../core/services/route-redirection.service";
-import { AUTH_REPOSITORY } from "../../data/providers/auth-repositories.provider";
-import { showSnackbar } from "../../../../shared/utils/show-snackbar-notification.util";
+import { Inject, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
+import { ToastrService } from 'ngx-toastr';
+import { Observable, switchMap, map, catchError, of, tap } from 'rxjs';
+import { TokenExpirationService } from '../../data/services/token-expiration.service';
+import { Credentials } from '../../domain/entities/credentials.entity';
+import { AuthActions } from './auth.actions';
+import { AUTH_TOKEN, CURRENT_AUTH_USER } from './auth.store';
+import { AuthRepository } from '../../domain/repositories/auth.repository';
+import { RouteRedirectionService } from '../../../../core/services/route-redirection.service';
+import { AUTH_REPOSITORY } from '../../data/providers/auth-repositories.provider';
+import { showSnackbar } from '../../../../shared/utils/show-snackbar-notification.util';
+import { RegistrationEntity } from '../../domain/entities/registration.entity';
 
 @Injectable()
 export class AuthEffects {
   login$: Observable<any>;
   loginSuccess$: Observable<any>;
+  register$: Observable<any>;
+  registerSuccess$: Observable<any>;
   logout$: Observable<any>;
   logoutSuccess$: Observable<any>;
   getCurrentUser$: Observable<any>;
@@ -58,19 +61,67 @@ export class AuthEffects {
         this.actions$.pipe(
           ofType(AuthActions.loginSuccess),
           tap((action) => {
-            console.log("Login success with user role:", action.user.role);
+            console.log('Login success with user role:', action.user.role);
             localStorage.setItem(AUTH_TOKEN, action.user.token);
-            localStorage.setItem(CURRENT_AUTH_USER, JSON.stringify(action.user));
+            localStorage.setItem(
+              CURRENT_AUTH_USER,
+              JSON.stringify(action.user)
+            );
             if (action.user.tokenExpiration) {
-              this.tokenExpirationService.setTokenExpiration(action.user.tokenExpiration);
+              this.tokenExpirationService.setTokenExpiration(
+                action.user.tokenExpiration
+              );
             }
             this.tokenExpirationService.initExpirationMonitor(); // Initialize monitor on login
 
             // Consider adding a small delay before redirecting
             setTimeout(() => {
-              const returnUrl = this.router.routerState.snapshot.root.queryParams['returnUrl'];
-              this.routeRedirectionService.redirectBasedOnRole(action.user, returnUrl);
+              const returnUrl =
+                this.router.routerState.snapshot.root.queryParams['returnUrl'];
+              this.routeRedirectionService.redirectBasedOnRole(
+                action.user,
+                returnUrl
+              );
             }, 100);
+          })
+        ),
+      { dispatch: false }
+    );
+
+    this.register$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(AuthActions.register),
+        switchMap(({ credentials }: { credentials: RegistrationEntity }) =>
+          this.authRepository.register(credentials).pipe(
+            map((response) =>
+              AuthActions.registerSuccess({ userId: response })
+            ),
+            catchError((error) => {
+              return of(
+                AuthActions.loginFailure({
+                  error: {
+                    message: error.error?.message || 'Register failed',
+                    errors: error.error?.errors,
+                    statusCode: error.error?.statusCode,
+                  },
+                })
+              );
+            })
+          )
+        )
+      )
+    );
+
+    this.registerSuccess$ = createEffect(
+      () =>
+        this.actions$.pipe(
+          ofType(AuthActions.registerSuccess),
+          tap((repsonse) => {
+            this.router.navigate(['en','auth','login']);
+            showSnackbar(this.toastr, {
+              title: `User Registered successfully with id: ${repsonse.userId}`,
+              type: 'success',
+            })
           })
         ),
       { dispatch: false }
@@ -141,7 +192,11 @@ export class AuthEffects {
           ofType(AuthActions.tokenExpired),
           tap(() => {
             // Log the user out when token expires
-            showSnackbar(this.toastr, {title: 'Session Expired!!', type:'info', description: 'Please login again'});
+            showSnackbar(this.toastr, {
+              title: 'Session Expired!!',
+              type: 'info',
+              description: 'Please login again',
+            });
             this.store.dispatch(AuthActions.logout());
           })
         ),

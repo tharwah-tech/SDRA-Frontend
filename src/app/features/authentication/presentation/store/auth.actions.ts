@@ -12,7 +12,7 @@ export const AuthActions = createActionGroup({
     'Login Success': props<{ user: AuthUser }>(),
     'Login Failure': props<{ error: ApiError }>(),
     'Register': props<{ credentials: RegistrationEntity }>(),
-    'Register Success': props<{ user: AuthUser }>(),
+    'Register Success': props<{ userId: string }>(),
     'Register Failure': props<{ error: ApiError }>(),
     'Logout': emptyProps(),
     'Logout Success': emptyProps(),

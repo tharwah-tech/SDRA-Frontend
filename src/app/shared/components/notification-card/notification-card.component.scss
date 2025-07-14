@@ -1,0 +1,230 @@
+/* Add global styles for the snackbar panel in your global styles.scss if not already done via panelClass in showSnackbar util */
+
+
+/* For example:
+.app-notification-snackbar {
+  padding: 0 !important; // Remove default padding if you want the card to take full space
+  background: transparent !important; // Make panel transparent if card has its own background
+  box-shadow: none !important; // Remove default shadow if card has its own
+}
+*/
+
+.notification-card {
+    display: flex;
+    align-items: flex-start; // Align items to the top for varied content height
+    padding: 16px;
+    border-radius: 8px;
+    font-family: 'Roboto', sans-serif; // Example font, adjust as needed
+    color: #333;
+    min-width: 320px; // Minimum width
+    max-width: 450px; // Maximum width
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    position: relative; // For positioning the close button absolutely if needed
+    overflow: hidden; // For animations
+    &.success {
+        background-color: #ffffff; // White background as per image
+        border-left: 5px solid #4CAF50; // Green left border for success
+        .notification-icon-container {
+            .success-icon {
+                color: #4CAF50;
+                background-color: rgba(76, 175, 80, 0.1); // Light green background circle
+                border-radius: 50%;
+                padding: 8px; // Padding inside the circle
+                font-size: 24px; // Icon size
+                width: 40px; // Ensure circle width
+                height: 40px; // Ensure circle height
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+        .notification-title {
+            color: #1E293B; // Darker title color from image
+        }
+        .notification-description {
+            color: #475569; // Subtitle color from image
+        }
+    }
+    &.error {
+        background-color: #FFF0F0; // Light red background
+        border-left: 5px solid #F44336; // Red left border
+        .notification-icon-container {
+            .error-icon {
+                color: #F44336;
+                background-color: rgba(244, 67, 54, 0.1);
+                border-radius: 50%;
+                padding: 8px;
+                font-size: 24px;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+        .notification-title {
+            color: #C00000;
+        }
+        .notification-description {
+            color: #D32F2F; // For single error message
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+        .notification-error-list {
+            font-size: 0.875rem;
+            color: #D32F2F;
+            margin-top: 8px;
+            padding-left: 20px;
+            list-style-type: disc;
+            li {
+                margin-bottom: 4px;
+                overflow-wrap: break-word;
+                word-break: break-word;
+            }
+        }
+    }
+    &.info {
+        background-color: #E3F2FD; // Light blue background
+        border-left: 5px solid #2196F3; // Blue left border
+        .notification-icon-container {
+            .info-icon {
+                color: #2196F3;
+                background-color: rgba(33, 150, 243, 0.1);
+                border-radius: 50%;
+                padding: 8px;
+                font-size: 24px;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+        .notification-title {
+            color: #0D47A1;
+        }
+        .notification-description {
+            color: #1976D2; // Info description color
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+    }
+}
+
+.notification-icon-container {
+    margin-right: 16px;
+    flex-shrink: 0; // Prevent icon from shrinking
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // Removed height: 100% as flex-start on parent handles alignment
+    .mat-icon {
+        font-size: 24px; // Default icon size, can be overridden
+        width: 24px;
+        height: 24px;
+    }
+}
+
+.notification-content {
+    flex-grow: 1; // Allow content to take remaining space
+    padding-right: 32px; // Increased space for the close button
+    .notification-title {
+        font-size: 1rem; // Adjusted from 1.1rem
+        font-weight: 600; // Bolder title
+        margin: 0 0 4px 0;
+    }
+    .notification-description {
+        font-size: 0.875rem; // Adjusted from 0.9rem
+        color: #555; // Default description color, overridden by types
+        margin: 0;
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
+    .notification-error-list {
+        font-size: 0.875rem;
+        // color is set in .error block
+        margin-top: 8px;
+        padding-left: 20px;
+        list-style-type: disc;
+        li {
+            margin-bottom: 4px;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+    }
+}
+
+.notification-actions {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    .notification-close-button {
+        color: #666;
+        width: 32px;
+        height: 32px;
+        padding: 0; // Remove default padding if any from mat-icon-button
+        display: flex; // Use flexbox for centering
+        align-items: center; // Center icon vertically
+        justify-content: center; // Center icon horizontally
+        border-radius: 50%; // Ensure the button itself is circular for hover effects
+        .mat-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+            // line-height for mat-icon is not typically needed when parent is flex-centered
+        }
+        // Optional: Explicitly style the ripple or focus overlay if needed,
+        // but usually, ensuring the button is well-formed is enough.
+        // For example, to ensure the ripple is contained and circular:
+        // ::ng-deep .mat-ripple-element {
+        //   border-radius: 50%;
+        // }
+    }
+}
+
+// If you added 'app-notification-snackbar' to panelClass in the utility function,
+// you might want to add global overrides for mat-snack-bar-container for this specific panel class.
+// This ensures that the custom card styling isn't constrained by default snackbar padding/background.
+// Place this in your global styles.scss:
+
+/*
+::ng-deep .app-notification-snackbar {
+  &.mat-snack-bar-container {
+    padding: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+}
+*/
+
+// ngx-toastr host styling to remove its default padding/styles
+// Add this to global styles.scss if it affects other toasts undesirably,
+// or scope it if NotificationCardComponent is always used with a specific toastClass.
+:host {
+    // Hide default ngx-toastr close button as we use a custom one
+    .toast-close-button {
+        display: none !important;
+    }
+    // The following styles are now handled globally by .app-custom-toast-container in styles.scss
+    /*
+    &.ngx-toastr,
+    &.ngx-toastr.toast-success,
+    &.ngx-toastr.toast-error,
+    &.ngx-toastr.toast-info,
+    &.ngx-toastr.toast-warning,
+    &.ngx-toastr:hover,
+    &.ngx-toastr.toast-success:hover,
+    &.ngx-toastr.toast-error:hover,
+    &.ngx-toastr.toast-info:hover,
+    &.ngx-toastr.toast-warning:hover {
+        background: transparent !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        border: none !important;
+        // If ngx-toastr sets a width/min-width/max-width on the host that you don't want:
+        // width: auto !important;
+        // min-width: 0 !important;
+        // max-width: none !important;
+    }
+    */
+}

@@ -77,7 +77,7 @@
         </mat-form-field>
       </div>
       <div name="organizationFieldContainer" class="flex flex-col w-full">
-        <label mat-label class="txt-field-label">Organization</label>
+        <label mat-label class="txt-field-label">Organization Name</label>
         <mat-form-field
           appearance="outline"
           [hideRequiredMarker]="true"
@@ -89,7 +89,7 @@
             formControlName="organization"
           />
           <mat-error *ngIf="organizationRequired">
-            Organization is required
+            Organization Name is required
           </mat-error>
         </mat-form-field>
       </div>
@@ -169,6 +169,7 @@
         color="primary"
         class="w-full h-[54px]"
         [disabled]="!form.valid"
+        (click)="register()"
       >
         Sign Up
       </button>

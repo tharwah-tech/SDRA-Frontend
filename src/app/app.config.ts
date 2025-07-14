@@ -1,5 +1,3 @@
-// src/app/app.config.ts
-
 import {
   ApplicationConfig,
   isDevMode,
@@ -48,6 +46,7 @@ import { AgentsService } from './features/agents/data/services/agents.service';
 import { AgentsMockService } from './features/agents/data/services/agents-mock.service';
 import { INTERVIEWS_REPOSITORY } from './features/agents/data/services/interviews.provider';
 import { InterviewsService } from './features/agents/data/services/interviews.service';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 // Global API URL token
 export const BASE_API_URL = new InjectionToken<string>('BASE_API_URL');
@@ -83,7 +82,7 @@ export const appConfig: ApplicationConfig = {
     ),
 
     // HTTP client with interceptors
-    provideHttpClient(withInterceptors([]), withFetch()),
+    provideHttpClient(withInterceptors([authInterceptor]), withFetch()),
 
     // Translation service (global)
     importProvidersFrom(

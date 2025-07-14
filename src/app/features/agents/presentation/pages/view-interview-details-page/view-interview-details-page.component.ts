@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, DestroyRef, input, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  DestroyRef,
+  input,
+  OnInit,
+} from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -12,7 +18,11 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { filter, Observable, tap } from 'rxjs';
 import { InterviewDetailsEntity } from '../../../domain/entities/interview-details.entity';
-import { selectInterviewsError, selectInterviewsLoading, selectSelectedInterview } from '../../store/interviews/interviews.selectors';
+import {
+  selectInterviewsError,
+  selectInterviewsLoading,
+  selectSelectedInterview,
+} from '../../store/interviews/interviews.selectors';
 import { ApiError } from '../../../../../core/models/api-error.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { showSnackbar } from '../../../../../shared/utils/show-snackbar-notification.util';
@@ -29,12 +39,14 @@ import { MatButtonModule } from '@angular/material/button';
     MatProgressSpinnerModule,
     MainPageStructureComponent,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
   ],
   templateUrl: './view-interview-details-page.component.html',
   styleUrl: './view-interview-details-page.component.scss',
 })
-export class ViewInterviewDetailsPageComponent implements OnInit, AfterViewInit {
+export class ViewInterviewDetailsPageComponent
+  implements OnInit, AfterViewInit
+{
   SideNavTabs = SideNavTabs;
   lang = input.required<string>();
   id = input.required<string>();
@@ -42,7 +54,7 @@ export class ViewInterviewDetailsPageComponent implements OnInit, AfterViewInit 
   interviewDetails$: Observable<InterviewDetailsEntity | null>;
   interviewDetails: InterviewDetailsEntity | null = null;
   loading$: Observable<boolean>;
-  errors: Observable<ApiError| null>;
+  errors: Observable<ApiError | null>;
   constructor(
     public translateService: TranslateService,
     public languageService: LanguageService,
@@ -57,22 +69,28 @@ export class ViewInterviewDetailsPageComponent implements OnInit, AfterViewInit 
   }
 
   ngOnInit(): void {
-    this.interviewDetails$.pipe(
-      takeUntilDestroyed(this.destroyRef),
-      filter(interviewDetails=> !!interviewDetails),
-      tap((interviewDetails)=>{
-        console.log(interviewDetails);
-        this.interviewDetails = interviewDetails
-      })
-    ).subscribe();
-    this.errors.pipe(
-      takeUntilDestroyed(this.destroyRef),
-      filter(error=> !!error),
-      tap((error)=>showSnackbar(this.toastr, { error, type: 'error' }))
-    ).subscribe();
+    this.interviewDetails$
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        filter((interviewDetails) => !!interviewDetails),
+        tap((interviewDetails) => {
+          console.log(interviewDetails);
+          this.interviewDetails = interviewDetails;
+        })
+      )
+      .subscribe();
+    this.errors
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        filter((error) => !!error),
+        tap((error) => showSnackbar(this.toastr, { error, type: 'error' }))
+      )
+      .subscribe();
   }
-  ngAfterViewInit(){
-    this.store.dispatch(InterviewsActions.loadInterview({id: this.interviewId()}))
+  ngAfterViewInit() {
+    this.store.dispatch(
+      InterviewsActions.loadInterview({ id: this.interviewId() })
+    );
   }
 
   CurrentPagePath(): RouteLink[] {
