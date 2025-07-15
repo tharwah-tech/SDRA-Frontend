@@ -24,10 +24,6 @@ import { GetAgentsUseCaseService } from './application/use-case/get-agents.use-c
 import { GetAgentByIdUseCaseService } from './application/use-case/get-agent-by-id.use-case.service';
 import { ConfigureAgentUseCaseService } from './application/use-case/configure-agent.use-case.service';
 import { GetInterviewsUseCaseService } from './application/use-case/get-interviews.use-case.service';
-
-// Environment
-import { environment } from '../../../environments/environment';
-import { InterviewShareService } from './data/services/interview-share.service';
 import { GetInterviewDetailsUseCaseService } from './application/use-case/get-interview-details.use-case.service';
 
 export const agentsFeatureProviders = [
@@ -54,7 +50,6 @@ export const agentsFeatureProviders = [
   InterviewsService,
   AgentsService,
   AgentsMockService,
-  InterviewShareService,
   // ✅ 2. SECOND: Provide the store state
   provideState(AGENTS_FEATURE_KEY, agentsReducer),
   provideState(INTERVIEWS_FEATURE_KEY, interviewsReducer),

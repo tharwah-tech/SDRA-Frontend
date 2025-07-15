@@ -1,13 +1,16 @@
 // src/app/features/agents/presentation/store/interviews/interviews.effects.ts
 
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { InterviewsActions } from './interviews.actions';
 import { GetInterviewsUseCaseService } from '../../../application/use-case/get-interviews.use-case.service';
 import { InterviewsService } from '../../../data/services/interviews.service';
 import { GetInterviewDetailsUseCaseService } from '../../../application/use-case/get-interview-details.use-case.service';
+import { Router } from '@angular/router';
+import { INTERVIEWS_REPOSITORY } from '../../../data/services/interviews.provider';
+import { InterviewsRepository } from '../../../domain/repositories/interviews.repository';
 
 @Injectable()
 export class InterviewsEffects {
@@ -17,11 +20,19 @@ export class InterviewsEffects {
   updateInterviewStatus$: any;
   deleteInterview$: any;
 
+  shareInterview$: any;
+  shareInterviewSuccess$: any;
+
+  getInterview$: any;
+
   constructor(
     private actions$: Actions,
+    @Inject(INTERVIEWS_REPOSITORY)
+    private interviewsRepository: InterviewsRepository,
     private getInterviewsUseCase: GetInterviewsUseCaseService,
     private interviewsService: InterviewsService,
-    private getInterviewDetailsUseCaseService: GetInterviewDetailsUseCaseService
+    private getInterviewDetailsUseCaseService: GetInterviewDetailsUseCaseService,
+    private router: Router
   ) {
     console.log('InterviewsEffects constructor called');
     console.log('actions$:', this.actions$);
@@ -39,7 +50,9 @@ export class InterviewsEffects {
             ),
             catchError((error) =>
               of(
-                InterviewsActions.loadInterviewsFailure({ error: error.message })
+                InterviewsActions.loadInterviewsFailure({
+                  error: error.message,
+                })
               )
             )
           )
@@ -56,7 +69,9 @@ export class InterviewsEffects {
               InterviewsActions.loadInterviewSuccess({ interview })
             ),
             catchError((error) =>
-              of(InterviewsActions.loadInterviewFailure({ error: error.message }))
+              of(
+                InterviewsActions.loadInterviewFailure({ error: error.message })
+              )
             )
           )
         )
@@ -91,13 +106,72 @@ export class InterviewsEffects {
             map(() => InterviewsActions.deleteInterviewSuccess({ id })),
             catchError((error) =>
               of(
-                InterviewsActions.deleteInterviewFailure({ error: error.message })
+                InterviewsActions.deleteInterviewFailure({
+                  error: error.message,
+                })
               )
             )
           )
         )
       )
     );
+
+    this.shareInterview$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(InterviewsActions.shareInterview),
+        switchMap(({ interviewId }) =>
+          this.interviewsRepository.getShareToken(interviewId).pipe(
+            map((token) => InterviewsActions.shareInterviewSuccess({ token })),
+            catchError((error) =>
+              of(
+                InterviewsActions.shareInterviewFailure({
+                  error: error.message,
+                })
+              )
+            )
+          )
+        )
+      )
+    );
+
+    this.shareInterviewSuccess$ = createEffect(
+      () =>
+        this.actions$.pipe(
+          ofType(InterviewsActions.shareInterviewSuccess),
+          tap(({token}) => {
+            const currentUrl = this.router.url;
+            const urlSegments = currentUrl.split('/');
+            const lang = urlSegments[1] || 'en';
+            console.log('token: ', token);
+
+            this.router.navigate(
+              [`/${lang}/agents/agents_lab/interviewer/interviews/start`],
+              {
+                queryParams: { token: token },
+              }
+            );
+          })
+        ),
+      { dispatch: false }
+    );
+
+    this.getInterview$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(InterviewsActions.getInterviewLink),
+        switchMap(({ token }) =>
+          this.interviewsRepository.getInterviewLink(token).pipe(
+            map((interviewLink) => InterviewsActions.getInterviewLinkSuccess({ interviewLink })),
+            catchError((error) =>
+              of(
+                InterviewsActions.shareInterviewFailure({
+                  error: error.message,
+                })
+              )
+            )
+          )
+        )
+      )
+    )
 
     console.log('✅ All effects initialized successfully');
   }

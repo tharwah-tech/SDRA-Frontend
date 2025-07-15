@@ -2,16 +2,16 @@
 <div class="interview-container">
   <div class="interview-card">
     <!-- Loading State -->
-    <div *ngIf="loading()" class="loading-container">
+    <div *ngIf="loading$ |async" class="loading-container">
       <mat-spinner diameter="50"></mat-spinner>
       <p class="loading-text">Preparing your interview...</p>
     </div>
 
     <!-- Error State -->
-    <div *ngIf="error() && !loading()" class="error-container">
+    <div *ngIf="(error$ | async) && !(loading$ |async)" class="error-container">
       <mat-icon class="error-icon">error</mat-icon>
       <h3>Unable to Load Interview</h3>
-      <p class="error-message">{{ error() }}</p>
+      <p class="error-message">{{ (error$ | async)?.message}}</p>
       <button mat-raised-button color="primary" (click)="onRetry()">
         <mat-icon>refresh</mat-icon>
         Try Again
@@ -19,7 +19,7 @@
     </div>
 
     <!-- Interview Ready State -->
-    <div *ngIf="!loading() && !error() && interviewUrl()" class="interview-content">
+    <div *ngIf="!(loading$ |async) && !(error$ | async) && interviewUrl()" class="interview-content">
       <!-- Header -->
       <div class="interview-header">
         <h2>Senior Frontend Developer Interview</h2>
@@ -52,17 +52,17 @@
 
       <!-- Action Buttons -->
       <div class="action-buttons">
-        <button 
-          mat-raised-button 
-          color="primary" 
+        <button
+          mat-raised-button
+          color="primary"
           class="start-button"
           (click)="onStartInterview()">
           Start Interview
         </button>
-        
-        <a 
-          mat-button 
-          color="accent" 
+
+        <a
+          mat-button
+          color="accent"
           class="back-link"
           [routerLink]="['../../../agent', routeSnapshot.snapshot.params['id']]">
           Go Back
@@ -73,13 +73,13 @@
       <div *ngIf="interviewUrl()" class="interview-url-container">
         <h4>Interview Link:</h4>
         <div class="url-display">
-          <input 
-            readonly 
-            [value]="interviewUrl()" 
+          <input
+            readonly
+            [value]="interviewUrl()"
             class="url-input"
             #urlInput>
-          <button 
-            mat-icon-button 
+          <button
+            mat-icon-button
             class="copy-button"
             (click)="copyToClipboard(urlInput)">
             <mat-icon>content_copy</mat-icon>
@@ -90,7 +90,7 @@
       <!-- Privacy Notice -->
       <div class="privacy-notice">
         <p>
-          By continuing, you agree to the recording and processing of this interview. 
+          By continuing, you agree to the recording and processing of this interview.
           Your privacy is protected and recordings are used solely for evaluation purposes.
         </p>
       </div>

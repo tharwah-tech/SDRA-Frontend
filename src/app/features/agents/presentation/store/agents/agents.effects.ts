@@ -14,7 +14,6 @@ export class AgentsEffects {
   loadAgents$;
   loadAgent$;
 
-
   constructor(
     private actions$: Actions,
     private getAgentsUseCase: GetAgentsUseCaseService,
@@ -27,15 +26,16 @@ export class AgentsEffects {
         ofType(AgentsActions.loadAgents),
         mergeMap(() =>
           this.getAgentsUseCase.execute().pipe(
-            map(agentsSummary => {
-
+            map((agentsSummary) => {
               return AgentsActions.loadAgentsSuccess({ agents: agentsSummary });
             }),
-            catchError(error => {
+            catchError((error) => {
               console.error('Error loading agents:', error);
-              return of(AgentsActions.loadAgentsFailure({
-                error: error.message || 'Failed to load agents'
-              }));
+              return of(
+                AgentsActions.loadAgentsFailure({
+                  error: error.message || 'Failed to load agents',
+                })
+              );
             })
           )
         )
@@ -47,21 +47,21 @@ export class AgentsEffects {
         ofType(AgentsActions.loadAgent),
         mergeMap(({ id }) =>
           this.getAgentByIdUseCase.execute(id).pipe(
-            map(agentDto => {
+            map((agentDto) => {
               const agent = AgentMapper.toEntity(agentDto);
               return AgentsActions.loadAgentSuccess({ agent });
             }),
-            catchError(error => {
+            catchError((error) => {
               console.error('Error loading agent:', error);
-              return of(AgentsActions.loadAgentFailure({
-                error: error.message || 'Failed to load agent'
-              }));
+              return of(
+                AgentsActions.loadAgentFailure({
+                  error: error.message || 'Failed to load agent',
+                })
+              );
             })
           )
         )
       )
     );
-
-
   }
 }

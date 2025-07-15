@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, computed, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Observable } from 'rxjs';
+import { filter, Observable, tap } from 'rxjs';
 
 // Angular Material
 import { MatButtonModule } from '@angular/material/button';
@@ -20,7 +20,10 @@ import {
 // Facades
 import { InterviewsFacade } from '../../../facades/interviews.facade';
 import { ActivatedRoute, Router } from '@angular/router';
-import { InterviewShareService } from '../../../../data/services/interview-share.service';
+import { Store } from '@ngrx/store';
+import { InterviewsActions } from '../../../store/interviews/interviews.actions';
+import { showSnackbar } from '../../../../../../shared/utils/show-snackbar-notification.util';
+import { ToastrService } from 'ngx-toastr';
 
 // Import the InterviewShareService for API calls
 
@@ -65,7 +68,7 @@ export class InterviewListComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private destroyRef: DestroyRef,
-    private interviewShareService: InterviewShareService
+    private store: Store,
   ) {
     this.interviews$ = this.interviewsFacade.interviews$;
     this.loading$ = this.interviewsFacade.loading$;
@@ -108,53 +111,56 @@ export class InterviewListComponent implements OnInit {
     const currentUrl = this.router.url;
     const urlSegments = currentUrl.split('/');
     const lang = urlSegments[1] || 'en';
-    this.router.navigate(
-      [`/${lang}/agents/agent/${agentId}/interview-details/${interview.id}`]
-    );
-  }
-
-  onPlayInterview(interview: InterviewEntity): void {
-    console.log('Play interview:', interview);
-
-    // Get the current agent ID from the route
-    const agentId = this.route.snapshot.params['id'];
-
-    if (!agentId) {
-      console.error('Agent ID not found in route parameters');
-      return;
-    }
-
-    console.log('Agent ID:', agentId);
-    console.log('Interview ID:', interview.id);
-
-    // Step 1: Get the share token for the interview
-    this.interviewShareService
-      .getShareToken(interview.id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (token: string) => {
-          console.log('Share token received:', token);
-
-          // Navigate to start-interview-page with the token
-          const currentUrl = this.router.url;
-          const urlSegments = currentUrl.split('/');
-          const lang = urlSegments[1] || 'en';
-
-          this.router.navigate(
-            [`/${lang}/agents/agent/${agentId}/StartInterview`],
-            {
-              queryParams: { token: token },
-            }
-          );
-        },
-        error: (error) => {
-          console.error('Error getting share token:', error);
-          // Handle error - maybe show a toast notification
-        },
-      });
+    this.router.navigate([
+      `/${lang}/agents/agent/${agentId}/interview-details/${interview.id}`,
+    ]);
   }
 
   onShareInterview(interview: InterviewEntity): void {
+    this.store.dispatch(
+      InterviewsActions.shareInterview({ interviewId: interview.id })
+    );
+    console.log('share interview:', interview);
+
+    // // Get the current agent ID from the route
+    // const agentId = this.route.snapshot.params['id'];
+
+    // if (!agentId) {
+    //   console.error('Agent ID not found in route parameters');
+    //   return;
+    // }
+
+    // console.log('Agent ID:', agentId);
+    // console.log('Interview ID:', interview.id);
+
+    // // Step 1: Get the share token for the interview
+    // this.interviewShareService
+    //   .getShareToken(interview.id)
+    //   .pipe(takeUntilDestroyed(this.destroyRef))
+    //   .subscribe({
+    //     next: (token: string) => {
+    //       console.log('Share token received:', token);
+
+    //       // Navigate to start-interview-page with the token
+    //       const currentUrl = this.router.url;
+    //       const urlSegments = currentUrl.split('/');
+    //       const lang = urlSegments[1] || 'en';
+
+    //       this.router.navigate(
+    //         [`/${lang}/agents/agent/${agentId}/StartInterview`],
+    //         {
+    //           queryParams: { token: token },
+    //         }
+    //       );
+    //     },
+    //     error: (error) => {
+    //       console.error('Error getting share token:', error);
+    //       // Handle error - maybe show a toast notification
+    //     },
+    //   });
+  }
+
+  onPlayInterview(interview: InterviewEntity): void {
     console.log('Share interview:', interview);
   }
 

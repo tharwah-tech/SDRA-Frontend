@@ -1,13 +1,17 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { InterviewsRepository } from '../../domain/repositories/interviews.repository';
 import {
   InterviewEntity,
   InterviewsResponse,
   InterviewStatus,
 } from '../../domain/entities/interview.entity';
-import { InterviewModel } from '../models/interview.model';
+import {
+  InterviewLinkResponse,
+  InterviewModel,
+  ShareTokenResponse,
+} from '../models/interview.model';
 import { ApiResponse } from '../../../../core/models/api-response.model';
 import { PaginatedModel } from '../../../../core/models/paginated.model';
 import { handleResponse } from '../../../../shared/utils/handle-reponses.util';
@@ -29,7 +33,6 @@ export class InterviewsService implements InterviewsRepository {
     @Inject(BASE_API_URL) private baseUrl: string
   ) {
     this.apiUrl = `${this.baseUrl}/agents_lab/interviews`;
-
   }
 
   getInterviews(): Observable<InterviewsResponse> {
@@ -66,6 +69,38 @@ export class InterviewsService implements InterviewsRepository {
     return handleResponse<InterviewDetailsModel, InterviewDetailsEntity>(
       response$,
       this.mapDetailsModelToEntity.bind(this)
+    );
+  }
+
+  getShareToken(interviewId: string): Observable<string> {
+    const formData = new FormData();
+    formData.append('interview_id', interviewId);
+
+    // Don't set Content-Type header for FormData - browser will set it automatically
+    const response$ = this.http.post<ApiResponse<ShareTokenResponse>>(
+      `${this.apiUrl}/share/`,
+      {
+        interview_id: interviewId,
+      }
+    );
+    response$
+      .pipe(tap((response) => console.log('response$: ', response.data.token)))
+      .subscribe();
+
+    return handleResponse<ShareTokenResponse, string>(
+      response$,
+      (model) => model.token
+    );
+  }
+
+  getInterviewLink(token: string): Observable<string> {
+    const response$ = this.http.get<ApiResponse<InterviewLinkResponse>>(
+      `${this.apiUrl}/link/?token=${token}`
+    );
+
+    return handleResponse<InterviewLinkResponse, string>(
+      response$,
+      (model) => model.interview_url
     );
   }
 

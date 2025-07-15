@@ -24,7 +24,19 @@ export const InterviewsActions = createActionGroup({
     'Delete Interview Success': props<{ id: string }>(),
     'Delete Interview Failure': props<{ error: ApiError }>(),
 
+    'Share Interview': props<{interviewId: string}>(),
+    'Share Interview Success':props<{token: string}>(),
+    'Share Interview Failure': props<{ error: ApiError }>(),
+    'Set Inteview Token': props<{token: string}>(),
+
+    'Get Interview Link': props<{token: string}>(),
+    'Get Interview Link Success': props<{interviewLink: string}>(),
+    'Get Interview Link Fails': props<{ error: ApiError }>(),
+    'Set Inteview Link': props<{interviewLink: string}>(),
+
     'Clear Selected Interview': emptyProps(),
     'Set Selected Interview': props<{ interview: InterviewDetailsEntity }>(),
+
+    'Set Error': props<{error: ApiError}>()
   }
 });

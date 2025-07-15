@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, input, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { filter, tap } from 'rxjs';
+import { filter, Observable, tap } from 'rxjs';
 
 // Components
 import { AgentCardComponent } from '../../components/agent-card/agent-card.component';
@@ -17,20 +17,22 @@ import { InterviewsFacade } from '../../facades/interviews.facade';
 
 // Entities
 import { AgentEntity } from '../../../domain/entities/agent.entity';
-import { MainPageStructureComponent } from "../../../../../shared/components/main-page-structure/main-page-structure.component";
+import { MainPageStructureComponent } from '../../../../../shared/components/main-page-structure/main-page-structure.component';
 import { RouteLink } from '../../../../../shared/components/page-navigation-routes/page-navigation-routes.component';
 import { SideNavTabs } from '../../../../../core/enums/side-nave-tabs.enum';
 import { MatCardModule } from '@angular/material/card';
+import { showSnackbar } from '../../../../../shared/utils/show-snackbar-notification.util';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-agent-view-page',
   imports: [
     CommonModule,
     AgentCardComponent,
-    InterviewListComponent,  // Add this import
+    InterviewListComponent, // Add this import
     MatProgressSpinnerModule,
     MainPageStructureComponent,
-    MatCardModule
+    MatCardModule,
   ],
   templateUrl: './agent-view-page.component.html',
   styleUrl: './agent-view-page.component.scss',
@@ -58,6 +60,7 @@ export class AgentViewPageComponent implements OnInit {
   constructor(
     private agentsFacade: AgentsFacade,
     private interviewsFacade: InterviewsFacade,
+    private toastr: ToastrService,
     private destroyRef: DestroyRef
   ) {
     // Initialize observables after services are injected
@@ -74,6 +77,20 @@ export class AgentViewPageComponent implements OnInit {
   ngOnInit(): void {
     this.loadInitialData();
     this.setupSubscriptions();
+    this.agentError$
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        filter((val) => !!val),
+        tap((error) => showSnackbar(this.toastr, { type: 'error', error }))
+      )
+      .subscribe();
+    this.interviewsError$
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        filter((val) => !!val),
+        tap((error) => showSnackbar(this.toastr, { type: 'error', error }))
+      )
+      .subscribe();
   }
 
   private loadInitialData(): void {
@@ -124,7 +141,10 @@ export class AgentViewPageComponent implements OnInit {
   CurrentPagePath(): RouteLink[] {
     return [
       { path: `/${this.lang()}/agents`, label: 'AI Agents' },
-      { path: `/${this.lang()}/agents/agent/${this.id()}`, label: this.selectedAgent?.name || 'Agent Details' }
+      {
+        path: `/${this.lang()}/agents/agent/${this.id()}`,
+        label: this.selectedAgent?.name || 'Agent Details',
+      },
     ];
   }
 }

@@ -8,4 +8,6 @@ export abstract class InterviewsRepository {
   abstract getInterviewById(id: string): Observable<InterviewDetailsEntity>;
   abstract updateInterviewStatus(id: string, status: string): Observable<InterviewDetailsEntity>;
   abstract deleteInterview(id: string): Observable<void>;
+  abstract getShareToken(interviewId: string): Observable<string>;
+  abstract getInterviewLink(token: string): Observable<string>;
 }

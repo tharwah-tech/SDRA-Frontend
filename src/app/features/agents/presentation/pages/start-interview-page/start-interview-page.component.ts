@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy, signal } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  signal,
+  DestroyRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,8 +13,16 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { Subject, takeUntil } from 'rxjs';
-import { InterviewShareService } from '../../../data/services/interview-share.service';
+import { filter, Observable, Subject, takeUntil, tap } from 'rxjs';
+import { Store } from '@ngrx/store';
+import {
+  selectInterviewsError,
+  selectInterviewsLoading,
+  selectSelectedInterviewLink,
+} from '../../store/interviews/interviews.selectors';
+import { ApiError } from '../../../../../core/models/api-error.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { InterviewsActions } from '../../store/interviews/interviews.actions';
 
 @Component({
   selector: 'app-start-interview-page',
@@ -20,24 +34,28 @@ import { InterviewShareService } from '../../../data/services/interview-share.se
     MatIconModule,
     MatInputModule,
     MatFormFieldModule,
-    RouterModule
+    RouterModule,
   ],
   templateUrl: './start-interview-page.component.html',
-  styleUrl: './start-interview-page.component.scss'
+  styleUrl: './start-interview-page.component.scss',
 })
-export class StartInterviewPageComponent implements OnInit, OnDestroy {
+export class StartInterviewPageComponent implements OnInit {
   // Component state signals
   token = signal<string | null>(null);
+  interviewLink$: Observable<string | null>;
   interviewUrl = signal<string | null>(null);
-  loading = signal<boolean>(false);
-  error = signal<string | null>(null);
-
-  private destroy$ = new Subject<void>();
+  loading$: Observable<boolean>;
+  error$: Observable<ApiError | null>;
 
   constructor(
+    private store: Store,
     private route: ActivatedRoute,
-    private interviewShareService: InterviewShareService
-  ) {}
+    private destroyRef: DestroyRef
+  ) {
+    this.interviewLink$ = this.store.select(selectSelectedInterviewLink);
+    this.loading$ = this.store.select(selectInterviewsLoading);
+    this.error$ = this.store.select(selectInterviewsError);
+  }
 
   // Make route accessible in template
   get routeSnapshot() {
@@ -46,47 +64,43 @@ export class StartInterviewPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadInterviewData();
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.interviewLink$
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        filter((val) => !!val),
+        tap((link) => this.interviewUrl.set(link))
+      )
+      .subscribe();
   }
 
   private loadInterviewData(): void {
-    this.route.queryParams.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(params => {
-      const token = params['token'];
-      
-      if (token) {
-        this.token.set(token);
-        this.fetchInterviewUrl(token);
-      } else {
-        this.error.set('Token not found in URL parameters');
-      }
-    });
+    this.route.queryParams
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((params) => {
+        const token = params['token'];
+
+        if (token) {
+          this.token.set(token);
+          this.store.dispatch(InterviewsActions.setInteviewToken(token));
+          this.fetchInterviewUrl(token);
+        } else {
+          // this.error$.set('Token not found in URL parameters');
+          this.store.dispatch(
+            InterviewsActions.setError({
+              error: {
+                message: 'Token not found in URL parameters',
+                errors: ['Missing Token'],
+                statusCode: 400,
+              },
+            })
+          );
+        }
+      });
   }
 
   private fetchInterviewUrl(token: string): void {
-    this.loading.set(true);
-    this.error.set(null);
-
     // Step 2: Get the interview URL using the token
-    this.interviewShareService.getInterviewLink(token).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe({
-      next: (interviewUrl: string) => {
-        this.interviewUrl.set(interviewUrl);
-        this.loading.set(false);
-        console.log('Interview URL loaded successfully:', interviewUrl);
-      },
-      error: (error) => {
-        this.error.set(error.message || 'Failed to load interview URL');
-        this.loading.set(false);
-        console.error('Error loading interview URL:', error);
-      }
-    });
+    this.store.dispatch(InterviewsActions.getInterviewLink({ token }));
   }
 
   onStartInterview(): void {
@@ -109,7 +123,7 @@ export class StartInterviewPageComponent implements OnInit, OnDestroy {
   copyToClipboard(input: HTMLInputElement): void {
     input.select();
     input.setSelectionRange(0, 99999); // For mobile devices
-    
+
     try {
       document.execCommand('copy');
       console.log('Interview URL copied to clipboard');

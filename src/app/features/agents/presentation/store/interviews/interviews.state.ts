@@ -10,6 +10,8 @@ export const INTERVIEWS_FEATURE_KEY = 'interviews';
 export interface InterviewsState {
   interviews: InterviewEntity[];
   selectedInterview: InterviewDetailsEntity | null;
+  selectedInterviewToken: string | null;
+  selectedInterviewLink: string | null;
   loading: boolean;
   error: ApiError | null;
   totalCount: number;
@@ -21,6 +23,8 @@ export interface InterviewsState {
 export const initialInterviewsState: InterviewsState = {
   interviews: [],
   selectedInterview: null,
+  selectedInterviewToken: null,
+  selectedInterviewLink: null,
   loading: false,
   error: null,
   totalCount: 0,
