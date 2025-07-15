@@ -18,8 +18,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { GenderType } from '../../../../../core/enums/gender-type.enum';
-import { JobType } from '../../../../../core/enums/job-type.enum';
+import { GenderType, mapGanderType } from '../../../../../core/enums/gender-type.enum';
+import { JobType, mapJobTypeIntoString } from '../../../../../core/enums/job-type.enum';
 import { Store } from '@ngrx/store';
 import { MatOptionModule } from '@angular/material/core';
 import { CreateInteviewEntity } from '../../../domain/entities/create-interview.entity';
@@ -190,45 +190,17 @@ export class CreateInterviewFormComponent {
       questionsArray.removeAt(index);
     }
   }
-  // onSubmit() {
-  //   if (this.form.valid) {
-  //     const formData = this.form.getRawValue(); // or this.form.value
 
-  //     // Convert to your interface
-  //     const interviewData = {
-  //       candidate_info: {
-  //         full_name:
-  //           formData.CandidateInformationFormGroup?.candidateFullName || '',
-  //         email: formData.CandidateInformationFormGroup?.candidateEmail || '',
-  //         phone: formData.CandidateInformationFormGroup?.candidatePhone || '',
-  //         gender: formData.CandidateInformationFormGroup?.candidateGender || '',
-  //       },
-  //       job_info: {
-  //         title: formData.JobInformationFormGroup?.jobTitle || '',
-  //         contract_type: formData.JobInformationFormGroup?.jobType || '',
-  //         job_description:
-  //           formData.JobInformationFormGroup?.jobDescription || '',
-  //         job_requirements:
-  //           formData.JobInformationFormGroup?.jobRequirements || '',
-  //         questions:
-  //           formData.InterviewQuestionsFormArray?.map((formQues, index) => ({
-  //             question_number: index,
-  //             question: formQues.question || '',
-  //           })) || [],
-  //       },
-  //     } as CreateInteviewEntity;
-  //     console.log('Interview Data:', interviewData);
-  //     this.onSubmitData.emit(interviewData);
-  //   } else {
-  //     // Handle form errors
-  //     Object.values(this.form.controls).forEach((control) => {
-  //       control.markAsTouched();
-  //       control.updateValueAndValidity();
-  //     });
-  //   }
-  // }
   onCancel() {
     this.router.navigate(['/agents/interviews']);
+  }
+
+  getGenderTypeString(type: GenderType): string{
+    return mapGanderType(type);
+  }
+
+  getJobTypeString(type: JobType):string{
+    return mapJobTypeIntoString(type);
   }
 
   get candidateFullName() {

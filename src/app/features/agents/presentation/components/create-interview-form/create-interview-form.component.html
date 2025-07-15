@@ -126,7 +126,7 @@
                   *ngFor="let gender of GenderTypeValues"
                   [value]="gender"
                 >
-                  {{ gender }}
+                  {{ getGenderTypeString(gender) }}
                 </mat-option>
               </mat-select>
               <mat-error *ngIf="candidateGenderRequired">
@@ -185,7 +185,7 @@
                   *ngFor="let jobType of JobTypeValues"
                   [value]="jobType"
                 >
-                  {{ jobType }}
+                  {{ getJobTypeString(jobType) }}
                 </mat-option>
               </mat-select>
               <mat-error *ngIf="jobTypeRequired">

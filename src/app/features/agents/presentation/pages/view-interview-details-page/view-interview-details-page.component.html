@@ -9,8 +9,8 @@
         <button
           mat-icon-button
           class="!flex !flex-row !justify-center !items-center !w-[38px] !h-[38px]"
-        (click)="goBack()"
-          >
+          (click)="goBack()"
+        >
           <mat-icon
             ><img
               src="../../../../../../assets/images/icons/navigate-back-arrow.svg"
@@ -84,9 +84,7 @@
             </div>
             <div class="flex flex-col items-start justify-start w-full gap-1">
               <h2 class="param-title-txt">Gender</h2>
-              <span class="parm-value-txt">{{
-                interviewDetails?.candidate_info?.gender
-              }}</span>
+              <span class="parm-value-txt">{{ GenderType }}</span>
             </div>
           </mat-card-content>
         </mat-card>
@@ -115,7 +113,7 @@
             <div class="flex flex-col items-start justify-start w-full gap-1">
               <h2 class="param-title-txt">Contract Type</h2>
               <span class="parm-value-txt">{{
-                interviewDetails?.job_info?.contract_type
+                JobType
               }}</span>
             </div>
             <div class="flex flex-col items-start justify-start w-full gap-1">
@@ -195,7 +193,7 @@
             >
               {{ quistion.question_number }}
             </div>
-            <span class="quistion-txt ">{{ quistion.question }}</span>
+            <span class="quistion-txt">{{ quistion.question }}</span>
           </div>
           }
         </mat-card-content>

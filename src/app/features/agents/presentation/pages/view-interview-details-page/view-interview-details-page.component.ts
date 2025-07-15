@@ -29,6 +29,8 @@ import { showSnackbar } from '../../../../../shared/utils/show-snackbar-notifica
 import { InterviewsActions } from '../../store/interviews/interviews.actions';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { GenderType, mapGanderType } from '../../../../../core/enums/gender-type.enum';
+import { mapJobTypeIntoString } from '../../../../../core/enums/job-type.enum';
 
 @Component({
   selector: 'app-view-interview-details-page',
@@ -105,6 +107,12 @@ export class ViewInterviewDetailsPageComponent
         label: 'View Interview',
       },
     ];
+  }
+  get GenderType(): string{
+    return mapGanderType(this.interviewDetails?.candidate_info?.gender!);
+  }
+  get JobType():string{
+    return mapJobTypeIntoString(this.interviewDetails?.job_info?.contract_type!)
   }
   shareInterview() {
     this.store.dispatch(
