@@ -4,7 +4,7 @@
 >
   <ng-content page-content class="w-full h-full">
     <!-- candidate name , job title , interview statu, and share btn -->
-    <div class="flex flex-row justify-between items-center w-full">
+    <div class="flex flex-col md:flex-row jsutify-start md:justify-between items-start md:items-center w-full">
       <div class="flex flex-row justify-start items-center gap-2">
         <button
           mat-icon-button
@@ -47,7 +47,7 @@
       class="!flex !flex-col !justify-start !items-start !gap-4 w-full h-full overflow-y-auto"
     >
       <!-- candidate ,and job info cards -->
-      <div class="flex flex-row justify-start items-start gap-4 w-full h-auto">
+      <div class="flex flex-col md:flex-row justify-start items-center md:items-start gap-4 w-full h-auto">
         <mat-card
           name="candidate-information"
           class="flex flex-col flex-grow w-full h-full gap-2 p-4 bg-white !rounded-lg"
@@ -135,7 +135,7 @@
       </div>
 
       <!-- Job description ,and job Requiements cards -->
-      <div class="flex flex-row justify-start items-start gap-4 w-full h-auto">
+      <div class="flex flex-col md:flex-row justify-start items-center md:items-start gap-4 w-full h-auto">
         <mat-card
           name="candidate-information"
           class="flex flex-col flex-grow w-full h-full gap-2 p-4 bg-white !rounded-lg"

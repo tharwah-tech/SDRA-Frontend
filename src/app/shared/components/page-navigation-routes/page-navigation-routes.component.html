@@ -1,10 +1,11 @@
-<div class="page-navigation-routes">
-  <ng-container
+<div class="page-navigation-routes h-full">
+  <div
     *ngFor="let route of routesList(); let i = index; let last = last"
+    class="flex flex-row justify-start items-center gap-2"
   >
     <a [routerLink]="route.path">{{ route.label }}</a>
     <mat-icon *ngIf="!last" class="separator"
       ><img src="../../../../assets/images/icons/chevron-right.svg" alt=""
     /></mat-icon>
-  </ng-container>
+  </div>
 </div>

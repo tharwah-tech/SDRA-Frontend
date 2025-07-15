@@ -1,10 +1,10 @@
 <!-- Updated Agent Card Component HTML -->
 <mat-card
-  class="!flex !flex-row !justify-start !items-start !w-full !gap-[32px] p-[24px]"
+  class="!flex flex-col md:!flex-row !justify-start !items-start !w-full !gap-[32px] p-[24px]"
 >
   <!-- Avatar -->
   <div
-    class="flex justify-center items-center w-[156px] h-[156px] rounded-[20px]"
+    class="flex justify-center items-center w-full md:w-[156px] h-auto md:h-[156px] rounded-[20px]"
   >
     <img
       [src]="`https://api.sdra-dev.com/${agent.avatarUrl}`"

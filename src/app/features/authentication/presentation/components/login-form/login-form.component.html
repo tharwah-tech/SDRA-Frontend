@@ -2,7 +2,11 @@
   name="loginFormContainer"
   class="flex flex-col items-center justify-center"
 >
-  <form [formGroup]="form" (submit)="login()" class="login-form">
+  <form
+    [formGroup]="form"
+    (submit)="login()"
+    class="flex flex-col justify-center items-center w-full md:w-[360px] gap-[24px] p-4 md:p-0"
+  >
     <mat-card class="w-[360px] !shadow-none">
       <mat-card-title>
         <div class="flex flex-col justify-start items-center gap-[8px]">
@@ -106,12 +110,14 @@
           </button>
           }
           <div class="w-full text-center mt-[8px] mb-[16px]">
-            <h3 class="register-txt"
-              >Don’t have an account?
-              <span class="text-[var(--primary-color)] cursor-pointer" (click)="goToRegister()"
+            <h3 class="register-txt">
+              Don’t have an account?
+              <span
+                class="text-[var(--primary-color)] cursor-pointer"
+                (click)="goToRegister()"
                 >Sign up</span
-              ></h3
-            >
+              >
+            </h3>
           </div>
         </div>
       </mat-card-actions>
