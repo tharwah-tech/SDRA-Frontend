@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, DestroyRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, signal, computed, DestroyRef, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, Observable, tap, map, combineLatest } from 'rxjs';
@@ -53,6 +53,11 @@ export class InterviewListComponent implements OnInit, AfterViewInit {
   // Component state
   selectedStatus = signal('all');
   
+  // Data storage
+  private allInterviews: InterviewEntity[] = [];
+  private filteredInterviews: InterviewEntity[] = [];
+  private dataLoaded = false; // Track if data has been loaded
+  
   // Mat Table configuration
   displayedColumns: string[] = ['candidateName', 'jobTitle', 'date', 'status', 'actions'];
   dataSource = new MatTableDataSource<InterviewEntity>([]);
@@ -78,12 +83,27 @@ export class InterviewListComponent implements OnInit, AfterViewInit {
     { value: InterviewStatus.TAKEN, label: 'Taken' },
   ];
 
+  // Computed properties for pagination
+  get paginatedInterviews(): InterviewEntity[] {
+    if (!this.filteredInterviews || this.filteredInterviews.length === 0) {
+      return [];
+    }
+    const startIndex = this.pageIndex * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    return this.filteredInterviews.slice(startIndex, endIndex);
+  }
+
+  get totalFilteredItems(): number {
+    return this.filteredInterviews ? this.filteredInterviews.length : 0;
+  }
+
   constructor(
     private interviewsFacade: InterviewsFacade,
     private router: Router,
     private route: ActivatedRoute,
     private destroyRef: DestroyRef,
     private store: Store,
+    private cdr: ChangeDetectorRef,
   ) {
     this.interviews$ = this.interviewsFacade.interviews$;
     this.loading$ = this.interviewsFacade.loading$;
@@ -92,24 +112,19 @@ export class InterviewListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    // Initialize state
+    this.allInterviews = [];
+    this.filteredInterviews = [];
+    this.dataLoaded = false;
+    
+    // Load interviews and setup data source
     this.loadInterviews();
     this.setupDataSource();
   }
 
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    
-    // Configure custom sort accessor
-    this.dataSource.sortingDataAccessor = (data: InterviewEntity, sortHeaderId: string) => {
-      switch (sortHeaderId) {
-        case 'candidateName': return data.candidateName.toLowerCase();
-        case 'jobTitle': return data.jobTitle.toLowerCase();
-        case 'date': return new Date(data.creationDate).getTime();
-        case 'status': return data.status;
-        default: return '';
-      }
-    };
+    // Don't set paginator and sort on dataSource since we're handling pagination manually
+    this.setupCustomSort();
   }
 
   private setupDataSource(): void {
@@ -120,24 +135,115 @@ export class InterviewListComponent implements OnInit, AfterViewInit {
     ]).pipe(
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(([interviews, count]) => {
-      this.dataSource.data = interviews || [];
-      this.totalItems = count || 0;
+      // Mark that we've received data from the observable
+      this.dataLoaded = true;
       
-      // Apply status filter
-      this.applyStatusFilter();
+      // Process the data
+      this.processInterviewData(interviews, count);
     });
   }
 
+  private processInterviewData(interviews: InterviewEntity[] | null | undefined, count: number | null | undefined): void {
+    if (interviews && Array.isArray(interviews) && interviews.length > 0) {
+      this.allInterviews = interviews;
+      this.totalItems = count || interviews.length;
+      
+      // Apply status filter and update pagination
+      this.applyStatusFilter();
+      this.updatePaginatedData();
+      
+      // Trigger change detection to ensure UI updates
+      this.cdr.detectChanges();
+    } else if (interviews && Array.isArray(interviews) && interviews.length === 0) {
+      // Handle empty but valid data
+      this.allInterviews = [];
+      this.filteredInterviews = [];
+      this.totalItems = 0;
+      this.dataSource.data = [];
+      
+      // Trigger change detection to ensure UI updates
+      this.cdr.detectChanges();
+    }
+  }
+
+  private setupCustomSort(): void {
+    if (this.sort) {
+      this.sort.sortChange.pipe(
+        takeUntilDestroyed(this.destroyRef)
+      ).subscribe(() => {
+        this.sortFilteredData();
+        this.pageIndex = 0; // Reset to first page when sorting
+        this.updatePaginatedData();
+      });
+    }
+  }
+
+  private sortFilteredData(): void {
+    // Don't sort if no data or sort is not active
+    if (!this.filteredInterviews || this.filteredInterviews.length === 0 || !this.sort?.active || !this.sort?.direction) {
+      return;
+    }
+
+    this.filteredInterviews = this.filteredInterviews.sort((a, b) => {
+      const isAsc = this.sort.direction === 'asc';
+      
+      switch (this.sort.active) {
+        case 'candidateName':
+          return this.compare(a.candidateName.toLowerCase(), b.candidateName.toLowerCase(), isAsc);
+        case 'jobTitle':
+          return this.compare(a.jobTitle.toLowerCase(), b.jobTitle.toLowerCase(), isAsc);
+        case 'date':
+          return this.compare(new Date(a.creationDate).getTime(), new Date(b.creationDate).getTime(), isAsc);
+        case 'status':
+          return this.compare(a.status, b.status, isAsc);
+        default:
+          return 0;
+      }
+    });
+  }
+
+  private compare(a: string | number, b: string | number, isAsc: boolean): number {
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+  }
+
   private applyStatusFilter(): void {
+    // Ensure we have data to filter
+    if (!this.allInterviews || this.allInterviews.length === 0) {
+      this.filteredInterviews = [];
+      return;
+    }
+
     const status = this.selectedStatus();
     if (status === 'all') {
-      this.dataSource.filter = '';
+      this.filteredInterviews = [...this.allInterviews];
     } else {
-      this.dataSource.filterPredicate = (data: InterviewEntity, filter: string) => {
-        return data.status === filter;
-      };
-      this.dataSource.filter = status;
+      this.filteredInterviews = this.allInterviews.filter(interview => interview.status === status);
     }
+    
+    // Apply current sorting after filtering
+    this.sortFilteredData();
+  }
+
+  private updatePaginatedData(): void {
+    // Ensure we have filtered data
+    if (!this.filteredInterviews || this.filteredInterviews.length === 0) {
+      this.dataSource.data = [];
+      return;
+    }
+
+    // Check if current page index is valid
+    const maxPageIndex = Math.ceil(this.filteredInterviews.length / this.pageSize) - 1;
+    if (this.pageIndex > maxPageIndex) {
+      this.pageIndex = Math.max(0, maxPageIndex);
+    }
+
+    // Calculate paginated data
+    const startIndex = this.pageIndex * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    const paginatedData = this.filteredInterviews.slice(startIndex, endIndex);
+    
+    // Update the data source
+    this.dataSource.data = paginatedData;
   }
 
   // Data loading
@@ -148,19 +254,16 @@ export class InterviewListComponent implements OnInit, AfterViewInit {
   // Status filter handling
   onStatusFilterChange(status: string): void {
     this.selectedStatus.set(status);
+    this.pageIndex = 0; // Reset to first page when filter changes
     this.applyStatusFilter();
-    
-    // Reset pagination when filter changes
-    if (this.paginator) {
-      this.paginator.firstPage();
-    }
+    this.updatePaginatedData();
   }
 
   // Pagination handling
   onPageChange(event: PageEvent): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.loadInterviews();
+    this.updatePaginatedData();
   }
 
   // Interview action methods
@@ -249,6 +352,19 @@ export class InterviewListComponent implements OnInit, AfterViewInit {
   }
 
   get showPaginator(): boolean {
-    return this.hasInterviews && this.totalItems > this.pageSize;
+    return this.totalFilteredItems > this.pageSize;
+  }
+
+  get hasDataLoaded(): boolean {
+    return this.dataLoaded;
+  }
+
+  get currentPageInfo(): string {
+    if (!this.totalFilteredItems || this.totalFilteredItems === 0) {
+      return '0 of 0';
+    }
+    const startIndex = this.pageIndex * this.pageSize + 1;
+    const endIndex = Math.min((this.pageIndex + 1) * this.pageSize, this.totalFilteredItems);
+    return `${startIndex}-${endIndex} of ${this.totalFilteredItems}`;
   }
 }
