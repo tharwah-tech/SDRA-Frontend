@@ -9,7 +9,8 @@
         <button
           mat-icon-button
           class="!flex !flex-row !justify-center !items-center !w-[38px] !h-[38px]"
-        >
+        (click)="goBack()"
+          >
           <mat-icon
             ><img
               src="../../../../../../assets/images/icons/navigate-back-arrow.svg"
@@ -32,7 +33,7 @@
         >
           {{ interviewDetails?.status }}
         </div>
-        <button mat-stroked-button>
+        <button mat-stroked-button (click)="shareInterview()">
           <div class="flex flex-row justify-center items-center gap-2">
             <img
               src="../../../../../../assets/images/icons/share-01.svg"

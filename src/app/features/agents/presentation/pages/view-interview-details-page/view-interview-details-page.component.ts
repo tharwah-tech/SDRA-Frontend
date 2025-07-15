@@ -106,4 +106,12 @@ export class ViewInterviewDetailsPageComponent
       },
     ];
   }
+  shareInterview() {
+    this.store.dispatch(
+      InterviewsActions.shareInterview({ interviewId: this.interviewId() })
+    );
+  }
+  goBack() {
+    this.router.navigateByUrl(`/${this.lang()}/agents/agent/${this.id()}`);
+  }
 }

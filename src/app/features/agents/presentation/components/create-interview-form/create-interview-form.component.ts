@@ -354,7 +354,7 @@ export class CreateInterviewFormComponent {
             formData.JobInformationFormGroup?.jobRequirements || '',
           questions:
             formData.InterviewQuestionsFormArray?.map((formQues, index) => ({
-              question_number: index,
+              question_number: index+1,
               question: formQues.question || '',
             })) || [],
         },
