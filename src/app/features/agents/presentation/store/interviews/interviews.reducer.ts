@@ -51,6 +51,29 @@ export const interviewsReducer = createReducer(
     loading: false,
     error,
   })),
+  // Create Interview
+  on(InterviewsActions.createInterview, (state, {interview}) => ({
+    ...state,
+    selectedInterviewid: null,
+    loading: true,
+    error: null,
+  })),
+
+  on(InterviewsActions.createInterviewSuccess, (state, { interviewId }) => ({
+    ...state,
+    selectedInterviewid: interviewId,
+    loading: false,
+    error: null,
+  })),
+
+  on(InterviewsActions.createInterviewFailure, (state, { error }) => {
+    console.log('reducer error : ', error);
+
+    return {
+    ...state,
+    loading: false,
+    error,
+  }}),
 
   // Update Interview Status
   on(InterviewsActions.updateInterviewStatus, (state) => ({

@@ -17,3 +17,6 @@ export interface InterviewShareResult {
   interviewUrl: string;
   token: string;
 }
+export interface CreateInterviewModel{
+  interview_id: string;
+}

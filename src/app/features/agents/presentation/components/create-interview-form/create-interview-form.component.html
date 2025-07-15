@@ -81,6 +81,12 @@
                     {{ country.label }}
                   </mat-option>
                 </mat-select>
+                <mat-error *ngIf="countryCodeRequired">
+                  country code is required
+                </mat-error>
+                <mat-error *ngIf="countryCodeInvaildPattern">
+                  country code is Invaild
+                </mat-error>
               </mat-form-field>
 
               <!-- Phone Number Input -->
@@ -101,6 +107,9 @@
                 </mat-hint>
                 <mat-error *ngIf="candidatePhoneRequired">
                   Phone number is required
+                </mat-error>
+                <mat-error *ngIf="candidatePhoneInvaildPattern">
+                  Phone number is Invaild
                 </mat-error>
               </mat-form-field>
             </div>
@@ -231,7 +240,7 @@
     <mat-card
       name="Interview-Questions"
       class="flex flex-col w-full gap-2 p-4 bg-white !rounded-lg"
-      [formArrayName]="'InterviewQuestionsFormArray'"
+      formArrayName="InterviewQuestionsFormArray"
     >
       <mat-card-title
         class="!flex !flex-row !justify-start !items-center !gap-2"
@@ -250,20 +259,24 @@
       <mat-card-content>
         <div class="flex flex-col w-full gap-2">
           @for (question of interviewQuestions.controls; track $index) {
-          <ng-container>
-            <div class="flex flex-col w-full gap-1">
-              <div class="flex flex-row justify-between items-center w-full">
 
+            <div class="flex flex-col w-full gap-1" [formGroupName]="$index">
+              <div class="flex flex-row justify-between items-center w-full">
                 <label mat-label class="field-label-txt"
                   >Question {{ $index + 1 }}</label
                 >
-                <button mat-icon-button (click)="removeInterviewQuestion($index)"><mat-icon>remove</mat-icon></button>
+                <button
+                  mat-icon-button
+                  (click)="removeInterviewQuestion($index)"
+                >
+                  <mat-icon>remove</mat-icon>
+                </button>
               </div>
               <mat-form-field appearance="outline" class="w-full h-auto">
                 <textarea
                   matInput
                   placeholder="Enter your question here"
-                  formControlName="$index"
+                  [formControlName]="'question'"
                   cdkTextareaAutosize="true"
                   cdkAutosizeMinRows="4"
                   cdkAutosizeMaxRows="8"
@@ -275,7 +288,6 @@
                 </mat-error>
               </mat-form-field>
             </div>
-          </ng-container>
           }
         </div>
       </mat-card-content>
@@ -289,8 +301,17 @@
         </button>
       </mat-card-actions>
     </mat-card>
-    <button mat-flat-button color="primary" type="submit" [disabled]="!form.valid">
+    @if ((loading$ | async)) {
+    <!-- Spinner -->
+    <div
+      class="spinner-container top-0 left-0 w-full h-full self-center flex justify-center items-center z-10"
+    >
+      <mat-spinner mode="indeterminate" diameter="40"></mat-spinner>
+    </div>
+    } @else {
+    <button mat-flat-button color="primary" type="submit">
       Create Interview
     </button>
+    }
   </form>
 </div>

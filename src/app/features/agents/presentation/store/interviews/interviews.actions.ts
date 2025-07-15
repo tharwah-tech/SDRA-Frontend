@@ -4,6 +4,7 @@ import { InterviewEntity, InterviewsResponse } from '../../../domain/entities/in
 import { INTERVIEWS_FEATURE_KEY } from './interviews.state';
 import { InterviewDetailsEntity } from '../../../domain/entities/interview-details.entity';
 import { ApiError } from '../../../../../core/models/api-error.model';
+import { CreateInteviewEntity } from '../../../domain/entities/create-interview.entity';
 
 export const InterviewsActions = createActionGroup({
   source: INTERVIEWS_FEATURE_KEY,
@@ -15,6 +16,10 @@ export const InterviewsActions = createActionGroup({
     'Load Interview': props<{ id: string }>(),
     'Load Interview Success': props<{ interview: InterviewDetailsEntity }>(),
     'Load Interview Failure': props<{ error: ApiError }>(),
+
+    'Create Interview': props<{ interview: CreateInteviewEntity }>(),
+    'Create Interview Success': props<{ interviewId: string }>(),
+    'Create Interview Failure': props<{ error: ApiError }>(),
 
     'Update Interview Status': props<{ id: string; status: string }>(),
     'Update Interview Status Success': props<{ interview: InterviewDetailsEntity }>(),

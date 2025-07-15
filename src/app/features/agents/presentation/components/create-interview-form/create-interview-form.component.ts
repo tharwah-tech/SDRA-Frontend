@@ -1,6 +1,8 @@
+import { selectInterviewsLoading } from './../../store/interviews/interviews.selectors';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, output } from '@angular/core';
 import {
+  AbstractControl,
   FormArray,
   FormControl,
   FormGroup,
@@ -20,6 +22,8 @@ import { GenderType } from '../../../../../core/enums/gender-type.enum';
 import { JobType } from '../../../../../core/enums/job-type.enum';
 import { Store } from '@ngrx/store';
 import { MatOptionModule } from '@angular/material/core';
+import { CreateInteviewEntity } from '../../../domain/entities/create-interview.entity';
+import { Observable } from 'rxjs';
 
 type CandidateInformationFormGroup = FormGroup<{
   candidateFullName: FormControl<string>;
@@ -62,6 +66,7 @@ type InterviewFormGroup = FormGroup<{
   styleUrl: './create-interview-form.component.scss',
 })
 export class CreateInterviewFormComponent {
+  onSubmitData = output<CreateInteviewEntity>();
   form: InterviewFormGroup;
   maxTitle = 60;
   maxDescription = 512;
@@ -71,6 +76,7 @@ export class CreateInterviewFormComponent {
   JobType = JobType;
   JobTypeKeys = Object.keys(JobType); // Get enum keys
   JobTypeValues = Object.values(JobType); // Get enum values
+  loading$: Observable<boolean>;
   countryPhoneCodes = [
     { code: '+966', name: 'Saudi Arabia', label: 'SA' },
     { code: '+20', name: 'Egypt', label: 'EG' },
@@ -117,6 +123,7 @@ export class CreateInterviewFormComponent {
     private router: Router,
     private store: Store
   ) {
+    this.loading$ = this.store.select(selectInterviewsLoading);
     this.form = fb.group({
       CandidateInformationFormGroup: fb.group({
         candidateFullName: fb.control('', {
@@ -131,11 +138,14 @@ export class CreateInterviewFormComponent {
         candidateCountryCode: fb.control('+966', {
           validators: [
             Validators.required,
-            Validators.pattern('^\\+[0-9]{10}$'),
+            Validators.pattern('^\\+[1-9]\\d{0,3}$'),
           ],
         }),
         candidatePhone: fb.control('', {
-          validators: [Validators.required, Validators.pattern('^[0-9]{10}$')],
+          validators: [
+            Validators.required,
+            Validators.pattern('^[0-9]\\d{6,11}$'),
+          ],
         }),
         candidateGender: fb.control<GenderType>('' as GenderType, {
           validators: [Validators.required],
@@ -158,7 +168,7 @@ export class CreateInterviewFormComponent {
           validators: [Validators.required],
         }),
         jobRequirements: fb.control('', {
-          validators: [Validators.maxLength(this.maxDescription)],
+          validators: [],
         }),
       }),
       InterviewQuestionsFormArray: fb.array<InterviewQuestionFormGroup>([]),
@@ -180,19 +190,43 @@ export class CreateInterviewFormComponent {
       questionsArray.removeAt(index);
     }
   }
-  onSubmit() {
-    if (this.form.valid) {
-      const interviewData = this.form.value;
-      // Handle the submission logic here, e.g., dispatch an action or call a service
-      console.log('Interview Data:', interviewData);
-    } else {
-      // Handle form errors
-      Object.values(this.form.controls).forEach((control) => {
-        control.markAsTouched();
-        control.updateValueAndValidity();
-      });
-    }
-  }
+  // onSubmit() {
+  //   if (this.form.valid) {
+  //     const formData = this.form.getRawValue(); // or this.form.value
+
+  //     // Convert to your interface
+  //     const interviewData = {
+  //       candidate_info: {
+  //         full_name:
+  //           formData.CandidateInformationFormGroup?.candidateFullName || '',
+  //         email: formData.CandidateInformationFormGroup?.candidateEmail || '',
+  //         phone: formData.CandidateInformationFormGroup?.candidatePhone || '',
+  //         gender: formData.CandidateInformationFormGroup?.candidateGender || '',
+  //       },
+  //       job_info: {
+  //         title: formData.JobInformationFormGroup?.jobTitle || '',
+  //         contract_type: formData.JobInformationFormGroup?.jobType || '',
+  //         job_description:
+  //           formData.JobInformationFormGroup?.jobDescription || '',
+  //         job_requirements:
+  //           formData.JobInformationFormGroup?.jobRequirements || '',
+  //         questions:
+  //           formData.InterviewQuestionsFormArray?.map((formQues, index) => ({
+  //             question_number: index,
+  //             question: formQues.question || '',
+  //           })) || [],
+  //       },
+  //     } as CreateInteviewEntity;
+  //     console.log('Interview Data:', interviewData);
+  //     this.onSubmitData.emit(interviewData);
+  //   } else {
+  //     // Handle form errors
+  //     Object.values(this.form.controls).forEach((control) => {
+  //       control.markAsTouched();
+  //       control.updateValueAndValidity();
+  //     });
+  //   }
+  // }
   onCancel() {
     this.router.navigate(['/agents/interviews']);
   }
@@ -218,7 +252,7 @@ export class CreateInterviewFormComponent {
   get candidateEmailInvalid() {
     return this.candidateEmail.hasError('email');
   }
-
+  //phone number
   get candidatePhone() {
     return this.form.controls.CandidateInformationFormGroup.controls
       .candidatePhone;
@@ -227,6 +261,24 @@ export class CreateInterviewFormComponent {
     return this.candidatePhone.hasError('required');
   }
 
+  get candidatePhoneInvaildPattern() {
+    return this.candidatePhone.hasError('pattern');
+  }
+
+  // country code
+  get countryCode() {
+    return this.form.controls.CandidateInformationFormGroup.controls
+      .candidateCountryCode;
+  }
+  get countryCodeRequired() {
+    return this.countryCode.hasError('required');
+  }
+
+  get countryCodeInvaildPattern() {
+    return this.countryCode.hasError('pattern');
+  }
+
+  // candidate gender
   get candidateGender() {
     return this.form.controls.CandidateInformationFormGroup.controls
       .candidateGender;
@@ -272,5 +324,198 @@ export class CreateInterviewFormComponent {
   get interviewQuestions(): FormArray<InterviewQuestionFormGroup> {
     return this.form.controls
       .InterviewQuestionsFormArray as FormArray<InterviewQuestionFormGroup>;
+  }
+
+  //submit handler
+  onSubmit() {
+    if (this.form.valid) {
+      const formData = this.form.getRawValue();
+
+      // Convert to your interface
+      const interviewData = {
+        candidate_info: {
+          full_name:
+            formData.CandidateInformationFormGroup?.candidateFullName || '',
+          email: formData.CandidateInformationFormGroup?.candidateEmail || '',
+          phone:
+            `${formData.CandidateInformationFormGroup?.candidateCountryCode}${formData.CandidateInformationFormGroup?.candidatePhone}` ||
+            '',
+          gender:
+            formData.CandidateInformationFormGroup?.candidateGender.toLowerCase() ||
+            '',
+        },
+        job_info: {
+          title: formData.JobInformationFormGroup?.jobTitle || '',
+          contract_type:
+            formData.JobInformationFormGroup?.jobType.toLowerCase() || '',
+          job_description:
+            formData.JobInformationFormGroup?.jobDescription || '',
+          job_requirements:
+            formData.JobInformationFormGroup?.jobRequirements || '',
+          questions:
+            formData.InterviewQuestionsFormArray?.map((formQues, index) => ({
+              question_number: index,
+              question: formQues.question || '',
+            })) || [],
+        },
+      } as CreateInteviewEntity;
+
+      console.log('Interview Data:', interviewData);
+      this.onSubmitData.emit(interviewData);
+    } else {
+      // Log validation errors
+      console.log('Form is invalid. Validation errors:');
+      this.logFormValidationErrors(this.form);
+
+      // Handle form errors
+      Object.values(this.form.controls).forEach((control) => {
+        control.markAsTouched();
+        control.updateValueAndValidity();
+      });
+    }
+  }
+
+  // Helper method to log form validation errors
+  private logFormValidationErrors(
+    form: AbstractControl,
+    formName: string = 'root'
+  ): void {
+    if (form instanceof FormGroup) {
+      Object.keys(form.controls).forEach((key) => {
+        const control = form.get(key);
+        if (control) {
+          const controlName = `${formName}.${key}`;
+
+          if (control.invalid) {
+            console.log(`❌ ${controlName} is invalid:`, control.errors);
+          }
+
+          // Recursively check nested FormGroups and FormArrays
+          if (control instanceof FormGroup || control instanceof FormArray) {
+            this.logFormValidationErrors(control, controlName);
+          }
+        }
+      });
+    } else if (form instanceof FormArray) {
+      form.controls.forEach((control, index) => {
+        const controlName = `${formName}[${index}]`;
+
+        if (control.invalid) {
+          console.log(`❌ ${controlName} is invalid:`, control.errors);
+        }
+
+        // Recursively check nested FormGroups and FormArrays
+        if (control instanceof FormGroup || control instanceof FormArray) {
+          this.logFormValidationErrors(control, controlName);
+        }
+      });
+    }
+  }
+
+  // Alternative: More detailed logging method
+  private logDetailedFormErrors(
+    form: AbstractControl,
+    formName: string = 'root'
+  ): void {
+    const errors: any[] = [];
+
+    this.collectFormErrors(form, formName, errors);
+
+    if (errors.length > 0) {
+      console.log('=== FORM VALIDATION ERRORS ===');
+      errors.forEach((error) => {
+        console.log(`Field: ${error.field}`);
+        console.log(`Errors:`, error.errors);
+        console.log(`Value:`, error.value);
+        console.log('---');
+      });
+    }
+  }
+
+  private collectFormErrors(
+    form: AbstractControl,
+    formName: string,
+    errors: any[]
+  ): void {
+    if (form instanceof FormGroup) {
+      Object.keys(form.controls).forEach((key) => {
+        const control = form.get(key);
+        if (control) {
+          const controlName = `${formName}.${key}`;
+
+          if (control.invalid && control.errors) {
+            errors.push({
+              field: controlName,
+              errors: control.errors,
+              value: control.value,
+            });
+          }
+
+          // Recursively check nested controls
+          if (control instanceof FormGroup || control instanceof FormArray) {
+            this.collectFormErrors(control, controlName, errors);
+          }
+        }
+      });
+    } else if (form instanceof FormArray) {
+      form.controls.forEach((control, index) => {
+        const controlName = `${formName}[${index}]`;
+
+        if (control.invalid && control.errors) {
+          errors.push({
+            field: controlName,
+            errors: control.errors,
+            value: control.value,
+          });
+        }
+
+        // Recursively check nested controls
+        if (control instanceof FormGroup || control instanceof FormArray) {
+          this.collectFormErrors(control, controlName, errors);
+        }
+      });
+    }
+  }
+
+  // Quick method to get summary of invalid fields
+  private getInvalidFields(): string[] {
+    const invalidFields: string[] = [];
+    this.findInvalidControls(this.form, 'root', invalidFields);
+    return invalidFields;
+  }
+
+  private findInvalidControls(
+    form: AbstractControl,
+    formName: string,
+    invalidFields: string[]
+  ): void {
+    if (form instanceof FormGroup) {
+      Object.keys(form.controls).forEach((key) => {
+        const control = form.get(key);
+        if (control) {
+          const controlName = `${formName}.${key}`;
+
+          if (control.invalid) {
+            invalidFields.push(controlName);
+          }
+
+          if (control instanceof FormGroup || control instanceof FormArray) {
+            this.findInvalidControls(control, controlName, invalidFields);
+          }
+        }
+      });
+    } else if (form instanceof FormArray) {
+      form.controls.forEach((control, index) => {
+        const controlName = `${formName}[${index}]`;
+
+        if (control.invalid) {
+          invalidFields.push(controlName);
+        }
+
+        if (control instanceof FormGroup || control instanceof FormArray) {
+          this.findInvalidControls(control, controlName, invalidFields);
+        }
+      });
+    }
   }
 }
