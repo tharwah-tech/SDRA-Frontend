@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { AgentType } from '../../../../../core/enums/agents-type.enum';
+import { AgentType, mapAgentType } from '../../../../../core/enums/agents-type.enum';
 
 @Component({
   selector: 'app-agent-summary-card',
@@ -17,5 +17,8 @@ export class AgentSummaryCardComponent {
   AgentType = AgentType;
   constructor() {
     // You can initialize any additional properties or services here if needed
+  }
+  getAgentTypeString(type: AgentType): string{
+    return mapAgentType(type);
   }
 }

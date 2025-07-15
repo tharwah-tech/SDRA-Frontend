@@ -2,7 +2,7 @@
   <img [src]="`https://api.sdra-dev.com/${agent().img_url}`" alt="{{ agent().name }}" />
   <div class="flex flex-col gap-2 p-2 h-full justify-between">
     <div class="flex flex-col gap-2">
-      <div class="flex flex-row justify-between items-center gap-4">
+      <div class="flex flex-row justify-start items-center gap-4">
         <h1>{{ agent().name }}</h1>
         <div
           class="flex flex-row items-center justify-center px-1 py-1 rounded-lg border "
@@ -12,7 +12,7 @@
             'bg-[#F59E0B0D] text-[#F59E0B] border-[#FFF1D9]': agent().type === AgentType.RAG_Agent,
             'bg-[#8B5CF60D] text-[#8B5CF6] border-[#E7DCFF]': agent().type === AgentType.Responder,
           }">
-          <span>{{ agent().type }}</span>
+          <span>{{ getAgentTypeString(agent().type) }}</span>
         </div>
       </div>
       <div class="flex flex-col flex-grow w-full h-full">
