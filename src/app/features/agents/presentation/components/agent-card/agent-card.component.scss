@@ -1,82 +1,24 @@
-// Updated Agent Card Component Styles
-.agent-card-container {
-  // transition: all 0.2s ease-in-out;
-
-  // &:hover {
-  //   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  // }
-
-  // Override Material Icon styles
-  ::ng-deep {
-    mat-icon {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-
-      &.text-blue-600 {
-        color: #2563eb !important;
-      }
-
-      &.text-green-600 {
-        color: #16a34a !important;
-      }
-
-      &.text-purple-600 {
-        color: #9333ea !important;
-      }
-
-      &.text-orange-600 {
-        color: #ea580c !important;
-      }
-
-      &.text-gray-600 {
-        color: #6b7280 !important;
-      }
-    }
-  }
+.section-title-txt {
+  color: #0f0624;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px; /* 125% */
 }
-
-// Responsive design
-@media (max-width: 768px) {
-  .agent-card-container {
-    .grid-cols-1 {
-      grid-template-columns: 1fr;
-    }
-
-    .flex-items-start {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  }
+.personality-txt {
+  color: #0f0624;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px; /* 166.667% */
 }
-
-// Dark mode support
-@media (prefers-color-scheme: dark) {
-  .agent-card-container {
-    background: #1f2937;
-    border-color: #374151;
-    color: #f9fafb;
-
-    h2 {
-      color: #f9fafb;
-    }
-
-    p {
-      color: #d1d5db;
-    }
-
-    h4 {
-      color: #f3f4f6;
-    }
-
-    .bg-blue-50 {
-      background: #1e3a8a;
-      color: #93c5fd;
-    }
-
-    .bg-gray-100 {
-      background: #374151;
-      color: #d1d5db;
-    }
-  }
+.output-name-txt {
+  color: #0f0624;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px; /* 142.857% */
 }

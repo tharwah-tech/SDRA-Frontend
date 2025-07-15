@@ -1,69 +1,81 @@
 <!-- Updated Agent Card Component HTML -->
-<mat-card class="agent-card-container w-full p-6">
-  <!-- Agent Header Section -->
-  <div class="flex items-start gap-4 mb-6">
-    <!-- Avatar -->
-    <div class="flex-shrink-0">
-      <div class="w-16 h-16 rounded-full overflow-hidden bg-gray-100">
-        <img
-          [src]="`https://api.sdra-dev.com/${agent.avatarUrl}`"
-          [alt]="agent.name + ' avatar'"
-          class="w-full h-full object-cover" />
-      </div>
-    </div>
-
-    <!-- Agent Info -->
-    <div class="flex-1">
-      <div class="flex items-center gap-3 mb-2">
-        <h2 class="text-2xl font-semibold text-gray-900 m-0">
-          {{ agent.name }}
-        </h2>
-        <span class="text-sm text-blue-600 bg-blue-50 px-3 py-1 rounded-md font-medium">
-          {{ agent.role }}
-        </span>
-      </div>
-
-      <!-- Agent Description -->
-      <p class="text-gray-600 text-sm leading-relaxed mb-4">
-        {{ agent.description }}
-      </p>
-    </div>
+<mat-card
+  class="!flex !flex-row !justify-start !items-start !w-full !gap-[32px] p-[24px]"
+>
+  <!-- Avatar -->
+  <div
+    class="flex justify-center items-center w-[156px] h-[156px] rounded-[20px]"
+  >
+    <img
+      [src]="`https://api.sdra-dev.com/${agent.avatarUrl}`"
+      [alt]="agent.name + ' avatar'"
+      class="w-full h-full object-cover"
+    />
   </div>
+  <div>
+    <!-- Agent Header Section -->
+    <div class="flex items-start gap-4 mb-6">
+      <!-- Agent Info -->
+      <div class="flex-1">
+        <div class="flex items-center gap-3 mb-2">
+          <h2 class="text-2xl font-semibold text-gray-900 m-0">
+            {{ agent.name }}
+          </h2>
+          <span
+            class="text-sm text-blue-600 bg-blue-50 px-3 py-1 rounded-md font-medium"
+          >
+            {{ agent.role }}
+          </span>
+        </div>
 
-  <!-- Agent Details Section -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <!-- Personality Traits -->
-    <div class="space-y-3">
-      <h4 class="text-sm font-medium text-gray-900 mb-3">
-        Personality
-      </h4>
-      <div class="flex flex-wrap gap-2">
-        <span
-          *ngFor="let trait of agent.personality"
-          class="inline-flex items-center px-2.5 py-1 rounded-md text-xs bg-gray-100 text-gray-700 font-medium">
-          {{ trait.trait }}
-        </span>
+        <!-- Agent Description -->
+        <p class="text-gray-600 text-sm leading-relaxed mb-4">
+          {{ agent.description }}
+        </p>
       </div>
     </div>
 
-    <!-- Supported Output -->
-    <div class="space-y-3">
-      <h4 class="text-sm font-medium text-gray-900 mb-3">
-        Supported Output
-      </h4>
-      <div class="flex flex-wrap gap-4">
-        <div *ngFor="let output of enabledOutputs" class="flex items-center gap-2">
-          <div class="w-6 h-6 rounded-full flex items-center justify-center"
-               [class]="getOutputIconBackgroundClass(output.type)">
-            <mat-icon
-              [class]="getOutputIconClass(output.type)"
-              class="!text-sm !w-4 !h-4">
-              {{ getOutputIcon(output.type) }}
-            </mat-icon>
-          </div>
-          <span class="text-sm text-gray-700 font-medium">
-            {{ output.type }}
+    <!-- Agent Details Section -->
+    <div
+      class="flex flex-col md:flex-row justify-start items-start w-full gap-[40px]"
+    >
+      <!-- Personality Traits -->
+      <div class="space-y-3">
+        <h4 class="section-title-txt">Personality</h4>
+        <div class="flex flex-wrap gap-2">
+          <span
+            *ngFor="let trait of agent.personality"
+            class="personality-txt flex flex-row justify-center items-center px-[8px] py-[2px] bg-[#F9FAFC] rounded-[8px]"
+          >
+            {{ trait.trait }}
           </span>
+        </div>
+      </div>
+
+      <!-- Supported Output -->
+      <div class="space-y-3">
+        <h4 class="section-title-txt">Supported Output</h4>
+        <div class="flex flex-wrap gap-4">
+          <div
+            *ngFor="let output of enabledOutputs"
+            class="flex items-center gap-2"
+          >
+            <div
+              class="w-6 h-6 rounded-full flex items-center justify-center"
+              [class]="getOutputIconBackgroundClass(output.type)"
+            >
+              <mat-icon
+                [class]="getOutputIconClass(output.type)"
+                class="!text-sm !w-4 !h-4"
+              >
+              <img [src]="getOutptIconPath(output.type)" alt="output-icon">
+                <!-- {{ getOutputIcon(output.type) }} -->
+              </mat-icon>
+            </div>
+            <span class="output-name-txt">
+              {{ output.type }}
+            </span>
+          </div>
         </div>
       </div>
     </div>
