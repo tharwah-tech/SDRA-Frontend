@@ -3,6 +3,6 @@
   [currentActiveTab]="SideNavTabs.SYSTEM_AGENTS"
 >
   <ng-content page-content>
-    <app-create-interview-form class="w-full h-full overflow-auto" />
+    <app-create-interview-form (onSubmitData)="submitInterview($event)" class="w-full h-full overflow-auto" />
   </ng-content>
 </app-main-page-structure>

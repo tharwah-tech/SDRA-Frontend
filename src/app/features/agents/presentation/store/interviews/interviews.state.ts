@@ -9,6 +9,7 @@ export const INTERVIEWS_FEATURE_KEY = 'interviews';
 
 export interface InterviewsState {
   interviews: InterviewEntity[];
+  selectedInterviewId: string|null;
   selectedInterview: InterviewDetailsEntity | null;
   selectedInterviewToken: string | null;
   selectedInterviewLink: string | null;
@@ -22,6 +23,7 @@ export interface InterviewsState {
 
 export const initialInterviewsState: InterviewsState = {
   interviews: [],
+  selectedInterviewId: null,
   selectedInterview: null,
   selectedInterviewToken: null,
   selectedInterviewLink: null,

@@ -8,6 +8,7 @@ import {
   InterviewStatus,
 } from '../../domain/entities/interview.entity';
 import {
+  CreateInterviewModel,
   InterviewLinkResponse,
   InterviewModel,
   ShareTokenResponse,
@@ -21,6 +22,7 @@ import {
   JobInfo,
 } from '../../domain/entities/interview-details.entity';
 import { InterviewDetailsModel } from '../models/interview-details.model';
+import { CreateInteviewEntity } from '../../domain/entities/create-interview.entity';
 
 @Injectable({
   providedIn: 'root',
@@ -54,6 +56,21 @@ export class InterviewsService implements InterviewsRepository {
     return handleResponse<InterviewDetailsModel, InterviewDetailsEntity>(
       response$,
       this.mapDetailsModelToEntity.bind(this)
+    );
+  }
+  createInterview(
+    interview: CreateInteviewEntity
+  ): Observable<{ interviewId: string }> {
+    const url = `${this.apiUrl}/create/`;
+    const response = this.http.post<ApiResponse<CreateInterviewModel>>(
+      url,
+      interview
+    );
+    return handleResponse<CreateInterviewModel, { interviewId: string }>(
+      response,
+      (model) => {
+        return { interviewId: model.interview_id };
+      }
     );
   }
 

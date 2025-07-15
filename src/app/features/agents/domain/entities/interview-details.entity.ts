@@ -1,3 +1,5 @@
+import { GenderType } from "../../../../core/enums/gender-type.enum";
+import { JobType } from "../../../../core/enums/job-type.enum";
 import { InterviewStatus } from "./interview.entity";
 
 export interface InterviewDetailsEntity {
@@ -13,12 +15,12 @@ export interface CandidateInfo {
     full_name: string;
     email:     string;
     phone:     string;
-    gender:    string;
+    gender:    GenderType;
 }
 
 export interface JobInfo {
     title:            string;
-    contract_type:    string;
+    contract_type:    JobType;
     job_description:  string;
     job_requirements: string;
 }
