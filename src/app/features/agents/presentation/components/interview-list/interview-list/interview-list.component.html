@@ -1,15 +1,16 @@
 <!-- Interview List Component HTML - Exact Match to Screenshot -->
 <div class="interview-list-container">
   <!-- Header Section -->
-  <div class="list-header">
+  <div class="flex flex-col md:flex-row justify-start md:justify-between">
     <h2 class="list-title">Interview list</h2>
-    <div class="header-controls !items-center">
+    <div
+      class="flex flex-row justify-start md:justify-end items-start w-full md:w-auto gap-2"
+    >
       <!-- Status Filter -->
       <mat-form-field appearance="outline" class="!w-auto">
         <mat-select
           [value]="selectedStatus()"
           (selectionChange)="onStatusFilterChange($event.value)"
-
         >
           <mat-option
             *ngFor="let option of statusOptions"
@@ -18,7 +19,7 @@
             {{ option.label }}
           </mat-option>
         </mat-select>
-        <mat-icon matPrefix class="filter-icon"
+        <mat-icon matPrefix
           ><img
             src="../../../../../../../assets/images/icons/filter-funnel-01.svg"
             alt="filter-icon"
@@ -29,7 +30,7 @@
       <button
         mat-flat-button
         color="primary"
-        class="!h-[44px] !rounded-[8px]"
+        class="!h-[56px] !rounded-[8px]"
         (click)="onNewInterview()"
       >
         <mat-icon>add</mat-icon>

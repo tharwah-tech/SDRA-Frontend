@@ -16,7 +16,6 @@
     }
 
     .header-controls {
-
       display: flex;
       justify-items: flex-end;
       align-items: center;
@@ -126,7 +125,6 @@
 
   // Interview Table
   .interview-table {
-
     .table-header {
       display: grid;
       grid-template-columns: 2fr 2fr 1fr 1fr 1fr;
@@ -462,4 +460,14 @@
       }
     }
   }
+}
+
+// ahmed custom sytle
+.list-title {
+  color: #0f0624;
+  font-family: Inter;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24.5px; /* 122.5% */
 }
