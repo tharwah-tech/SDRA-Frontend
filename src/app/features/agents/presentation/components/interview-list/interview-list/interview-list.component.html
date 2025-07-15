@@ -1,14 +1,22 @@
 <!-- Interview List Component HTML with Angular Material Table -->
-<div class="interview-list-container">
+<div class="interview-list-container !w-full">
   <!-- Header Section -->
-  <div class="flex flex-col md:flex-row justify-start md:justify-between items-center mb-6">
+  <div
+    class="flex flex-col md:flex-row justify-start md:justify-between items-center mb-6"
+  >
     <div class="flex items-center gap-3 mb-4 md:mb-0">
       <h2 class="list-title m-0">Interview List</h2>
-      <div class="text-gray-500 text-sm bg-gray-100 px-3 py-1 rounded-full" *ngIf="totalFilteredItems > 0">
-        {{ totalFilteredItems }} {{ totalFilteredItems === 1 ? 'Interview' : 'Interviews' }}
+      <div
+        class="text-gray-500 text-sm bg-gray-100 px-3 py-1 rounded-full"
+        *ngIf="totalFilteredItems > 0"
+      >
+        {{ totalFilteredItems }}
+        {{ totalFilteredItems === 1 ? "Interview" : "Interviews" }}
       </div>
     </div>
-    <div class="flex flex-row justify-start md:justify-end items-center w-full md:w-auto gap-4">
+    <div
+      class="flex flex-row justify-start md:justify-end items-center w-full md:w-auto gap-4"
+    >
       <!-- Status Filter -->
       <mat-form-field appearance="outline" class="filter-field">
         <mat-select
@@ -17,7 +25,10 @@
           placeholder="Filter by status"
           class="filter-select"
         >
-          <mat-option *ngFor="let option of statusOptions" [value]="option.value">
+          <mat-option
+            *ngFor="let option of statusOptions"
+            [value]="option.value"
+          >
             {{ option.label }}
           </mat-option>
         </mat-select>
@@ -44,7 +55,10 @@
   </div>
 
   <!-- Loading State -->
-  <div *ngIf="loading$ | async" class="loading-state bg-white/50 rounded-lg flex items-center justify-center p-12">
+  <div
+    *ngIf="loading$ | async"
+    class="loading-state bg-white/50 rounded-lg flex items-center justify-center p-12"
+  >
     <div class="flex flex-col items-center gap-4">
       <mat-spinner diameter="40" class="!text-primary"></mat-spinner>
       <span class="text-gray-600">Loading interviews...</span>
@@ -52,12 +66,20 @@
   </div>
 
   <!-- Error State -->
-  <div *ngIf="error$ | async as error" class="error-state bg-red-50 border-red-100 rounded-lg p-6">
+  <div
+    *ngIf="error$ | async as error"
+    class="error-state bg-red-50 border-red-100 rounded-lg p-6"
+  >
     <div class="error-content flex items-center gap-3 mb-4">
       <mat-icon class="text-red-500">error_outline</mat-icon>
       <span class="text-red-700">Error loading interviews: {{ error }}</span>
     </div>
-    <button mat-flat-button color="warn" (click)="loadInterviews()" class="!rounded-lg !py-2 !px-4">
+    <button
+      mat-flat-button
+      color="warn"
+      (click)="loadInterviews()"
+      class="!rounded-lg !py-2 !px-4"
+    >
       <div class="flex items-center gap-2">
         <mat-icon>refresh</mat-icon>
         <span>Retry</span>
@@ -66,10 +88,12 @@
   </div>
 
   <!-- Table Container -->
-  <div *ngIf="!(loading$ | async)" class="table-container">
-    
+  <div *ngIf="!(loading$ | async)" class="table-container !w-full">
     <!-- Show loading indicator until data is loaded -->
-    <div *ngIf="!hasDataLoaded" class="loading-placeholder bg-white rounded-lg shadow-sm p-12 text-center">
+    <div
+      *ngIf="!hasDataLoaded"
+      class="loading-placeholder bg-white rounded-lg shadow-sm p-12 text-center"
+    >
       <div class="flex flex-col items-center gap-4">
         <mat-spinner diameter="30" class="!text-primary"></mat-spinner>
         <span class="text-gray-500 text-sm">Loading interview data...</span>
@@ -77,17 +101,29 @@
     </div>
 
     <!-- Empty State -->
-    <div *ngIf="!hasInterviews && hasDataLoaded && totalFilteredItems === 0" class="empty-state bg-white rounded-lg shadow-sm p-12 text-center">
-      <div class="bg-gray-50 rounded-full p-4 mb-6 inline-flex items-center justify-center">
-        <mat-icon class="empty-icon text-gray-400 !w-8 !h-8 !text-3xl">assignment</mat-icon>
+    <div
+      *ngIf="!hasInterviews && hasDataLoaded && totalFilteredItems === 0"
+      class="empty-state bg-white rounded-lg shadow-sm p-12 text-center"
+    >
+      <div
+        class="bg-gray-50 rounded-full p-4 mb-6 inline-flex items-center justify-center"
+      >
+        <mat-icon class="empty-icon text-gray-400 !w-8 !h-8 !text-3xl"
+          >assignment</mat-icon
+        >
       </div>
       <h3 class="text-xl font-semibold text-gray-900 mb-2">
-        {{ selectedStatus() === 'all' ? 'No interviews found' : 'No interviews match your filter' }}
+        {{
+          selectedStatus() === "all"
+            ? "No interviews found"
+            : "No interviews match your filter"
+        }}
       </h3>
       <p class="text-gray-600 mb-8 max-w-md mx-auto leading-relaxed">
-        {{ selectedStatus() === 'all' 
-          ? 'Get started by creating your first interview to begin evaluating candidates.' 
-          : 'Try adjusting your filter or create a new interview.' 
+        {{
+          selectedStatus() === "all"
+            ? "Get started by creating your first interview to begin evaluating candidates."
+            : "Try adjusting your filter or create a new interview."
         }}
       </p>
       <button
@@ -102,122 +138,186 @@
     </div>
 
     <!-- Angular Material Table -->
-    <div *ngIf="hasInterviews || (hasDataLoaded && totalFilteredItems > 0)" class="table-wrapper">
-      <mat-table 
-        [dataSource]="dataSource" 
-        matSort
-        class="interview-table"
-        matSortActive="date"
-        matSortDirection="desc"
-      >
-        
-        <!-- Candidate Name Column -->
-        <ng-container matColumnDef="candidateName">
-          <mat-header-cell *matHeaderCellDef mat-sort-header class="candidate-name-header">
-            Candidate Name
-          </mat-header-cell>
-          <mat-cell *matCellDef="let interview" class="candidate-name-cell">
-            <span class="candidate-text">{{ interview.candidateName }}</span>
-          </mat-cell>
-        </ng-container>
+    <div
+      *ngIf="hasInterviews || (hasDataLoaded && totalFilteredItems > 0)"
+      class="table-scroll-wrapper w-full"
+    >
+      <!-- Scrollable Table Container -->
+      <div class="w-full overflow-hidden">
+        <div
+          class="w-full overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100"
+        >
+          <mat-table
+            [dataSource]="dataSource"
+            matSort
+            class="w-full min-w-[700px] md:min-w-[600px] sm:min-w-[500px]"
+            matSortActive="date"
+            matSortDirection="desc"
+          >
+            <!-- Candidate Name Column -->
+            <ng-container matColumnDef="candidateName">
+              <mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="px-4 py-3 md:px-3 md:py-2 sm:px-2 sm:py-2 min-w-[180px] md:min-w-[160px] sm:min-w-[140px]  flex-1 border-b border-gray-200 "
+              >
+                <span class="text-sm font-medium text-gray-900"
+                  >Candidate Name</span
+                >
+              </mat-header-cell>
+              <mat-cell
+                *matCellDef="let interview"
+                class="px-4 py-3 md:px-3 md:py-2 sm:px-2 sm:py-2 min-w-[180px] md:min-w-[160px] sm:min-w-[140px]  flex-1 border-b border-gray-200"
+              >
+                <span
+                  class="block overflow-hidden text-ellipsis whitespace-nowrap text-sm text-gray-900"
+                >
+                  {{ interview.candidateName }}
+                </span>
+              </mat-cell>
+            </ng-container>
 
-        <!-- Job Title Column -->
-        <ng-container matColumnDef="jobTitle">
-          <mat-header-cell *matHeaderCellDef mat-sort-header class="job-title-header">
-            Job Title
-          </mat-header-cell>
-          <mat-cell *matCellDef="let interview" class="job-title-cell">
-            <a href="#" class="job-link" (click)="onViewJob(interview, $event)">
-              {{ interview.jobTitle }}
-            </a>
-          </mat-cell>
-        </ng-container>
+            <!-- Job Title Column -->
+            <ng-container matColumnDef="jobTitle">
+              <mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="px-4 py-3 md:px-3 md:py-2 sm:px-2 sm:py-2 min-w-[150px] md:min-w-[140px] sm:min-w-[120px] flex-1 border-b border-gray-200 "
+              >
+                <span class="text-sm font-medium text-gray-900">Job Title</span>
+              </mat-header-cell>
+              <mat-cell
+                *matCellDef="let interview"
+                class="px-4 py-3 md:px-3 md:py-2 sm:px-2 sm:py-2 min-w-[150px] md:min-w-[140px] sm:min-w-[120px] flex-1 border-b border-gray-200"
+              >
+                <a
+                  href="#"
+                  class="block overflow-hidden text-ellipsis whitespace-nowrap text-sm text-blue-600 hover:text-blue-800 hover:underline transition-colors duration-200"
+                  (click)="onViewJob(interview, $event)"
+                >
+                  {{ interview.jobTitle }}
+                </a>
+              </mat-cell>
+            </ng-container>
 
-        <!-- Date Column -->
-        <ng-container matColumnDef="date">
-          <mat-header-cell *matHeaderCellDef mat-sort-header class="date-header">
-            Date
-          </mat-header-cell>
-          <mat-cell *matCellDef="let interview" class="date-cell">
-            <span class="date-text">{{ formatDate(interview.creationDate) }}</span>
-          </mat-cell>
-        </ng-container>
+            <!-- Date Column -->
+            <ng-container matColumnDef="date">
+              <mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="px-4 py-3 md:px-3 md:py-2 sm:px-2 sm:py-2 min-w-[120px] md:min-w-[100px] sm:min-w-[90px]  flex-shrink-0 border-b border-gray-200 "
+              >
+                <span class="text-sm font-medium text-gray-900">Date</span>
+              </mat-header-cell>
+              <mat-cell
+                *matCellDef="let interview"
+                class="px-4 py-3 md:px-3 md:py-2 sm:px-2 sm:py-2 min-w-[120px] md:min-w-[100px] sm:min-w-[90px]  flex-shrink-0 border-b border-gray-200"
+              >
+                <span
+                  class="block overflow-hidden text-ellipsis whitespace-nowrap text-sm text-gray-600"
+                >
+                  {{ formatDate(interview.creationDate) }}
+                </span>
+              </mat-cell>
+            </ng-container>
 
-        <!-- Status Column -->
-        <ng-container matColumnDef="status">
-          <mat-header-cell *matHeaderCellDef mat-sort-header class="status-header">
-            Status
-          </mat-header-cell>
-          <mat-cell *matCellDef="let interview" class="status-cell">
-            <span
-              class="status-badge"
-              [ngClass]="getStatusClass(interview.status)"
+            <!-- Status Column -->
+            <ng-container matColumnDef="status">
+              <mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="px-4 py-3 md:px-3 md:py-2 sm:px-2 sm:py-2 min-w-[100px] md:min-w-[80px] sm:min-w-[70px]  flex-shrink-0 border-b border-gray-200 "
+              >
+                <span class="text-sm font-medium text-gray-900">Status</span>
+              </mat-header-cell>
+              <mat-cell
+                *matCellDef="let interview"
+                class="px-4 py-3 md:px-3 md:py-2 sm:px-2 sm:py-2 min-w-[100px] md:min-w-[80px] sm:min-w-[70px]  flex-shrink-0 border-b border-gray-200"
+              >
+                <span
+                  class="inline-block px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap"
+                  [ngClass]="getStatusClass(interview.status)"
+                >
+                  {{ getStatusDisplayText(interview.status) }}
+                </span>
+              </mat-cell>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <mat-header-cell
+                *matHeaderCellDef
+                class="px-4 py-3 md:px-3 md:py-2 sm:px-2 sm:py-2 min-w-[120px] md:min-w-[100px] sm:min-w-[90px]  flex-shrink-0 border-b border-gray-200 "
+              >
+                <span class="text-sm font-medium text-gray-900">Actions</span>
+              </mat-header-cell>
+              <mat-cell
+                *matCellDef="let interview"
+                class="px-4 py-3 md:px-3 md:py-2 sm:px-2 sm:py-2 min-w-[120px] md:min-w-[100px] sm:min-w-[90px]  flex-shrink-0 border-b border-gray-200"
+              >
+                <div class="flex items-center gap-1 whitespace-nowrap">
+                  <button
+                    mat-icon-button
+                    matTooltip="View interview"
+                    (click)="onViewInterview(interview)"
+                    class="min-w-[36px] w-9 h-9 md:min-w-[32px] md:w-8 md:h-8 sm:min-w-[32px] sm:w-8 sm:h-8 hover:bg-gray-100 transition-colors duration-200"
+                  >
+                    <mat-icon class="text-gray-600 sm:text-[18px]"
+                      >visibility</mat-icon
+                    >
+                  </button>
+
+                  <button
+                    mat-icon-button
+                    matTooltip="Share interview"
+                    (click)="onShareInterview(interview)"
+                    class="min-w-[36px] w-9 h-9 md:min-w-[32px] md:w-8 md:h-8 sm:min-w-[32px] sm:w-8 sm:h-8 hover:bg-gray-100 transition-colors duration-200"
+                  >
+                    <mat-icon class="text-gray-600 sm:text-[18px]"
+                      >share</mat-icon
+                    >
+                  </button>
+
+                  <!-- Uncomment if needed -->
+                  <!-- <button
+              mat-icon-button
+              matTooltip="Play interview"
+              (click)="onPlayInterview(interview)"
+              class="min-w-[36px] w-9 h-9 md:min-w-[32px] md:w-8 md:h-8 sm:min-w-[32px] sm:w-8 sm:h-8 hover:bg-gray-100 transition-colors duration-200"
             >
-              {{ getStatusDisplayText(interview.status) }}
-            </span>
-          </mat-cell>
-        </ng-container>
+              <mat-icon class="text-gray-600 sm:text-[18px]">play_arrow</mat-icon>
+            </button> -->
 
-        <!-- Actions Column -->
-        <ng-container matColumnDef="actions">
-          <mat-header-cell *matHeaderCellDef class="actions-header">
-            Actions
-          </mat-header-cell>
-          <mat-cell *matCellDef="let interview" class="actions-cell">
-            <div class="action-buttons">
-              <button
-                mat-icon-button
-                matTooltip="View interview"
-                (click)="onViewInterview(interview)"
-                class="action-btn"
-              >
-                <mat-icon>visibility</mat-icon>
-              </button>
+                  <!-- <button
+              mat-icon-button
+              matTooltip="Delete interview"
+              (click)="onDeleteInterview(interview)"
+              class="min-w-[36px] w-9 h-9 md:min-w-[32px] md:w-8 md:h-8 sm:min-w-[32px] sm:w-8 sm:h-8 hover:bg-gray-100 transition-colors duration-200"
+            >
+              <mat-icon class="text-gray-600 sm:text-[18px]">delete</mat-icon>
+            </button> -->
+                </div>
+              </mat-cell>
+            </ng-container>
 
-              <button
-                mat-icon-button
-                matTooltip="Share interview"
-                (click)="onShareInterview(interview)"
-                class="action-btn"
-              >
-                <mat-icon>share</mat-icon>
-              </button>
-
-              <!-- Uncomment if needed -->
-              <!-- <button
-                mat-icon-button
-                matTooltip="Play interview"
-                (click)="onPlayInterview(interview)"
-                class="action-btn"
-              >
-                <mat-icon>play_arrow</mat-icon>
-              </button> -->
-
-              <!-- <button
-                mat-icon-button
-                matTooltip="Delete interview"
-                (click)="onDeleteInterview(interview)"
-                class="action-btn"
-              >
-                <mat-icon>delete</mat-icon>
-              </button> -->
-            </div>
-          </mat-cell>
-        </ng-container>
-
-        <!-- Table Header and Rows -->
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row 
-          *matRowDef="let row; columns: displayedColumns;" 
-          class="interview-row"
-        ></mat-row>
-      </mat-table>
+            <!-- Table Header and Rows -->
+            <mat-header-row
+              *matHeaderRowDef="displayedColumns"
+              class="!bg-gray-100 !rounded-[20px]"
+            ></mat-header-row>
+            <mat-row
+              *matRowDef="let row; columns: displayedColumns"
+              class="hover:bg-gray-50 transition-colors duration-200"
+            ></mat-row>
+          </mat-table>
+        </div>
+      </div>
 
       <!-- Enhanced Pagination -->
       <div class="pagination-container" *ngIf="showPaginator">
-        <div class="pagination-info">
+        <!-- <div class="pagination-info">
           <span class="pagination-text">{{ currentPageInfo }}</span>
-        </div>
+        </div> -->
         <mat-paginator
           [length]="totalFilteredItems"
           [pageSize]="pageSize"
