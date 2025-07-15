@@ -1,12 +1,12 @@
 <!-- Updated Agent Card Component HTML -->
-<div class="agent-card-container bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+<mat-card class="agent-card-container w-full p-6">
   <!-- Agent Header Section -->
   <div class="flex items-start gap-4 mb-6">
     <!-- Avatar -->
     <div class="flex-shrink-0">
       <div class="w-16 h-16 rounded-full overflow-hidden bg-gray-100">
         <img
-          [src]="agent.avatarUrl"
+          [src]="`https://api.sdra-dev.com/${agent.avatarUrl}`"
           [alt]="agent.name + ' avatar'"
           class="w-full h-full object-cover" />
       </div>
@@ -68,4 +68,4 @@
       </div>
     </div>
   </div>
-</div>
+</mat-card>

@@ -1,29 +1,37 @@
 <!-- Interview List Component HTML - Exact Match to Screenshot -->
 <div class="interview-list-container">
-  
   <!-- Header Section -->
   <div class="list-header">
     <h2 class="list-title">Interview list</h2>
-    <div class="header-controls">
+    <div class="header-controls !items-center">
       <!-- Status Filter -->
-      <mat-form-field appearance="outline" class="status-filter">
-        <mat-select 
-          [value]="selectedStatus()" 
-          (selectionChange)="onStatusFilterChange($event.value)">
-          <mat-option 
-            *ngFor="let option of statusOptions" 
-            [value]="option.value">
+      <mat-form-field appearance="outline" class="!w-auto">
+        <mat-select
+          [value]="selectedStatus()"
+          (selectionChange)="onStatusFilterChange($event.value)"
+
+        >
+          <mat-option
+            *ngFor="let option of statusOptions"
+            [value]="option.value"
+          >
             {{ option.label }}
           </mat-option>
         </mat-select>
-        <mat-icon matPrefix class="filter-icon">tune</mat-icon>
+        <mat-icon matPrefix class="filter-icon"
+          ><img
+            src="../../../../../../../assets/images/icons/filter-funnel-01.svg"
+            alt="filter-icon"
+        /></mat-icon>
       </mat-form-field>
 
       <!-- New Interview Button -->
-      <button 
-        mat-raised-button 
-        class="new-interview-button"
-        (click)="onNewInterview()">
+      <button
+        mat-flat-button
+        color="primary"
+        class="!h-[44px] !rounded-[8px]"
+        (click)="onNewInterview()"
+      >
         <mat-icon>add</mat-icon>
         New Interview
       </button>
@@ -49,7 +57,6 @@
 
   <!-- Interview Table -->
   <div *ngIf="!(loading$ | async)" class="interview-table">
-    
     <!-- Table Header -->
     <div class="table-header">
       <div class="header-cell candidate-name">
@@ -64,10 +71,13 @@
 
     <!-- Table Body -->
     <div class="table-body">
-      <div 
-        *ngFor="let interview of interviews$ | async; trackBy: trackByInterviewId" 
-        class="table-row">
-        
+      <div
+        *ngFor="
+          let interview of interviews$ | async;
+          trackBy: trackByInterviewId
+        "
+        class="table-row"
+      >
         <!-- Candidate Name -->
         <div class="table-cell candidate-name">
           <span class="candidate-text">{{ interview.candidateName }}</span>
@@ -82,14 +92,17 @@
 
         <!-- Date -->
         <div class="table-cell date">
-          <span class="date-text">{{ formatDate(interview.creationDate) }}</span>
+          <span class="date-text">{{
+            formatDate(interview.creationDate)
+          }}</span>
         </div>
 
         <!-- Status -->
         <div class="table-cell status">
-          <span 
+          <span
             class="status-badge"
-            [ngClass]="getStatusClass(interview.status)">
+            [ngClass]="getStatusClass(interview.status)"
+          >
             {{ getStatusDisplayText(interview.status) }}
           </span>
         </div>
@@ -97,35 +110,39 @@
         <!-- Actions -->
         <div class="table-cell actions">
           <div class="action-buttons">
-            <button 
-              mat-icon-button 
+            <button
+              mat-icon-button
               matTooltip="View interview"
               (click)="onViewInterview(interview)"
-              class="action-btn view-btn">
+              class="action-btn view-btn"
+            >
               <mat-icon>visibility</mat-icon>
             </button>
 
-            <button 
-              mat-icon-button 
+            <button
+              mat-icon-button
               matTooltip="Play interview"
               (click)="onPlayInterview(interview)"
-              class="action-btn play-btn">
+              class="action-btn play-btn"
+            >
               <mat-icon>play_arrow</mat-icon>
             </button>
 
-            <button 
-              mat-icon-button 
+            <button
+              mat-icon-button
               matTooltip="Share interview"
               (click)="onShareInterview(interview)"
-              class="action-btn share-btn">
+              class="action-btn share-btn"
+            >
               <mat-icon>share</mat-icon>
             </button>
 
-            <button 
-              mat-icon-button 
+            <button
+              mat-icon-button
               matTooltip="Delete interview"
               (click)="onDeleteInterview(interview)"
-              class="action-btn delete-btn">
+              class="action-btn delete-btn"
+            >
               <mat-icon>delete</mat-icon>
             </button>
           </div>
@@ -138,10 +155,11 @@
       <mat-icon class="empty-icon">assignment</mat-icon>
       <h3>No interviews found</h3>
       <p>Get started by creating your first interview.</p>
-      <button 
-        mat-raised-button 
+      <button
+        mat-raised-button
         class="new-interview-button"
-        (click)="onNewInterview()">
+        (click)="onNewInterview()"
+      >
         <mat-icon>add</mat-icon>
         Create New Interview
       </button>
@@ -149,34 +167,40 @@
   </div>
 
   <!-- Pagination -->
-  <div *ngIf="(interviews$ | async)?.length && (interviews$ | async)!.length > 0" class="pagination-section">
+  <div
+    *ngIf="(interviews$ | async)?.length && (interviews$ | async)!.length > 0"
+    class="pagination-section"
+  >
     <div class="pagination-controls">
-      <button 
-        mat-button 
+      <button
+        mat-button
         class="pagination-nav"
         [disabled]="currentPage() === 1"
-        (click)="onPreviousPage()">
+        (click)="onPreviousPage()"
+      >
         <mat-icon>chevron_left</mat-icon>
         Previous
       </button>
-      
+
       <div class="page-numbers">
-        <button 
-          *ngFor="let page of getPageNumbers()" 
-          mat-button 
+        <button
+          *ngFor="let page of getPageNumbers()"
+          mat-button
           class="page-number"
           [class.active]="page === currentPage()"
-          (click)="onPageClick(page)">
+          (click)="onPageClick(page)"
+        >
           {{ page }}
         </button>
         <span *ngIf="getTotalPages() > 5" class="page-ellipsis">...</span>
       </div>
 
-      <button 
-        mat-button 
+      <button
+        mat-button
         class="pagination-nav"
         [disabled]="currentPage() === getTotalPages()"
-        (click)="onNextPage()">
+        (click)="onNextPage()"
+      >
         Next
         <mat-icon>chevron_right</mat-icon>
       </button>

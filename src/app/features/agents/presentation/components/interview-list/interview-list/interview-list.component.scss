@@ -1,57 +1,59 @@
 .interview-list-container {
   padding: 24px 0;
-  
+
   // Header Section
   .list-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 24px;
-    
+
     .list-title {
       font-size: 24px;
       font-weight: 600;
       color: #111827;
       margin: 0;
     }
-    
+
     .header-controls {
+
       display: flex;
+      justify-items: flex-end;
       align-items: center;
       gap: 12px;
-      
+
       .status-filter {
         position: relative;
-        
+
         ::ng-deep {
           .mat-mdc-form-field-wrapper {
             padding-bottom: 0;
           }
-          
+
           .mat-mdc-form-field-outline {
             border-color: #d1d5db;
             border-radius: 8px;
           }
-          
+
           .mat-mdc-form-field-outline-thick {
             border-color: #6b7280;
           }
-          
+
           .mat-mdc-select {
             font-size: 14px;
             color: #374151;
             padding: 8px 40px 8px 32px;
             min-width: 120px;
           }
-          
+
           .mat-mdc-select-value {
             color: #374151;
           }
-          
+
           .mat-mdc-select-arrow {
             color: #6b7280;
           }
-          
+
           .mat-mdc-form-field-prefix {
             position: absolute;
             left: 8px;
@@ -60,7 +62,7 @@
             z-index: 1;
           }
         }
-        
+
         .filter-icon {
           font-size: 16px;
           width: 16px;
@@ -68,7 +70,7 @@
           color: #6b7280;
         }
       }
-      
+
       .new-interview-button {
         background-color: #14b8a6 !important;
         color: white !important;
@@ -80,11 +82,11 @@
         height: 40px;
         box-shadow: none;
         text-transform: none;
-        
+
         &:hover {
           background-color: #0f766e !important;
         }
-        
+
         ::ng-deep {
           .mat-icon {
             font-size: 16px;
@@ -96,7 +98,7 @@
       }
     }
   }
-  
+
   // Loading State
   .loading-state {
     display: flex;
@@ -104,7 +106,7 @@
     align-items: center;
     padding: 48px 0;
   }
-  
+
   // Error State
   .error-state {
     background-color: #fef2f2;
@@ -112,7 +114,7 @@
     border-radius: 8px;
     padding: 16px;
     margin-bottom: 24px;
-    
+
     .error-content {
       display: flex;
       align-items: center;
@@ -121,17 +123,17 @@
       margin-bottom: 8px;
     }
   }
-  
+
   // Interview Table
   .interview-table {
-    
+
     .table-header {
       display: grid;
       grid-template-columns: 2fr 2fr 1fr 1fr 1fr;
       gap: 16px;
       padding: 12px 0;
       border-bottom: 1px solid #e5e7eb;
-      
+
       .header-cell {
         display: flex;
         align-items: center;
@@ -139,7 +141,7 @@
         font-size: 14px;
         font-weight: 500;
         color: #6b7280;
-        
+
         .sort-arrow {
           font-size: 16px;
           width: 16px;
@@ -148,7 +150,7 @@
         }
       }
     }
-    
+
     .table-body {
       .table-row {
         display: grid;
@@ -157,19 +159,19 @@
         padding: 16px 0;
         border-bottom: 1px solid #f3f4f6;
         transition: background-color 0.2s ease;
-        
+
         &:hover {
           background-color: #f9fafb;
         }
-        
+
         &:last-child {
           border-bottom: none;
         }
-        
+
         .table-cell {
           display: flex;
           align-items: center;
-          
+
           &.candidate-name {
             .candidate-text {
               font-size: 14px;
@@ -177,27 +179,27 @@
               color: #111827;
             }
           }
-          
+
           &.job-title {
             .job-link {
               font-size: 14px;
               color: #3b82f6;
               text-decoration: none;
               cursor: pointer;
-              
+
               &:hover {
                 text-decoration: underline;
               }
             }
           }
-          
+
           &.date {
             .date-text {
               font-size: 14px;
               color: #6b7280;
             }
           }
-          
+
           &.status {
             .status-badge {
               padding: 4px 12px;
@@ -205,52 +207,52 @@
               font-size: 12px;
               font-weight: 500;
               text-transform: capitalize;
-              
+
               &.scheduled {
                 background-color: #dbeafe;
                 color: #1e40af;
               }
-              
+
               &.processed {
                 background-color: #dcfce7;
                 color: #166534;
               }
-              
+
               &.in-progress {
                 background-color: #fed7aa;
                 color: #9a3412;
               }
-              
+
               &.taken {
                 background-color: #e9d5ff;
                 color: #7c3aed;
               }
             }
           }
-          
+
           &.actions {
             .action-buttons {
               display: flex;
               gap: 4px;
-              
+
               .action-btn {
                 width: 32px;
                 height: 32px;
                 border-radius: 6px;
                 transition: all 0.2s ease;
-                
+
                 &:hover {
                   background-color: #f3f4f6;
                 }
-                
+
                 &.delete-btn:hover {
                   background-color: #fef2f2;
-                  
+
                   mat-icon {
                     color: #dc2626;
                   }
                 }
-                
+
                 ::ng-deep {
                   .mat-icon {
                     font-size: 16px;
@@ -265,12 +267,12 @@
         }
       }
     }
-    
+
     // Empty State
     .empty-state {
       text-align: center;
       padding: 48px 0;
-      
+
       .empty-icon {
         font-size: 48px !important;
         width: 48px !important;
@@ -278,20 +280,20 @@
         color: #d1d5db;
         margin-bottom: 16px;
       }
-      
+
       h3 {
         font-size: 18px;
         font-weight: 500;
         color: #111827;
         margin: 0 0 8px 0;
       }
-      
+
       p {
         font-size: 14px;
         color: #6b7280;
         margin: 0 0 24px 0;
       }
-      
+
       .new-interview-button {
         background-color: #14b8a6 !important;
         color: white !important;
@@ -300,40 +302,40 @@
         font-size: 14px;
         font-weight: 500;
         text-transform: none;
-        
+
         &:hover {
           background-color: #0f766e !important;
         }
       }
     }
   }
-  
+
   // Pagination
   .pagination-section {
     margin-top: 24px;
-    
+
     .pagination-controls {
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 8px;
-      
+
       .pagination-nav {
         color: #6b7280;
         font-size: 14px;
         font-weight: 500;
         text-transform: none;
         padding: 8px 16px;
-        
+
         &:disabled {
           color: #d1d5db;
           cursor: not-allowed;
         }
-        
+
         &:hover:not(:disabled) {
           background-color: #f3f4f6;
         }
-        
+
         ::ng-deep {
           .mat-icon {
             font-size: 16px;
@@ -342,12 +344,12 @@
           }
         }
       }
-      
+
       .page-numbers {
         display: flex;
         gap: 4px;
         margin: 0 16px;
-        
+
         .page-number {
           min-width: 32px;
           height: 32px;
@@ -357,22 +359,22 @@
           color: #6b7280;
           text-transform: none;
           padding: 0;
-          
+
           &:hover {
             background-color: #f3f4f6;
             color: #111827;
           }
-          
+
           &.active {
             background-color: #3b82f6;
             color: white;
-            
+
             &:hover {
               background-color: #2563eb;
             }
           }
         }
-        
+
         .page-ellipsis {
           display: flex;
           align-items: center;
@@ -392,30 +394,30 @@
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     margin-top: 4px;
   }
-  
+
   .mat-mdc-option {
     font-size: 14px;
     padding: 8px 16px;
-    
+
     &:hover {
       background-color: #f3f4f6;
     }
-    
+
     &.mat-mdc-option-active {
       background-color: #f3f4f6;
     }
   }
-  
+
   .mat-mdc-button {
     &.mat-mdc-raised-button {
       box-shadow: none;
-      
+
       &:hover {
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       }
     }
   }
-  
+
   .mat-mdc-icon-button {
     &:hover {
       background-color: transparent;
@@ -430,29 +432,29 @@
       flex-direction: column;
       gap: 16px;
       align-items: stretch;
-      
+
       .header-controls {
         justify-content: space-between;
       }
     }
-    
+
     .interview-table {
       .table-header,
       .table-body .table-row {
         grid-template-columns: 1fr;
         gap: 8px;
-        
+
         .table-cell {
           padding: 8px 0;
           border-bottom: 1px solid #f3f4f6;
-          
+
           &:last-child {
             border-bottom: none;
           }
         }
       }
     }
-    
+
     .pagination-section {
       .pagination-controls {
         flex-direction: column;

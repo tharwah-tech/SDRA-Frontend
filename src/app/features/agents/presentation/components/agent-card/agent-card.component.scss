@@ -1,10 +1,10 @@
 // Updated Agent Card Component Styles
 .agent-card-container {
-  transition: all 0.2s ease-in-out;
-  
-  &:hover {
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  }
+  // transition: all 0.2s ease-in-out;
+
+  // &:hover {
+  //   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  // }
 
   // Override Material Icon styles
   ::ng-deep {
@@ -42,7 +42,7 @@
     .grid-cols-1 {
       grid-template-columns: 1fr;
     }
-    
+
     .flex-items-start {
       flex-direction: column;
       align-items: flex-start;
@@ -56,24 +56,24 @@
     background: #1f2937;
     border-color: #374151;
     color: #f9fafb;
-    
+
     h2 {
       color: #f9fafb;
     }
-    
+
     p {
       color: #d1d5db;
     }
-    
+
     h4 {
       color: #f3f4f6;
     }
-    
+
     .bg-blue-50 {
       background: #1e3a8a;
       color: #93c5fd;
     }
-    
+
     .bg-gray-100 {
       background: #374151;
       color: #d1d5db;
