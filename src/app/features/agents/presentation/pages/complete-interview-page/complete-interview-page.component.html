@@ -1,107 +1,75 @@
-
-<app-main-page-structure
-  [routesLinks]="getCurrentPagePath()"
-  [currentActiveTab]="SideNavTabs.SYSTEM_AGENTS"
->
-  <ng-content page-content>
-    <div class="complete-interview-container">
-      <!-- Loading State -->
-      <div *ngIf="(agentLoading$ | async) || (interviewLoading$ | async)" class="loading-container">
-        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+<div class="complete-interview-container">
+  <!-- Main Content -->
+  <div
+    class="content-wrapper"
+  >
+    <mat-card class="completion-card">
+      <!-- Success Icon and Header -->
+      <div class="completion-header">
+        <div class="success-icon">
+          <mat-icon class="check-icon">check_circle</mat-icon>
+        </div>
+        <h1 class="completion-title">Interview Completed!</h1>
+        <p class="completion-subtitle">
+          Thank you for taking the time to complete this interview. Your
+          responses have been recorded successfully.
+        </p>
       </div>
 
-      <!-- Main Content -->
-      <div *ngIf="!((agentLoading$ | async) || (interviewLoading$ | async))" class="content-wrapper">
-        <mat-card class="completion-card">
-          <!-- Success Icon and Header -->
-          <div class="completion-header">
-            <div class="success-icon">
-              <mat-icon class="check-icon">check_circle</mat-icon>
-            </div>
-            <h1 class="completion-title">Interview Completed!</h1>
-            <p class="completion-subtitle">
-              Thank you for taking the time to complete this interview. Your responses have
-              been recorded successfully.
-            </p>
-          </div>
-
-          <!-- Progress Section -->
-          <div class="progress-section">
-            <div class="progress-label">
-              Interview submitted successfully - 100% Complete
-            </div>
-            <mat-progress-bar
-              mode="determinate"
-              value="100"
-              class="completion-progress">
-            </mat-progress-bar>
-          </div>
-
-          <!-- What Happens Next Section -->
-          <div class="next-steps-section">
-            <h2 class="next-steps-title">What happens next?</h2>
-            <ul class="next-steps-list">
-              <li class="next-step-item">
-                <mat-icon class="step-icon">assignment</mat-icon>
-                <span>Your interview will be reviewed by our team</span>
-              </li>
-              <li class="next-step-item">
-                <mat-icon class="step-icon">schedule</mat-icon>
-                <span>You'll receive feedback within 2-3 business days</span>
-              </li>
-              <li class="next-step-item">
-                <mat-icon class="step-icon">contact_phone</mat-icon>
-                <span>We'll contact you directly with next steps</span>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Action Button -->
-          <div class="action-section">
-            <button
-              mat-raised-button
-              color="primary"
-              class="exit-button"
-              (click)="exitInterview()">
-              Exit Interview
-            </button>
-          </div>
-
-          <!-- Interview Metadata -->
-          <div class="interview-metadata">
-            <div class="metadata-item">
-              <span class="metadata-label">Interview ID:</span>
-              <span class="metadata-value">{{ getInterviewDisplayId() }}</span>
-            </div>
-            <div class="metadata-item">
-              <span class="metadata-label">Completed on:</span>
-              <span class="metadata-value">{{ getFormattedDate() }}</span>
-            </div>
-          </div>
-        </mat-card>
-
-        <!-- Additional Information Card (Optional) -->
-        <mat-card class="info-card" *ngIf="selectedAgent">
-          <div class="info-header">
-            <mat-icon class="info-icon">info</mat-icon>
-            <h3 class="info-title">Interview Details</h3>
-          </div>
-          <div class="info-content">
-            <div class="info-row">
-              <span class="info-label">Agent:</span>
-              <span class="info-value">{{ selectedAgent.name }}</span>
-            </div>
-            <div class="info-row" *ngIf="selectedInterview">
-              <span class="info-label">Position:</span>
-              <span class="info-value">{{ selectedInterview.job_info.title }}</span>
-            </div>
-            <div class="info-row" *ngIf="selectedInterview">
-              <span class="info-label">Candidate:</span>
-              <span class="info-value">{{ selectedInterview.candidate_info.full_name }}</span>
-            </div>
-          </div>
-        </mat-card>
+      <!-- Progress Section -->
+      <div class="progress-section">
+        <div class="progress-label">
+          Interview submitted successfully - 100% Complete
+        </div>
+        <mat-progress-bar
+          mode="determinate"
+          value="100"
+          class="completion-progress"
+        >
+        </mat-progress-bar>
       </div>
-    </div>
-  </ng-content>
-</app-main-page-structure>
+
+      <!-- What Happens Next Section -->
+      <div class="next-steps-section">
+        <h2 class="next-steps-title">What happens next?</h2>
+        <ul class="next-steps-list">
+          <li class="next-step-item">
+            <mat-icon class="step-icon">assignment</mat-icon>
+            <span>Your interview will be reviewed by our team</span>
+          </li>
+          <li class="next-step-item">
+            <mat-icon class="step-icon">schedule</mat-icon>
+            <span>You'll receive feedback within 2-3 business days</span>
+          </li>
+          <li class="next-step-item">
+            <mat-icon class="step-icon">contact_phone</mat-icon>
+            <span>We'll contact you directly with next steps</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Action Button -->
+      <div class="action-section">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="exitInterview()"
+        >
+          Exit Interview
+        </button>
+      </div>
+
+      <!-- Interview Metadata -->
+      <div class="interview-metadata">
+        <!-- <div class="metadata-item">
+          <span class="metadata-label">Interview ID:</span>
+          <span class="metadata-value">{{ token }}</span>
+        </div> -->
+        <div class="metadata-item">
+          <span class="metadata-label">Completed on:</span>
+          <span class="metadata-value">{{ getFormattedDate() }}</span>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

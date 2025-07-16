@@ -30,7 +30,6 @@ export const AGENTS_ROUTES: Routes = [
         component: AgentViewPageComponent,
         title: 'Agent Details',
       },
-
       {
         path: 'agent/:id/create-interview',
         component: CreateInterviewPageComponent,
@@ -42,20 +41,16 @@ export const AGENTS_ROUTES: Routes = [
         title: 'Interview Details',
       },
       {
-        // agents_lab/interviewer/interviews/start
+        // Public route - no authentication required
         path: 'agents_lab/interviewer/interviews/start',
         component: StartInterviewPageComponent,
         title: 'Start Interview',
-        canActivate: [], // Exclude auth guard by providing an empty array
       },
       {
-        // The route for complete-interview with query parameters
+        // Public route - no authentication required
         path: 'agents_lab/interviewer/interviews/completed',
         component: CompleteInterviewPageComponent,
         title: 'Complete Interview',
-        canActivate: [],
-        // Query parameters like interview-id and completeDate are not defined in the path,
-        // but can be accessed in the component using ActivatedRoute's queryParamMap.
       },
       {
         path: '**',

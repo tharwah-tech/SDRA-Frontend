@@ -12,7 +12,7 @@ import { handleResponse } from '../../../../shared/utils/handle-reponses.util';
 import { ApiResponse } from '../../../../core/models/api-response.model';
 import { RegisterResponseModel } from '../models/register-response.model';
 import { LogoutReponseModel } from '../models/logut-response.model';
-import { AUTH_TOKEN } from '../../presentation/store/auth.store';
+import { AUTH_TOKEN, CURRENT_AUTH_USER } from '../../presentation/store/auth.store';
 
 @Injectable({
   providedIn: 'root',
@@ -113,7 +113,27 @@ export class AuthService implements AuthRepository {
   }
 
   getCurrentUser(): Observable<AuthUser | undefined> {
-    return throwError(() => new Error('Method not implemented.'));
+    try {
+      const storedUser = localStorage.getItem(CURRENT_AUTH_USER);
+      if (!storedUser) {
+        return of(undefined);
+      }
+
+      const user: AuthUser = JSON.parse(storedUser);
+
+      // Convert date strings back to Date objects if they exist
+      if (user.date_joined && typeof user.date_joined === 'string') {
+        user.date_joined = new Date(user.date_joined);
+      }
+      if (user.tokenExpiration && typeof user.tokenExpiration === 'string') {
+        user.tokenExpiration = new Date(user.tokenExpiration);
+      }
+
+      return of(user);
+    } catch (error) {
+      console.error('Error parsing stored user data:', error);
+      return of(undefined);
+    }
   }
 
   // Add this to your AuthService
