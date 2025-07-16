@@ -2,12 +2,28 @@
   "General": {
     "primaryBtn": "الزرار الرئيسي"
   },
-    "agents": {
+  "agents": {
     "personality": "الشخصية",
     "supportedOutput": "المخرجات المدعومة",
     "configureAgent": "تكوين الوكيل",
     "video": "فيديو",
     "audio": "صوت",
-    "transcript": "نص" },
+    "transcript": "نص"
+  },
+  "RAG": {
+    "REFERENCE_DOCUMENTS": "الوثائق المرجعية",
+    "UPLOAD_DOCUMENT": "رفع وثيقة",
+    "NO_DOCUMENTS_FOUND": "لم يتم العثور على وثائق",
+    "UPLOAD_FIRST_DOCUMENT": "ارفع أول وثيقة للبدء",
+    "FILENAME": "اسم الملف",
+    "TYPE": "النوع",
+    "STATUS": "الحالة",
+    "UPLOAD_DATE": "تاريخ الرفع"
+  },
+  "COMMON": {
+    "ACTIONS": "الإجراءات",
+    "VIEW": "عرض",
+    "DELETE": "حذف"
+  },
   "sidenav": {}
 }

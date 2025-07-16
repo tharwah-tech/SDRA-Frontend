@@ -1,5 +1,3 @@
-// src/app/features/agents/presentation/store/interviews.reducer.ts
-
 import { createReducer, on } from '@ngrx/store';
 import { InterviewsActions } from './interviews.actions';
 import { initialInterviewsState } from './interviews.state';

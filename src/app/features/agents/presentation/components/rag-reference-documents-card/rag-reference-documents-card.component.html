@@ -1,0 +1,115 @@
+<mat-card class="w-full">
+  <mat-card-header class="flex flex-row justify-between items-center">
+    <mat-card-title>
+      {{ "RAG.REFERENCE_DOCUMENTS" | translate }}
+    </mat-card-title>
+    <mat-card-actions>
+      <button mat-flat-button color="primary" (click)="uploadDocument()">
+        <mat-icon>add</mat-icon>
+        {{ "RAG.UPLOAD_DOCUMENT" | translate }}
+      </button>
+    </mat-card-actions>
+  </mat-card-header>
+  <mat-card-content>
+    @if (loading$ | async) {
+      <div class="flex justify-center items-center py-8">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    } @else if (documentsList.length > 0) {
+      <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="documentsList" matSort (matSortChange)="onSortChange($event)" class="w-full">
+          <!-- Filename Column -->
+          <ng-container matColumnDef="filename">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ "RAG.FILENAME" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let document">
+              <div class="flex items-center">
+                <mat-icon class="mr-2 text-gray-500">description</mat-icon>
+                <span class="font-medium">{{ document.filename }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Type Column -->
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ "RAG.TYPE" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let document">
+              <mat-chip-set>
+                <mat-chip [color]="'primary'" selected>
+                  {{ document.type }}
+                </mat-chip>
+              </mat-chip-set>
+            </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ "RAG.STATUS" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let document">
+              <mat-chip-set>
+                <mat-chip [color]="getStatusColor(document.status)" selected>
+                  {{ document.status }}
+                </mat-chip>
+              </mat-chip-set>
+            </td>
+          </ng-container>
+
+          <!-- Upload Date Column -->
+          <ng-container matColumnDef="uploadDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ "RAG.UPLOAD_DATE" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let document">
+              <div class="flex items-center">
+                <mat-icon class="mr-2 text-gray-500">schedule</mat-icon>
+                <span>{{ document.uploadDate | date : "dd/MM/yyyy HH:mm" }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ "COMMON.ACTIONS" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let document">
+              <div class="flex gap-2">
+                <button mat-icon-button color="primary" (click)="viewDocument(document.id)"
+                        matTooltip="{{ 'COMMON.VIEW' | translate }}">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteDocument(document.id)"
+                        matTooltip="{{ 'COMMON.DELETE' | translate }}">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator
+          [pageSizeOptions]="pageSizeOptions"
+          [pageSize]="pageSize"
+          [length]="totalItems"
+          (page)="onPageChange($event)"
+          showFirstLastButtons
+          class="w-full">
+        </mat-paginator>
+      </div>
+    } @else {
+      <div class="flex flex-col items-center justify-center py-8 text-gray-500">
+        <mat-icon class="text-6xl mb-4">folder_open</mat-icon>
+        <p class="text-lg">{{ "RAG.NO_DOCUMENTS_FOUND" | translate }}</p>
+        <p class="text-sm mt-2">{{ "RAG.UPLOAD_FIRST_DOCUMENT" | translate }}</p>
+      </div>
+    }
+  </mat-card-content>
+</mat-card>

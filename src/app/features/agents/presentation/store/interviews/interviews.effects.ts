@@ -1,5 +1,3 @@
-// src/app/features/agents/presentation/store/interviews/interviews.effects.ts
-
 import { Inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';

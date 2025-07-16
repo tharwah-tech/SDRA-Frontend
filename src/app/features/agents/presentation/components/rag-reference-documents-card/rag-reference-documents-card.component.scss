@@ -1,0 +1,85 @@
+.mat-mdc-table {
+  width: 100%;
+  background: white;
+}
+
+.mat-mdc-header-cell {
+  font-weight: 600;
+  color: #374151;
+  background-color: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.mat-mdc-cell {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.mat-mdc-row:hover {
+  background-color: #f9fafb;
+}
+
+.mat-mdc-chip-set {
+  .mat-mdc-chip {
+    font-size: 0.75rem;
+    height: 24px;
+  }
+}
+
+.mat-mdc-paginator {
+  border-top: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+}
+
+.mat-mdc-card {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+}
+
+.mat-mdc-card-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.mat-mdc-card-content {
+  padding: 0;
+}
+
+.mat-mdc-card-actions {
+  padding: 0 24px;
+}
+
+// Status chip colors
+.mat-mdc-chip.mat-accent {
+  background-color: #10b981;
+  color: white;
+}
+
+.mat-mdc-chip.mat-warn {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.mat-mdc-chip.mat-error {
+  background-color: #ef4444;
+  color: white;
+}
+
+.mat-mdc-chip.mat-primary {
+  background-color: #3b82f6;
+  color: white;
+}
+
+// Action buttons
+.mat-mdc-icon-button {
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+}
+
+// Empty state
+.empty-state {
+  .mat-icon {
+    opacity: 0.5;
+  }
+}

@@ -25,6 +25,10 @@ import { GetAgentByIdUseCaseService } from './application/use-case/get-agent-by-
 import { ConfigureAgentUseCaseService } from './application/use-case/configure-agent.use-case.service';
 import { GetInterviewsUseCaseService } from './application/use-case/get-interviews.use-case.service';
 import { GetInterviewDetailsUseCaseService } from './application/use-case/get-interview-details.use-case.service';
+import { provideRagsRepository } from './data/services/rag.provider';
+import { RAG_FEATURE_KEY } from './presentation/store/rags/rag.state';
+import { ragReducer } from './presentation/store/rags/rag.reducer';
+import { RagsEffects } from './presentation/store/rags/rag.effects';
 
 export const agentsFeatureProviders = [
   // ✅ 1. FIRST: Provide all services that effects depend on
@@ -38,6 +42,8 @@ export const agentsFeatureProviders = [
     provide: INTERVIEWS_REPOSITORY,
     useClass: InterviewsService,
   },
+
+  provideRagsRepository(),
 
   // Use Case Services
   GetAgentsUseCaseService,
@@ -53,7 +59,8 @@ export const agentsFeatureProviders = [
   // ✅ 2. SECOND: Provide the store state
   provideState(AGENTS_FEATURE_KEY, agentsReducer),
   provideState(INTERVIEWS_FEATURE_KEY, interviewsReducer),
+  provideState(RAG_FEATURE_KEY, ragReducer),
 
   // ✅ 3. LAST: Provide effects AFTER all dependencies are available
-  provideEffects([AgentsEffects, InterviewsEffects]),
+  provideEffects([AgentsEffects, InterviewsEffects, RagsEffects]),
 ];

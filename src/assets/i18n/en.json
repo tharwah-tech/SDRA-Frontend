@@ -2,13 +2,28 @@
   "General": {
     "primaryBtn": "Primary Button"
   },
-    "agents": {
+  "agents": {
     "personality": "Personality",
     "supportedOutput": "Supported Output",
     "configureAgent": "Configure Agent",
     "video": "Video",
     "audio": "Audio",
     "transcript": "Transcript"
+  },
+  "RAG": {
+    "REFERENCE_DOCUMENTS": "Reference Documents",
+    "UPLOAD_DOCUMENT": "Upload Document",
+    "NO_DOCUMENTS_FOUND": "No documents found",
+    "UPLOAD_FIRST_DOCUMENT": "Upload your first document to get started",
+    "FILENAME": "Filename",
+    "TYPE": "Type",
+    "STATUS": "Status",
+    "UPLOAD_DATE": "Upload Date"
+  },
+  "COMMON": {
+    "ACTIONS": "Actions",
+    "VIEW": "View",
+    "DELETE": "Delete"
   },
   "sidenav": {}
 }

@@ -23,6 +23,7 @@ import { SideNavTabs } from '../../../../../core/enums/side-nave-tabs.enum';
 import { MatCardModule } from '@angular/material/card';
 import { showSnackbar } from '../../../../../shared/utils/show-snackbar-notification.util';
 import { ToastrService } from 'ngx-toastr';
+import { RAGReferenceDocumentsCardComponent } from '../../components/rag-reference-documents-card/rag-reference-documents-card.component';
 
 @Component({
   selector: 'app-agent-view-page',
@@ -30,6 +31,7 @@ import { ToastrService } from 'ngx-toastr';
     CommonModule,
     AgentCardComponent,
     InterviewListComponent, // Add this import
+    RAGReferenceDocumentsCardComponent,
     MatProgressSpinnerModule,
     MainPageStructureComponent,
     MatCardModule,

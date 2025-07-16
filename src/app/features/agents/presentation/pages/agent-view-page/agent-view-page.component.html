@@ -29,6 +29,12 @@
         >
           <app-interview-list class="w-full" />
         </mat-card>
+        <div class="w-full">
+          <app-rag-reference-documents-card
+            [agentId]="(agent$ | async)?.id!"
+            *ngIf="(agent$ | async)?.role === AgentType.RAG_Agent"
+          />
+        </div>
       </div>
     </div>
   </ng-content>
