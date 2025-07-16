@@ -24,11 +24,16 @@
           <span
             class="text-sm px-3 py-1 border rounded-md font-medium"
             [ngClass]="{
-            'bg-[#EFF6FF] text-[#1447E6] border-[#BFDBFF]': agent.role === AgentType.Interviewer,
-            'bg-[#10B9810D] text-[#10B981] border-[#C5FFEC]': agent.role === AgentType.Summarizer,
-            'bg-[#F59E0B0D] text-[#F59E0B] border-[#FFF1D9]': agent.role === AgentType.RAG_Agent,
-            'bg-[#8B5CF60D] text-[#8B5CF6] border-[#E7DCFF]': agent.role === AgentType.Responder,
-          }"
+              'bg-[#EFF6FF] text-[#1447E6] border-[#BFDBFF]': agent.role === AgentType.Interviewer || (
+                agent.role !== AgentType.Interviewer &&
+                agent.role !== AgentType.Summarizer &&
+                agent.role !== AgentType.RAG_Agent &&
+                agent.role !== AgentType.Responder
+              ),
+              'bg-[#10B9810D] text-[#10B981] border-[#C5FFEC]': agent.role === AgentType.Summarizer,
+              'bg-[#F59E0B0D] text-[#F59E0B] border-[#FFF1D9]': agent.role === AgentType.RAG_Agent,
+              'bg-[#8B5CF60D] text-[#8B5CF6] border-[#E7DCFF]': agent.role === AgentType.Responder
+            }"
           >
             {{ agent.role }}
           </span>
