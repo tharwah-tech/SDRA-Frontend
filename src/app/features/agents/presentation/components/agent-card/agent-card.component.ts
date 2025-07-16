@@ -11,6 +11,7 @@ import {
   SupportedOutput,
   OutputType,
 } from '../../../domain/entities/agent.entity';
+import { AgentType, mapAgentType } from '../../../../../core/enums/agents-type.enum';
 
 @Component({
   selector: 'app-agent-card',
@@ -28,6 +29,7 @@ import {
 export class AgentCardComponent implements OnInit {
   @Input() agent!: AgentEntity;
   enabledOutputs: SupportedOutput[] = [];
+  AgentType = AgentType;
 
   ngOnInit(): void {
     this.loadEnabledOutputs();
@@ -74,5 +76,9 @@ export class AgentCardComponent implements OnInit {
       [OutputType.TRANSCRIPT]: 'bg-purple-50',
     };
     return classes[type] || 'bg-gray-50';
+  }
+
+  getAgentTypeString(type: AgentType):string{
+    return mapAgentType(type);
   }
 }

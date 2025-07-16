@@ -1,7 +1,7 @@
 export enum AgentType {
   Interviewer = 'interviewer',
   Summarizer = 'summarizer',
-  RAG_Agent = 'rag_agent',
+  RAG_Agent = 'rag',
   Responder = 'responder',
 }
 export function mapAgentType(type: AgentType): string {
@@ -11,7 +11,7 @@ export function mapAgentType(type: AgentType): string {
     case AgentType.Summarizer:
       return 'Summarizer';
     case AgentType.RAG_Agent:
-      return 'RAG Agent';
+      return 'RAG';
     case AgentType.Responder:
       return 'Responder';
   }
