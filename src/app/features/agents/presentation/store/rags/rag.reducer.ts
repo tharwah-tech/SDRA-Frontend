@@ -42,9 +42,8 @@ export const ragReducer = createReducer(
     loading: true,
     error: null,
   })),
-  on(RagsActions.uploadRagDocumentSuccess, (state, { document }) => ({
+    on(RagsActions.uploadRagDocumentSuccess, (state, { document }) => ({
     ...state,
-    documentsList: [...state.documentsList, document],
     loading: false,
     error: null,
   })),

@@ -76,9 +76,10 @@ export class RAGReferenceDocumentsCardComponent implements OnInit {
     'uploadDate',
     'actions',
   ];
-  pageSize = 10;
+  pageSize = 5;
   pageSizeOptions = [5, 10, 25, 50];
   currentPage = 1;
+  currentPageIndex = 0; // Material paginator uses 0-based index
   totalItems = 0;
 
   constructor(
@@ -148,6 +149,7 @@ export class RAGReferenceDocumentsCardComponent implements OnInit {
 
   onPageChange(event: PageEvent): void {
     this.currentPage = event.pageIndex + 1;
+    this.currentPageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.loadDocuments();
   }
@@ -259,7 +261,7 @@ export class RAGReferenceDocumentsCardComponent implements OnInit {
           this.isUploading = false;
           this.uploadProgress = 0;
           this.selectedFile = null;
-          // Refresh the documents list once after successful upload
+          // Reload documents to get fresh data from server
           this.loadDocuments();
         }, 500);
       });

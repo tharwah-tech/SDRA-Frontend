@@ -171,6 +171,7 @@
       <mat-paginator
         [pageSizeOptions]="pageSizeOptions"
         [pageSize]="pageSize"
+        [pageIndex]="currentPageIndex"
         [length]="totalItems"
         (page)="onPageChange($event)"
         showFirstLastButtons
