@@ -11,14 +11,17 @@
     "transcript": "Transcript"
   },
   "RAG": {
+    "CONVERSATION_HISTORY": "Conversation History",
+    "NEW_CONVERSATION": "New Conversation",
+    "CONVERSATION_TITLE": "Title",
+    "LAST_ACTIVE": "Last Active",
+    "STATUS": "Status",
+    "NO_CONVERSATIONS_FOUND": "No conversations found",
     "REFERENCE_DOCUMENTS": "Reference Documents",
     "UPLOAD_DOCUMENT": "Upload Document",
-    "NO_DOCUMENTS_FOUND": "No document uploaded yet..",
-    "UPLOAD_FIRST_DOCUMENT": "Upload your first document to get started",
     "FILENAME": "File Name",
-    "TYPE": "File Type",
-    "STATUS": "Status",
-    "UPLOAD_DATE": "Uploaded On"
+    "TYPE": "Type",
+    "UPLOAD_DATE": "Upload Date"
   },
   "COMMON": {
     "ACTIONS": "Actions",

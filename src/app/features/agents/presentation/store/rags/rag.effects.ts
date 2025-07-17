@@ -1,3 +1,4 @@
+
 import { Inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { RagRepository } from '../../../domain/repositories/rag.repository';
@@ -82,7 +83,7 @@ export class RagsEffects {
       )
     );
 
-            this.uploadRagDocumentSuccess$ = createEffect(
+    this.uploadRagDocumentSuccess$ = createEffect(
       () =>
         this.actions$.pipe(
           ofType(RagsActions.uploadRagDocumentSuccess),
@@ -118,16 +119,15 @@ export class RagsEffects {
       )
     );
 
-    this.loadRagConversationSummariesSuccess$ = createEffect(() =>
-      this.actions$.pipe(
-        ofType(RagsActions.loadRagConversationsSummariesSuccess),
-        tap((action) => {
-          showSnackbar(this.toastr, {
-            title: 'Rag conversations loaded successfully',
-            type: 'success',
-          });
-        })
-      ),
+    this.loadRagConversationSummariesSuccess$ = createEffect(
+      () =>
+        this.actions$.pipe(
+          ofType(RagsActions.loadRagConversationsSummariesSuccess),
+          tap((action) => {
+            // Removed success notification for loading conversations
+            // as it's not needed and might be annoying
+          })
+        ),
       { dispatch: false }
     );
 
@@ -147,16 +147,17 @@ export class RagsEffects {
       )
     );
 
-    this.loadRagConversationSuccess$ = createEffect(() =>
-      this.actions$.pipe(
-        ofType(RagsActions.loadRagConversationSuccess),
-        tap((action) => {
-          showSnackbar(this.toastr, {
-            title: 'Rag conversation loaded successfully',
-            type: 'success',
-          });
-        })
-      ),
+    this.loadRagConversationSuccess$ = createEffect(
+      () =>
+        this.actions$.pipe(
+          ofType(RagsActions.loadRagConversationSuccess),
+          tap((action) => {
+            showSnackbar(this.toastr, {
+              title: 'Conversation loaded successfully',
+              type: 'success',
+            });
+          })
+        ),
       { dispatch: false }
     );
 
@@ -176,17 +177,19 @@ export class RagsEffects {
       )
     );
 
-    this.startRagConversationSuccess$ = createEffect(() =>
-      this.actions$.pipe(
-        ofType(RagsActions.startRagConversationSuccess),
-        tap((action) => {
-          showSnackbar(this.toastr, {
-            title: 'Rag conversation started successfully',
-            type: 'success',
-          });
-          this.router.navigate(['/agents/rag/conversation', action.conversation.id]);
-        })
-      ),
+    this.startRagConversationSuccess$ = createEffect(
+      () =>
+        this.actions$.pipe(
+          ofType(RagsActions.startRagConversationSuccess),
+          tap((action) => {
+            showSnackbar(this.toastr, {
+              title: 'New conversation started successfully',
+              type: 'success',
+            });
+            // Navigate to conversation page if needed
+            // this.router.navigate(['/agents/rag/conversation', action.conversation.id]);
+          })
+        ),
       { dispatch: false }
     );
 
@@ -208,16 +211,17 @@ export class RagsEffects {
       )
     );
 
-    this.sendRagTextMessageSuccess$ = createEffect(() =>
-      this.actions$.pipe(
-        ofType(RagsActions.sendRagTextMessageSuccess),
-        tap((action) => {
-          showSnackbar(this.toastr, {
-            title: 'Rag text message sent successfully',
-            type: 'success',
-          });
-        })
-      ),
+    this.sendRagTextMessageSuccess$ = createEffect(
+      () =>
+        this.actions$.pipe(
+          ofType(RagsActions.sendRagTextMessageSuccess),
+          tap((action) => {
+            showSnackbar(this.toastr, {
+              title: 'Message sent successfully',
+              type: 'success',
+            });
+          })
+        ),
       { dispatch: false }
     );
 
@@ -239,16 +243,17 @@ export class RagsEffects {
       )
     );
 
-    this.sendRagAudioMessageSuccess$ = createEffect(() =>
-      this.actions$.pipe(
-        ofType(RagsActions.sendRagAudioMessageSuccess),
-        tap((action) => {
-          showSnackbar(this.toastr, {
-            title: 'Rag audio message sent successfully',
-            type: 'success',
-          });
-        })
-      ),
+    this.sendRagAudioMessageSuccess$ = createEffect(
+      () =>
+        this.actions$.pipe(
+          ofType(RagsActions.sendRagAudioMessageSuccess),
+          tap((action) => {
+            showSnackbar(this.toastr, {
+              title: 'Audio message sent successfully',
+              type: 'success',
+            });
+          })
+        ),
       { dispatch: false }
     );
   }

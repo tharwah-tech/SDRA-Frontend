@@ -1,3 +1,5 @@
+// src/app/features/agents/presentation/store/rags/rag.selectors.ts
+
 import { createFeatureSelector, createSelector } from "@ngrx/store";
 import { RAG_FEATURE_KEY, RagState } from "./rag.state";
 
@@ -18,6 +20,11 @@ export const selectRagDocumentsPagination = createSelector(
 export const selectRagConversationSummaryList = createSelector(
   selectRagState,
   (state) => state.conversationSummaryList
+);
+
+export const selectRagConversationsPagination = createSelector(
+  selectRagState,
+  (state) => state.conversationsPagination
 );
 
 export const selectRagSelectedConversation = createSelector(

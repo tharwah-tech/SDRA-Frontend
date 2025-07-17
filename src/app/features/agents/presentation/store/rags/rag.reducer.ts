@@ -1,3 +1,4 @@
+
 import { createReducer, on } from '@ngrx/store';
 import { RagsActions } from './rag.actions';
 import { initialRagState } from './rag.state';
@@ -42,7 +43,7 @@ export const ragReducer = createReducer(
     loading: true,
     error: null,
   })),
-    on(RagsActions.uploadRagDocumentSuccess, (state, { document }) => ({
+  on(RagsActions.uploadRagDocumentSuccess, (state, { document }) => ({
     ...state,
     loading: false,
     error: null,
@@ -59,12 +60,25 @@ export const ragReducer = createReducer(
     loading: true,
     error: null,
   })),
-  on(RagsActions.loadRagConversationsSummariesSuccess, (state, { paginatedConversationSummaryList }) => ({
-    ...state,
-    conversationSummaryList: paginatedConversationSummaryList.items,
-    loading: false,
-    error: null,
-  })),
+  on(RagsActions.loadRagConversationsSummariesSuccess, (state, { paginatedConversationSummaryList }) => {
+    // Extract pagination metadata for conversations
+    const conversationsPaginationMetadata: PaginationMetadata = {
+      totalCount: paginatedConversationSummaryList.totalCount,
+      pageNumber: paginatedConversationSummaryList.pageNumber,
+      pageSize: paginatedConversationSummaryList.pageSize,
+      totalPages: paginatedConversationSummaryList.totalPages,
+      hasNextPage: paginatedConversationSummaryList.hasNextPage,
+      hasPreviousPage: paginatedConversationSummaryList.hasPreviousPage,
+    };
+
+    return {
+      ...state,
+      conversationSummaryList: paginatedConversationSummaryList.items,
+      conversationsPagination: conversationsPaginationMetadata,
+      loading: false,
+      error: null,
+    };
+  }),
   on(RagsActions.loadRagConversationsSummariesFailure, (state, { error }) => ({
     ...state,
     loading: false,

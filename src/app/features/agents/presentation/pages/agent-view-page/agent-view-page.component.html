@@ -1,3 +1,5 @@
+<!-- src/app/features/agents/presentation/pages/agent-view-page/agent-view-page.component.html -->
+
 <app-main-page-structure
   [routesLinks]="CurrentPagePath()"
   [currentActiveTab]="SideNavTabs.SYSTEM_AGENTS"
@@ -29,18 +31,23 @@
         >
           <app-interview-list class="w-full" />
         </mat-card>
-        <div class="w-full">
-          <app-rag-reference-documents-card
-            [agentId]="(agent$ | async)?.id!"
-            *ngIf="(agent$ | async)?.role === AgentType.RAG_Agent"
-          />
-        </div>
-        <div class="w-full">
-          <app-rag-conversation-history
-            [agentId]="(agent$ | async)?.id!"
-            *ngIf="(agent$ | async)?.role === AgentType.RAG_Agent"
-          />
-        </div>
+
+        <!-- RAG Agent Sections -->
+        <ng-container *ngIf="(agent$ | async)?.role === AgentType.RAG_Agent">
+          <!-- Reference Documents Section -->
+          <div class="w-full">
+            <app-rag-reference-documents-card
+              [agentId]="(agent$ | async)?.id!"
+            />
+          </div>
+
+          <!-- Conversation History Section -->
+          <div class="w-full">
+            <app-rag-conversation-history
+              [agentId]="(agent$ | async)?.id!"
+            />
+          </div>
+        </ng-container>
       </div>
     </div>
   </ng-content>
