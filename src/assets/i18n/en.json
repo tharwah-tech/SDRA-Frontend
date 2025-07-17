@@ -23,7 +23,9 @@
   "COMMON": {
     "ACTIONS": "Actions",
     "VIEW": "View",
-    "DELETE": "Delete"
+    "DELETE": "Delete",
+    "CANCEL": "Cancel",
+    "COMPLETE": "Complete"
   },
   "sidenav": {}
 }

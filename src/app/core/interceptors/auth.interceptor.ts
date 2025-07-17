@@ -34,15 +34,26 @@ export const authInterceptor: HttpInterceptorFn = (
   // This part attaches the token to outgoing requests.
   // It should run for ALL requests, including logout, if a token is available,
   // as the server might require the token to validate the logout action.
-  return store.select(selectAccessToken).pipe(
+    return store.select(selectAccessToken).pipe(
     take(1),
     switchMap((token) => {
       if (token) {
+        // Don't override Content-Type for FormData requests
+        const headers: { [key: string]: string } = {
+          Authorization: `Token ${token}`,
+        };
+
+        // Check if the request body is FormData
+        const isFormData = request.body instanceof FormData;
+
+        // Only set Content-Type to application/json if it's not already set AND not FormData
+        // This allows FormData to set its own Content-Type with boundary
+        if (!request.headers.has('Content-Type') && !isFormData) {
+          headers['Content-Type'] = 'application/json';
+        }
+
         const authReq = request.clone({
-          setHeaders: {
-            Authorization: `Token ${token}`,
-            'Content-Type': 'application/json',
-          },
+          setHeaders: headers,
         });
         return next(authReq);
       } else {

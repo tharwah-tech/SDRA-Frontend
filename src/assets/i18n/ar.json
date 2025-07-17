@@ -23,7 +23,9 @@
   "COMMON": {
     "ACTIONS": "الإجراءات",
     "VIEW": "عرض",
-    "DELETE": "حذف"
+    "DELETE": "حذف",
+    "CANCEL": "إلغاء",
+    "COMPLETE": "مكتمل"
   },
   "sidenav": {}
 }

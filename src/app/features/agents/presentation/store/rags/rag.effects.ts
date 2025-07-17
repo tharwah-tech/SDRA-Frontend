@@ -87,10 +87,7 @@ export class RagsEffects {
         this.actions$.pipe(
           ofType(RagsActions.uploadRagDocumentSuccess),
           tap((action) => {
-            showSnackbar(this.toastr, {
-              title: 'Rag document uploaded successfully',
-              type: 'success',
-            });
+            // Success notification is handled in the component
           })
         ),
       { dispatch: false }

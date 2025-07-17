@@ -11,7 +11,7 @@ import { LanguageService } from '../../../../../core/services/language.service';
 import { RagsActions } from '../../store/rags/rag.actions';
 import { OnInit } from '@angular/core';
 import { ApiError } from '../../../../../core/models/api-error.model';
-import { filter, Observable, tap } from 'rxjs';
+import { filter, Observable, tap, take } from 'rxjs';
 import {
   selectRagDocumentsList,
   selectRagDocumentsPagination,
@@ -28,6 +28,8 @@ import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PaginatedEntity } from '../../../../../core/entities/paginated.entity';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-rag-reference-documents-card',
@@ -44,6 +46,8 @@ import { PaginatedEntity } from '../../../../../core/entities/paginated.entity';
     MatSortModule,
     MatChipsModule,
     MatTooltipModule,
+    MatProgressBarModule,
+    MatDialogModule,
   ],
   templateUrl: './rag-reference-documents-card.component.html',
   styleUrl: './rag-reference-documents-card.component.scss',
@@ -55,6 +59,12 @@ export class RAGReferenceDocumentsCardComponent implements OnInit {
   documents$: Observable<RagDocumentEntity[]>;
   pagination$: Observable<PaginatedEntity<RagDocumentEntity> | null>;
   documentsList: RagDocumentEntity[] = [];
+
+  // Upload properties
+  isUploading = false;
+  uploadProgress = 0;
+  selectedFile: File | null = null;
+  fileInput: HTMLInputElement | null = null;
 
   // Table properties
   displayedColumns: string[] = [
@@ -138,8 +148,123 @@ export class RAGReferenceDocumentsCardComponent implements OnInit {
     console.log('Sort:', sort);
   }
 
-  uploadDocument() {
-    console.log('uploadDocument');
+  uploadDocument(): void {
+    // Create a hidden file input if it doesn't exist
+    if (!this.fileInput) {
+      this.fileInput = document.createElement('input');
+      this.fileInput.type = 'file';
+      this.fileInput.accept = '.pdf,.doc,.docx,.txt,.rtf,.md';
+      this.fileInput.style.display = 'none';
+      document.body.appendChild(this.fileInput);
+
+      this.fileInput.addEventListener('change', (event: any) => {
+        const file = event.target.files[0];
+        if (file) {
+          this.handleFileSelection(file);
+        }
+      });
+    }
+
+    this.fileInput.click();
+  }
+
+  handleFileSelection(file: File): void {
+    // Validate file size (max 10MB)
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSize) {
+      showSnackbar(this.toastr, {
+        type: 'error',
+        error: { message: 'File size exceeds 10MB limit' } as ApiError,
+      });
+      return;
+    }
+
+    // Validate file type
+    const allowedTypes = [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'text/plain',
+      'text/rtf',
+      'text/markdown'
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      showSnackbar(this.toastr, {
+        type: 'error',
+        error: { message: 'Invalid file type. Please upload PDF, DOC, DOCX, TXT, RTF, or MD files only.' } as ApiError,
+      });
+      return;
+    }
+
+    this.selectedFile = file;
+    this.startUpload();
+  }
+
+    startUpload(): void {
+    if (!this.selectedFile) {
+      return;
+    }
+
+    this.isUploading = true;
+    this.uploadProgress = 0;
+
+    // Simulate upload progress (in real implementation, you'd track actual progress)
+    const progressInterval = setInterval(() => {
+      if (this.uploadProgress < 90) {
+        this.uploadProgress += Math.random() * 10;
+      }
+    }, 200);
+
+    // Dispatch upload action
+    this.store.dispatch(
+      RagsActions.uploadRagDocument({
+        agentId: this.agentId(),
+        file: this.selectedFile,
+      })
+    );
+
+    // Listen for upload error
+    this.error$.pipe(
+      takeUntilDestroyed(this.destroyRef),
+      filter((error) => error !== null)
+    ).subscribe((error) => {
+      clearInterval(progressInterval);
+      this.uploadProgress = 0;
+      this.isUploading = false;
+      this.selectedFile = null;
+    });
+
+    // Listen for successful upload completion
+    this.store
+      .select((state: any) => state.rags)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        filter((state) => state && state.documentsList && this.isUploading),
+        take(1) // Only take the first emission to prevent infinite loop
+      )
+      .subscribe(() => {
+        clearInterval(progressInterval);
+        this.uploadProgress = 100;
+        setTimeout(() => {
+          this.isUploading = false;
+          this.uploadProgress = 0;
+          this.selectedFile = null;
+          // Refresh the documents list once after successful upload
+          this.loadDocuments();
+        }, 500);
+      });
+  }
+
+  cancelUpload(): void {
+    this.isUploading = false;
+    this.uploadProgress = 0;
+    this.selectedFile = null;
+    showSnackbar(this.toastr, {
+      type: 'info',
+      title: 'Info',
+      description: 'Upload cancelled',
+    });
   }
 
   deleteDocument(documentId: string) {
@@ -152,7 +277,11 @@ export class RAGReferenceDocumentsCardComponent implements OnInit {
     // Implement view logic here
   }
 
-  getStatusColor(status: string): string {
+  getStatusColor(status: string | undefined | null): string {
+    if (!status) {
+      return 'primary';
+    }
+
     switch (status.toLowerCase()) {
       case 'completed':
         return 'accent';
@@ -162,6 +291,28 @@ export class RAGReferenceDocumentsCardComponent implements OnInit {
         return 'error';
       default:
         return 'primary';
+    }
+  }
+
+  getFileIcon(fileType: string | undefined | null): string {
+    if (!fileType) {
+      return 'insert_drive_file';
+    }
+
+    switch (fileType.toLowerCase()) {
+      case 'pdf':
+        return 'picture_as_pdf';
+      case 'doc':
+      case 'docx':
+        return 'description';
+      case 'txt':
+        return 'article';
+      case 'rtf':
+        return 'text_fields';
+      case 'md':
+        return 'code';
+      default:
+        return 'insert_drive_file';
     }
   }
 }

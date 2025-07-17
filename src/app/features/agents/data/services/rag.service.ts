@@ -68,7 +68,7 @@ export class RagService implements RagRepository {
     formData.append('agent_id', agentId);
 
     const response$ = this.http.post<ApiResponse<RagDocumentModel>>(
-      `${this.apiUrl}documents/upload/`,
+      `${this.apiUrl}/documents/upload/`,
       formData
     );
 
@@ -169,7 +169,7 @@ export class RagService implements RagRepository {
       id: model.id,
       filename: model.name,
       uploadDate: model.uploaded_on,
-      type: model.type,
+      type: model.type || 'unknown',
       status: 'active',
     };
   }
