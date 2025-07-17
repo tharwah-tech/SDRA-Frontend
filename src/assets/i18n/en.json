@@ -13,12 +13,12 @@
   "RAG": {
     "REFERENCE_DOCUMENTS": "Reference Documents",
     "UPLOAD_DOCUMENT": "Upload Document",
-    "NO_DOCUMENTS_FOUND": "No documents found",
+    "NO_DOCUMENTS_FOUND": "No document uploaded yet..",
     "UPLOAD_FIRST_DOCUMENT": "Upload your first document to get started",
-    "FILENAME": "Filename",
-    "TYPE": "Type",
+    "FILENAME": "File Name",
+    "TYPE": "File Type",
     "STATUS": "Status",
-    "UPLOAD_DATE": "Upload Date"
+    "UPLOAD_DATE": "Uploaded On"
   },
   "COMMON": {
     "ACTIONS": "Actions",

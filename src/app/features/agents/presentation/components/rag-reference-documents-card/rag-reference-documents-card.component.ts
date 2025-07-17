@@ -57,7 +57,13 @@ export class RAGReferenceDocumentsCardComponent implements OnInit {
   documentsList: RagDocumentEntity[] = [];
 
   // Table properties
-  displayedColumns: string[] = ['filename', 'type', 'status', 'uploadDate', 'actions'];
+  displayedColumns: string[] = [
+    'filename',
+    'type',
+    'status',
+    'uploadDate',
+    'actions',
+  ];
   pageSize = 10;
   pageSizeOptions = [5, 10, 25, 50];
   currentPage = 1;
