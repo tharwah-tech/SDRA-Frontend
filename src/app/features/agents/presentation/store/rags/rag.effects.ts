@@ -82,12 +82,13 @@ export class RagsEffects {
       )
     );
 
-    this.uploadRagDocumentSuccess$ = createEffect(
+            this.uploadRagDocumentSuccess$ = createEffect(
       () =>
         this.actions$.pipe(
           ofType(RagsActions.uploadRagDocumentSuccess),
           tap((action) => {
             // Success notification is handled in the component
+            // The component will handle reloading documents after upload success
           })
         ),
       { dispatch: false }
