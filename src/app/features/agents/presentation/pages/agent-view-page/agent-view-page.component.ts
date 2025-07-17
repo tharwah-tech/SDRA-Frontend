@@ -24,6 +24,7 @@ import { MatCardModule } from '@angular/material/card';
 import { showSnackbar } from '../../../../../shared/utils/show-snackbar-notification.util';
 import { ToastrService } from 'ngx-toastr';
 import { RAGReferenceDocumentsCardComponent } from '../../components/rag-reference-documents-card/rag-reference-documents-card.component';
+import { RAGConversationHistoryComponent } from '../../components/rag-conversation-history/rag-conversation-history.component';
 
 @Component({
   selector: 'app-agent-view-page',
@@ -32,6 +33,7 @@ import { RAGReferenceDocumentsCardComponent } from '../../components/rag-referen
     AgentCardComponent,
     InterviewListComponent, // Add this import
     RAGReferenceDocumentsCardComponent,
+    RAGConversationHistoryComponent,
     MatProgressSpinnerModule,
     MainPageStructureComponent,
     MatCardModule,

@@ -32,7 +32,7 @@ export class RagService implements RagRepository {
     private http: HttpClient,
     @Inject(BASE_API_URL) private baseUrl: string
   ) {
-    this.apiUrl = `${this.baseUrl}/agents_lab/rag`;
+    this.apiUrl = `${this.baseUrl}/agents_lab`;
   }
 
   getRagDocuments(
@@ -46,7 +46,7 @@ export class RagService implements RagRepository {
       .set('page_size', pageSize.toString());
     const response$ = this.http.get<
       ApiResponse<PaginatedModel<RagDocumentModel>>
-    >(`${this.apiUrl}/documents/`, { params });
+    >(`${this.apiUrl}/rag/documents/`, { params });
 
     return handleResponse<
       PaginatedModel<RagDocumentModel>,
@@ -68,7 +68,7 @@ export class RagService implements RagRepository {
     formData.append('agent_id', agentId);
 
     const response$ = this.http.post<ApiResponse<RagDocumentModel>>(
-      `${this.apiUrl}/documents/upload/`,
+      `${this.apiUrl}/rag/documents/upload/`,
       formData
     );
 
@@ -83,11 +83,13 @@ export class RagService implements RagRepository {
     pageNumber: number,
     pageSize: number
   ): Observable<PaginatedEntity<RagConversationSummaryEntity>> {
+    const params = new HttpParams()
+      .set('agent_id', agentId)
+      .set('page_number', pageNumber.toString())
+      .set('page_size', pageSize.toString());
     const response$ = this.http.get<
       ApiResponse<PaginatedModel<RagConversationSummaryModel>>
-    >(
-      `${this.apiUrl}/conversations?agentId=${agentId}&pageNumber=${pageNumber}&pageSize=${pageSize}`
-    );
+    >(`${this.apiUrl}/conversations/`, { params });
 
     return handleResponse<
       PaginatedModel<RagConversationSummaryModel>,

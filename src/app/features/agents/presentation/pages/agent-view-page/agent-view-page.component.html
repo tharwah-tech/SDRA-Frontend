@@ -35,6 +35,12 @@
             *ngIf="(agent$ | async)?.role === AgentType.RAG_Agent"
           />
         </div>
+        <div class="w-full">
+          <app-rag-conversation-history
+            [agentId]="(agent$ | async)?.id!"
+            *ngIf="(agent$ | async)?.role === AgentType.RAG_Agent"
+          />
+        </div>
       </div>
     </div>
   </ng-content>

@@ -197,13 +197,16 @@ export class RAGReferenceDocumentsCardComponent implements OnInit {
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       'text/plain',
       'text/rtf',
-      'text/markdown'
+      'text/markdown',
     ];
 
     if (!allowedTypes.includes(file.type)) {
       showSnackbar(this.toastr, {
         type: 'error',
-        error: { message: 'Invalid file type. Please upload PDF, DOC, DOCX, TXT, RTF, or MD files only.' } as ApiError,
+        error: {
+          message:
+            'Invalid file type. Please upload PDF, DOC, DOCX, TXT, RTF, or MD files only.',
+        } as ApiError,
       });
       return;
     }
@@ -212,7 +215,7 @@ export class RAGReferenceDocumentsCardComponent implements OnInit {
     this.startUpload();
   }
 
-    startUpload(): void {
+  startUpload(): void {
     if (!this.selectedFile) {
       return;
     }
@@ -236,15 +239,17 @@ export class RAGReferenceDocumentsCardComponent implements OnInit {
     );
 
     // Listen for upload error
-    this.error$.pipe(
-      takeUntilDestroyed(this.destroyRef),
-      filter((error) => error !== null)
-    ).subscribe((error) => {
-      clearInterval(progressInterval);
-      this.uploadProgress = 0;
-      this.isUploading = false;
-      this.selectedFile = null;
-    });
+    this.error$
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        filter((error) => error !== null)
+      )
+      .subscribe((error) => {
+        clearInterval(progressInterval);
+        this.uploadProgress = 0;
+        this.isUploading = false;
+        this.selectedFile = null;
+      });
 
     // Listen for successful upload completion
     this.store
