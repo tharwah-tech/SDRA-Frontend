@@ -1,6 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { RagsActions } from './rag.actions';
 import { initialRagState } from './rag.state';
+import { PaginationMetadata } from '../../../../../core/entities/paginator.entity';
 
 export const ragReducer = createReducer(
   initialRagState,
@@ -10,12 +11,25 @@ export const ragReducer = createReducer(
     loading: true,
     error: null,
   })),
-  on(RagsActions.loadRagDocumentsSuccess, (state, { paginatedDocuments }) => ({
-    ...state,
-    documentsList: paginatedDocuments.items,
-    loading: false,
-    error: null,
-  })),
+  on(RagsActions.loadRagDocumentsSuccess, (state, { paginatedDocuments }) => {
+    // Extract pagination metadata without duplicating the items
+    const paginationMetadata: PaginationMetadata = {
+      totalCount: paginatedDocuments.totalCount,
+      pageNumber: paginatedDocuments.pageNumber,
+      pageSize: paginatedDocuments.pageSize,
+      totalPages: paginatedDocuments.totalPages,
+      hasNextPage: paginatedDocuments.hasNextPage,
+      hasPreviousPage: paginatedDocuments.hasPreviousPage,
+    };
+
+    return {
+      ...state,
+      documentsList: paginatedDocuments.items,
+      documentsPagination: paginationMetadata,
+      loading: false,
+      error: null,
+    };
+  }),
   on(RagsActions.loadRagDocumentsFailure, (state, { error }) => ({
     ...state,
     loading: false,

@@ -27,9 +27,10 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { PaginatedEntity } from '../../../../../core/entities/paginated.entity';
+import { PaginationMetadata } from '../../../../../core/entities/paginator.entity';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-rag-reference-documents-card',
@@ -48,6 +49,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatTooltipModule,
     MatProgressBarModule,
     MatDialogModule,
+    MatDividerModule,
   ],
   templateUrl: './rag-reference-documents-card.component.html',
   styleUrl: './rag-reference-documents-card.component.scss',
@@ -57,7 +59,7 @@ export class RAGReferenceDocumentsCardComponent implements OnInit {
   error$: Observable<ApiError | null>;
   loading$: Observable<boolean>;
   documents$: Observable<RagDocumentEntity[]>;
-  pagination$: Observable<PaginatedEntity<RagDocumentEntity> | null>;
+  pagination$: Observable<PaginationMetadata | null>;
   documentsList: RagDocumentEntity[] = [];
 
   // Upload properties
@@ -113,6 +115,10 @@ export class RAGReferenceDocumentsCardComponent implements OnInit {
         filter((documents) => documents.length > 0),
         tap((documents) => {
           this.documentsList = documents;
+          // Update totalItems if no pagination data is available
+          if (this.totalItems === 0) {
+            this.totalItems = documents.length;
+          }
         })
       )
       .subscribe();
@@ -133,6 +139,9 @@ export class RAGReferenceDocumentsCardComponent implements OnInit {
       .subscribe((pagination) => {
         if (pagination) {
           this.totalItems = pagination.totalCount;
+        } else {
+          // If no pagination data, set totalItems based on current documents list
+          this.totalItems = this.documentsList.length;
         }
       });
   }

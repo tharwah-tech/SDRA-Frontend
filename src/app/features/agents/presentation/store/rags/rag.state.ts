@@ -2,13 +2,16 @@ import { ApiError } from "../../../../../core/models/api-error.model";
 import { RagConversationSummaryEntity } from "../../../domain/entities/rag-conversation-summary.entity";
 import { RagConversationEntity } from "../../../domain/entities/rag-conversation.entity";
 import { RagDocumentEntity } from "../../../domain/entities/rag-document.enttity";
-import { PaginatedEntity } from "../../../../../core/entities/paginated.entity";
+import { PaginationMetadata } from "../../../../../core/entities/paginator.entity";
 
 export const RAG_FEATURE_KEY = 'rags';
 
+// Custom pagination metadata without duplicating the items
+
+
 export interface RagState {
   documentsList: RagDocumentEntity[];
-  documentsPagination: PaginatedEntity<RagDocumentEntity> | null;
+  documentsPagination: PaginationMetadata | null;
   conversationSummaryList: RagConversationSummaryEntity[];
   selectedConversation: RagConversationEntity | null;
   selectedConversationId: string | null;
