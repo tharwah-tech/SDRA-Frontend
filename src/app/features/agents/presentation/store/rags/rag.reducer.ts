@@ -93,7 +93,7 @@ export const ragReducer = createReducer(
   })),
   on(RagsActions.loadRagConversationSuccess, (state, { conversation }) => ({
     ...state,
-    conversation,
+    selectedConversation:conversation,
     loading: false,
     error: null,
   })),
@@ -111,7 +111,7 @@ export const ragReducer = createReducer(
   })),
   on(RagsActions.startRagConversationSuccess, (state, { conversation }) => ({
     ...state,
-    selectedConversation: conversation,
+    conversationSummaryList: [...state.conversationSummaryList, conversation],
     loading: false,
     error: null,
   })),

@@ -18,7 +18,7 @@ export interface RagRepository {
     pageSize: number
   ): Observable<PaginatedEntity<RagConversationSummaryEntity>>;
   getRagConversation(id: string): Observable<RagConversationEntity>;
-  startRagConversation(agentId: string): Observable<RagConversationEntity>;
+  startRagConversation(agentId: string): Observable<RagConversationSummaryEntity>;
   sendRagTextMessage(
     conversationId: string,
     textMessage: string

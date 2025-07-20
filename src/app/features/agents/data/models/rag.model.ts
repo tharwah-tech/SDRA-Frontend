@@ -26,5 +26,9 @@ export interface RagConversationSummaryModel {
 }
 
 export interface CreateRagConversationModel {
-  conversation_id: string;
+  id:                 string;
+  conversation_title: string;
+  agent_id:           string;
+  status:             string;
+  created_date:       Date;
 }

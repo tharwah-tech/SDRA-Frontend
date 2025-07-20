@@ -113,20 +113,24 @@ export class RagService implements RagRepository {
     );
   }
 
-  startRagConversation(agentId: string): Observable<RagConversationEntity> {
+  startRagConversation(agentId: string): Observable<RagConversationSummaryEntity> {
+    const params = new HttpParams().set('agent_id', agentId);
+    const url = `${this.apiUrl}/conversations/create/`;
     const response$ = this.http.post<ApiResponse<CreateRagConversationModel>>(
-      `${this.apiUrl}/conversations/start`,
-      { agentId }
+      url,
+      {},
+      { params }
     );
 
-    return handleResponse<CreateRagConversationModel, RagConversationEntity>(
+    return handleResponse<CreateRagConversationModel, RagConversationSummaryEntity>(
       response$,
       (model) => {
         // Return a placeholder entity that will be replaced by the actual conversation
         return {
-          id: model.conversation_id,
-          conversation_title: 'New Conversation',
-          messages: [],
+          id: model.id,
+          conversation_title: model.conversation_title,
+          last_active: model.created_date,
+          status: model.status,
         };
       }
     );

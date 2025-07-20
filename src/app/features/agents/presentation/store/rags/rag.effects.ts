@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { RagRepository } from '../../../domain/repositories/rag.repository';
 import { RAGS_REPOSITORY } from '../../../data/services/rag.provider';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, map, Observable, of, switchMap, tap } from 'rxjs';
 import { RagsActions } from './rag.actions';
 import { ToastrService } from 'ngx-toastr';
@@ -36,6 +36,7 @@ export class RagsEffects {
     private actions$: Actions,
     @Inject(RAGS_REPOSITORY) private ragRepository: RagRepository,
     private router: Router,
+    private route: ActivatedRoute,
     private toastr: ToastrService
   ) {
     this.loadRagDocuments$ = createEffect(() =>
@@ -152,10 +153,13 @@ export class RagsEffects {
         this.actions$.pipe(
           ofType(RagsActions.loadRagConversationSuccess),
           tap((action) => {
-            showSnackbar(this.toastr, {
-              title: 'Conversation loaded successfully',
-              type: 'success',
-            });
+            const currentUrl = this.router.url;
+            const urlSegments = currentUrl.split('/');
+            const lang = urlSegments[1] || 'en';
+            const agentId = urlSegments[4] || '';
+            const url = `/${lang}/agents/agent/${agentId}/chat/${action.conversation.id}`
+            console.log(url);
+            this.router.navigate([url]);
           })
         ),
       { dispatch: false }
@@ -181,16 +185,8 @@ export class RagsEffects {
       () =>
         this.actions$.pipe(
           ofType(RagsActions.startRagConversationSuccess),
-          tap((action) => {
-            showSnackbar(this.toastr, {
-              title: 'New conversation started successfully',
-              type: 'success',
-            });
-            // Navigate to conversation page if needed
-            // this.router.navigate(['/agents/rag/conversation', action.conversation.id]);
-          })
-        ),
-      { dispatch: false }
+          map((action) => RagsActions.loadRagConversation({ id: action.conversation.id }))
+        )
     );
 
     this.sendRagTextMessage$ = createEffect(() =>

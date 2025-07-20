@@ -46,7 +46,7 @@ export const RagsActions = createActionGroup({
       agentId: string;
     }>(),
     'Start Rag Conversation Success': props<{
-      conversation: RagConversationEntity;
+      conversation: RagConversationSummaryEntity;
     }>(),
     'Start Rag Conversation Failure': props<{ error: ApiError }>(),
 
