@@ -66,8 +66,6 @@ export const initialRagState: RagState = {
   },
   selectedConversationId: 'dummy-conversation-123',
   conversationsPagination: null,
-  selectedConversation: null,
-  selectedConversationId: null,
   loading: false,
   error: null,
 };
