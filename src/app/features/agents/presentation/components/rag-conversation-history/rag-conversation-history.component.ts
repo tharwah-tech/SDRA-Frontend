@@ -1,3 +1,4 @@
+
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, input } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
@@ -11,13 +12,12 @@ import { LanguageService } from '../../../../../core/services/language.service';
 import { RagsActions } from '../../store/rags/rag.actions';
 import { OnInit } from '@angular/core';
 import { ApiError } from '../../../../../core/models/api-error.model';
-import { filter, Observable, tap, take } from 'rxjs';
+import { filter, Observable, tap } from 'rxjs';
 import {
-  selectRagDocumentsList,
-  selectRagDocumentsPagination,
+  selectRagConversationSummaryList,
+  selectRagConversationsPagination,
   selectRagError,
   selectRagLoading,
-  selectRagConversationSummaryList,
 } from '../../store/rags/rag.selectors';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { showSnackbar } from '../../../../../shared/utils/show-snackbar-notification.util';
@@ -59,16 +59,15 @@ export class RAGConversationHistoryComponent implements OnInit {
   agentId = input.required<string>();
   error$: Observable<ApiError | null>;
   loading$: Observable<boolean>;
-  converstions$: Observable<RagConversationSummaryEntity[]>;
+  conversations$: Observable<RagConversationSummaryEntity[]>;
   pagination$: Observable<PaginationMetadata | null>;
-  converstionsList: RagConversationSummaryEntity[] = [];
+  conversationsList: RagConversationSummaryEntity[] = [];
 
   // Table properties
   displayedColumns: string[] = [
-    'filename',
-    'type',
+    'title',
+    'lastActive',
     'status',
-    'uploadDate',
     'actions',
   ];
   pageSize = 5;
@@ -87,17 +86,58 @@ export class RAGConversationHistoryComponent implements OnInit {
   ) {
     this.error$ = this.store.select(selectRagError);
     this.loading$ = this.store.select(selectRagLoading);
-    this.converstions$ = this.store.select(selectRagConversationSummaryList);
-    this.pagination$ = this.store.select(selectRagDocumentsPagination);
+    this.conversations$ = this.store.select(selectRagConversationSummaryList);
+    this.pagination$ = this.store.select(selectRagConversationsPagination);
   }
 
   ngOnInit(): void {
     this.loadConversations();
     this.setupPaginationSubscription();
-    this.converstions$
+  }
+
+  loadConversations(): void {
+    this.store.dispatch(
+      RagsActions.loadRagConversationsSummaries({
+        agentId: this.agentId(),
+        pageNumber: this.currentPage,
+        pageSize: this.pageSize,
+      })
+    );
+
+    this.conversations$
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        filter((conversations) => conversations.length >= 0),
+        tap((conversations) => {
+          this.conversationsList = conversations;
+          // Update totalItems if no pagination data is available
+          if (this.totalItems === 0) {
+            this.totalItems = conversations.length;
+          }
+        })
+      )
+      .subscribe();
+
+    this.error$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((error) => {
+      if (error) {
+        showSnackbar(this.toastr, {
+          type: 'error',
+          error,
+        });
+      }
+    });
+  }
+
+  setupPaginationSubscription(): void {
+    this.pagination$
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((converstions) => {
-        this.converstionsList = converstions;
+      .subscribe((pagination) => {
+        if (pagination) {
+          this.totalItems = pagination.totalCount;
+        } else {
+          // If no pagination data, set totalItems based on current conversations list
+          this.totalItems = this.conversationsList.length;
+        }
       });
   }
 
@@ -113,26 +153,85 @@ export class RAGConversationHistoryComponent implements OnInit {
     console.log('Sort:', sort);
   }
 
-  loadConversations(): void {
+  startNewConversation(): void {
     this.store.dispatch(
-      RagsActions.loadRagConversationsSummaries({
+      RagsActions.startRagConversation({
         agentId: this.agentId(),
-        pageNumber: this.currentPage,
-        pageSize: this.pageSize,
       })
     );
   }
 
-  setupPaginationSubscription(): void {
-    this.pagination$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((pagination) => {
-        if (pagination) {
-          this.totalItems = pagination.totalCount;
-        } else {
-          // If no pagination data, set totalItems based on current documents list
-          this.totalItems = this.converstionsList.length;
-        }
-      });
+  viewConversation(conversationId: string): void {
+    // Navigate to conversation details or load conversation
+    this.store.dispatch(
+      RagsActions.loadRagConversation({
+        id: conversationId,
+      })
+    );
+    // You can also navigate to a conversation details page
+    // this.router.navigate(['/agents/conversation', conversationId]);
+  }
+
+  deleteConversation(conversationId: string): void {
+    // Implement delete logic here
+    console.log('Delete conversation:', conversationId);
+    // You would typically dispatch a delete action
+    // this.store.dispatch(RagsActions.deleteRagConversation({ id: conversationId }));
+  }
+
+  getStatusColor(status: string | undefined | null): string {
+    if (!status) {
+      return 'primary';
+    }
+
+    switch (status.toLowerCase()) {
+      case 'active':
+        return 'accent';
+      case 'archived':
+        return 'warn';
+      case 'completed':
+        return 'primary';
+      default:
+        return 'primary';
+    }
+  }
+
+  getStatusIcon(status: string | undefined | null): string {
+    if (!status) {
+      return 'chat';
+    }
+
+    switch (status.toLowerCase()) {
+      case 'active':
+        return 'chat';
+      case 'archived':
+        return 'archive';
+      case 'completed':
+        return 'check_circle';
+      default:
+        return 'chat';
+    }
+  }
+
+  formatLastActive(lastActive: Date | string): string {
+    if (!lastActive) {
+      return 'Unknown';
+    }
+
+    const date = typeof lastActive === 'string' ? new Date(lastActive) : lastActive;
+    const now = new Date();
+    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
+
+    if (diffInMinutes < 1) {
+      return 'Just now';
+    } else if (diffInMinutes < 60) {
+      return `${diffInMinutes} min ago`;
+    } else if (diffInMinutes < 1440) {
+      const hours = Math.floor(diffInMinutes / 60);
+      return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    } else {
+      const days = Math.floor(diffInMinutes / 1440);
+      return `${days} day${days > 1 ? 's' : ''} ago`;
+    }
   }
 }

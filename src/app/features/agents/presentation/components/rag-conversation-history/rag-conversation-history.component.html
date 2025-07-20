@@ -1,1 +1,148 @@
-<p>rag-conversation-history works!</p>
+
+<mat-card class="w-full">
+  <mat-card-header class="flex flex-row justify-between items-center">
+    <mat-card-title>
+      {{ "RAG.CONVERSATION_HISTORY" | translate }}
+    </mat-card-title>
+    <mat-card-actions>
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="startNewConversation()"
+        [disabled]="loading$ | async"
+      >
+        <mat-icon>add</mat-icon>
+        {{ "RAG.NEW_CONVERSATION" | translate }}
+      </button>
+    </mat-card-actions>
+  </mat-card-header>
+
+  <mat-card-content>
+    @if (loading$ | async) {
+    <div class="flex justify-center items-center py-8">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+    } @else if (conversationsList.length > 0) {
+    <div class="mat-elevation-z8">
+      <table
+        mat-table
+        [dataSource]="conversationsList"
+        matSort
+        (matSortChange)="onSortChange($event)"
+        class="w-full"
+      >
+        <!-- Conversation Title Column -->
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{ "RAG.CONVERSATION_TITLE" | translate }}
+          </th>
+          <td mat-cell *matCellDef="let conversation">
+            <div class="flex items-center cursor-pointer" (click)="viewConversation(conversation.id)">
+              <mat-icon class="mr-2 !text-blue-500">chat</mat-icon>
+              <span class="conversation-title-txt text-blue-600 hover:text-blue-800 font-medium">
+                {{ conversation.conversation_title || 'Untitled Conversation' }}
+              </span>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Last Active Column -->
+        <ng-container matColumnDef="lastActive">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{ "RAG.LAST_ACTIVE" | translate }}
+          </th>
+          <td mat-cell *matCellDef="let conversation">
+            <div class="flex items-center">
+              <mat-icon class="mr-2 !text-gray-500">schedule</mat-icon>
+              <span class="last-active-txt">
+                {{ formatLastActive(conversation.last_active) }}
+              </span>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{ "RAG.STATUS" | translate }}
+          </th>
+          <td mat-cell *matCellDef="let conversation">
+            <mat-chip-set>
+              <mat-chip
+                [color]="getStatusColor(conversation.status)"
+                class="!text-[#fff]"
+              >
+                <mat-icon matChipAvatar>{{ getStatusIcon(conversation.status) }}</mat-icon>
+                <span class="!text-white">
+                  {{ conversation.status }}
+                </span>
+              </mat-chip>
+            </mat-chip-set>
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ "COMMON.ACTIONS" | translate }}
+          </th>
+          <td mat-cell *matCellDef="let conversation">
+            <div class="flex gap-2">
+              <button
+                mat-icon-button
+                color="primary"
+                (click)="viewConversation(conversation.id)"
+                matTooltip="{{ 'COMMON.VIEW' | translate }}"
+              >
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <div
+                (click)="deleteConversation(conversation.id)"
+                class="flex flex-row justify-end items-center p-2 border border-[#E0E0E0] rounded-[8px] gap-2 cursor-pointer"
+              >
+                <img
+                  src="../../../../../../assets/images/icons/trash-03.svg"
+                  alt="delete"
+                  class="w-[16px] h-[16px]"
+                />
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <mat-divider></mat-divider>
+
+      <mat-paginator
+        [pageSizeOptions]="pageSizeOptions"
+        [pageSize]="pageSize"
+        [pageIndex]="currentPageIndex"
+        [length]="totalItems"
+        (page)="onPageChange($event)"
+        showFirstLastButtons
+        class="w-full"
+      >
+      </mat-paginator>
+    </div>
+    } @else {
+    <div
+      class="flex flex-col items-center justify-center py-8 text-gray-500 gap-4"
+    >
+      <mat-icon class="text-6xl !text-gray-400">chat_bubble_outline</mat-icon>
+      <p class="text-lg mt-4">{{ "RAG.NO_CONVERSATIONS_FOUND" | translate }}</p>
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="startNewConversation()"
+        [disabled]="loading$ | async"
+      >
+        <mat-icon>add</mat-icon>
+        {{ "RAG.NEW_CONVERSATION" | translate }}
+      </button>
+    </div>
+    }
+  </mat-card-content>
+</mat-card>
