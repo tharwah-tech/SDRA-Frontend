@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, input, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { filter, Observable, tap } from 'rxjs';
+import { filter, tap } from 'rxjs';
 
 // Components
 import { AgentCardComponent } from '../../components/agent-card/agent-card.component';

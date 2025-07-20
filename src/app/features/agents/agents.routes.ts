@@ -9,6 +9,7 @@ import { CreateInterviewPageComponent } from './presentation/pages/create-interv
 import { ViewInterviewDetailsPageComponent } from './presentation/pages/view-interview-details-page/view-interview-details-page.component';
 import { StartInterviewPageComponent } from './presentation/pages/start-interview-page/start-interview-page.component';
 import { CompleteInterviewPageComponent } from './presentation/pages/complete-interview-page/complete-interview-page.component';
+import { AgnetChatPageComponent } from './presentation/pages/agnet-chat-page/agnet-chat-page.component';
 
 export const AGENTS_ROUTES: Routes = [
   {
@@ -51,6 +52,16 @@ export const AGENTS_ROUTES: Routes = [
         path: 'agents_lab/interviewer/interviews/completed',
         component: CompleteInterviewPageComponent,
         title: 'Complete Interview',
+      },
+      {
+        path: 'agent/:id/chat/:conversationId',
+        component: AgnetChatPageComponent,
+        title: 'Agent Chat',
+      },
+      {
+        path: 'rag/conversation/:conversationId',
+        component: AgnetChatPageComponent,
+        title: 'RAG Conversation',
       },
       {
         path: '**',

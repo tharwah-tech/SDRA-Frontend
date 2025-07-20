@@ -1,0 +1,127 @@
+<app-main-page-structure
+  [routesLinks]="CurrentPagePath()"
+  [currentActiveTab]="SideNavTabs.SYSTEM_AGENTS"
+>
+  <ng-content page-content>
+    <div class="chat-container">
+      <!-- Loading State -->
+      <div *ngIf="loading$ | async" class="loading-container">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+
+      <!-- Chat Interface -->
+      <div *ngIf="!(loading$ | async)" class="chat-interface">
+        <!-- Conversation Header -->
+        <div class="conversation-header">
+          <div class="conversation-info">
+            <h2>{{ conversation?.conversation_title || 'New Conversation' }}</h2>
+            <p class="conversation-subtitle">Chat with AI Agent</p>
+          </div>
+          <div class="conversation-actions">
+            <button
+              mat-icon-button
+              (click)="startNewConversation()"
+              matTooltip="Start New Conversation">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- Messages Container -->
+        <div class="messages-container" #messagesContainer>
+          <div *ngIf="!conversation?.messages?.length" class="empty-state">
+            <mat-icon class="empty-icon">chat</mat-icon>
+            <h3>Start a conversation</h3>
+            <p>Send a message to begin chatting with the AI agent</p>
+          </div>
+
+          <!-- Messages List -->
+          <div *ngFor="let message of conversation?.messages; trackBy: trackByMessage"
+               class="message-item"
+               [ngClass]="{'user-message': message.message_type === 'user', 'agent-message': message.message_type === 'agent'}">
+
+            <!-- User Message -->
+            <div *ngIf="message.message_type === 'user'" class="message user-message">
+              <div class="message-content">
+                <div class="message-text">{{ message.content }}</div>
+                <div class="message-time">{{ message.message_date | date:'shortTime' }}</div>
+              </div>
+              <div class="message-avatar">
+                <mat-icon>person</mat-icon>
+              </div>
+            </div>
+
+            <!-- Agent Message -->
+            <div *ngIf="message.message_type === 'agent'" class="message agent-message">
+              <div class="message-avatar">
+                <mat-icon>smart_toy</mat-icon>
+              </div>
+              <div class="message-content">
+                <div class="message-text">{{ message.content }}</div>
+                <div class="message-time">{{ message.message_date | date:'shortTime' }}</div>
+              </div>
+            </div>
+
+            <!-- Audio Message -->
+            <div *ngIf="message.audio_content" class="audio-message">
+              <audio controls>
+                <source [src]="message.audio_content" type="audio/wav">
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+          <div class="input-container">
+            <!-- Text Input -->
+            <mat-form-field appearance="outline" class="text-input">
+              <mat-label>Type your message...</mat-label>
+              <textarea
+                matInput
+                [(ngModel)]="messageText"
+                (keydown.enter)="onEnterPress($event)"
+                placeholder="Type your message..."
+                rows="1"
+                cdkTextareaAutosize
+                cdkAutosizeMinRows="1"
+                cdkAutosizeMaxRows="4">
+              </textarea>
+              <mat-icon matSuffix>message</mat-icon>
+            </mat-form-field>
+
+            <!-- Audio Recording -->
+            <div class="audio-controls">
+              <button
+                mat-icon-button
+                [class.recording]="isRecording"
+                (click)="toggleRecording()"
+                [disabled]="sendingMessage"
+                matTooltip="{{ isRecording ? 'Stop Recording' : 'Record Audio' }}">
+                <mat-icon>{{ isRecording ? 'stop' : 'mic' }}</mat-icon>
+              </button>
+            </div>
+
+            <!-- Send Button -->
+            <button
+              mat-fab
+              color="primary"
+              (click)="sendTextMessage()"
+              [disabled]="!messageText.trim() || sendingMessage"
+              class="send-button">
+              <mat-icon>send</mat-icon>
+            </button>
+          </div>
+
+          <!-- Recording Indicator -->
+          <div *ngIf="isRecording" class="recording-indicator">
+            <mat-icon class="recording-icon">fiber_manual_record</mat-icon>
+            <span>Recording...</span>
+            <span class="recording-time">{{ recordingTime }}s</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-content>
+</app-main-page-structure>
