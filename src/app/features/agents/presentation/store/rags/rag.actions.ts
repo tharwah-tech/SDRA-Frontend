@@ -50,13 +50,13 @@ export const RagsActions = createActionGroup({
     }>(),
     'Start Rag Conversation Failure': props<{ error: ApiError }>(),
 
-    'Send Rag text message': props<{ agentId: string; textMessage: string }>(),
+    'Send Rag text message': props<{ agentId: string; conversationId: string; textMessage: string }>(),
     'Send Rag text message Success': props<{
       message: RagConversationMessageEntity;
     }>(),
     'Send Rag text message Failure': props<{ error: ApiError }>(),
 
-    'Send Rag audio message': props<{ agentId: string; audioMessage: string }>(),
+    'Send Rag audio message': props<{ agentId: string; conversationId: string; audioMessage: string }>(),
     'Send Rag audio message Success': props<{
       message: RagConversationMessageEntity;
     }>(),

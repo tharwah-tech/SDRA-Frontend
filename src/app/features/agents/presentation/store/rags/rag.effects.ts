@@ -194,7 +194,7 @@ export class RagsEffects {
         ofType(RagsActions.sendRagTextMessage),
         switchMap((action) =>
           this.ragRepository
-            .sendRagTextMessage(action.agentId, action.textMessage)
+            .sendRagTextMessage(action.agentId, action.conversationId, action.textMessage)
             .pipe(
               map((message) =>
                 RagsActions.sendRagTextMessageSuccess({ message })
@@ -213,7 +213,7 @@ export class RagsEffects {
           ofType(RagsActions.sendRagTextMessageSuccess),
           tap((action) => {
             showSnackbar(this.toastr, {
-              title: 'Message sent successfully',
+              title: action.message.content,
               type: 'success',
             });
           })
@@ -226,7 +226,7 @@ export class RagsEffects {
         ofType(RagsActions.sendRagAudioMessage),
         switchMap((action) =>
           this.ragRepository
-            .sendRagAudioMessage(action.agentId, action.audioMessage)
+            .sendRagAudioMessage(action.agentId, action.conversationId, action.audioMessage)
             .pipe(
               map((message) =>
                 RagsActions.sendRagAudioMessageSuccess({ message })

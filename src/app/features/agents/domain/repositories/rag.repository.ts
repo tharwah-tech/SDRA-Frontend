@@ -20,10 +20,12 @@ export interface RagRepository {
   getRagConversation(id: string): Observable<RagConversationEntity>;
   startRagConversation(agentId: string): Observable<RagConversationSummaryEntity>;
   sendRagTextMessage(
+    agentId: string,
     conversationId: string,
     textMessage: string
   ): Observable<RagConversationMessageEntity>;
   sendRagAudioMessage(
+    agentId: string,
     conversationId: string,
     audioMessage: string
   ): Observable<RagConversationMessageEntity>;

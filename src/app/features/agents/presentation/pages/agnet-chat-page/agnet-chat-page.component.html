@@ -42,21 +42,22 @@
 
             <!-- User Message -->
             <div *ngIf="message.message_type === 'user'" class="message user-message">
-              <div class="message-content">
-                <div class="message-text">{{ message.content }}</div>
-                <div class="message-time">{{ message.message_date | date:'shortTime' }}</div>
-              </div>
               <div class="message-avatar">
                 <mat-icon>person</mat-icon>
+              </div>
+              <div class="message-content" [attr.dir]="languageService.getLanguage() === 'ar' ? 'rtl' : 'rtl'">
+                <div class="message-text">{{ message.content }}</div>
+                <div class="message-time">{{ message.message_date | date:'shortTime' }}</div>
               </div>
             </div>
 
             <!-- Agent Message -->
             <div *ngIf="message.message_type === 'agent'" class="message agent-message">
               <div class="message-avatar">
-                <mat-icon>smart_toy</mat-icon>
+                <img  [src]="`https://api.sdra-dev.com/${agent?.avatarUrl}`"
+                [alt]="agent?.name + ' avatar'">
               </div>
-              <div class="message-content">
+              <div class="message-content" [attr.dir]="languageService.getLanguage() === 'ar' ? 'rtl' : 'rtl'">
                 <div class="message-text">{{ message.content }}</div>
                 <div class="message-time">{{ message.message_date | date:'shortTime' }}</div>
               </div>
@@ -70,14 +71,20 @@
               </audio>
             </div>
           </div>
+          <div *ngIf="messageSending$ | async" class="message agent-message">
+            <div class="message-avatar">
+              <mat-icon>smart_toy</mat-icon>
+            </div>
+            <mat-spinner diameter="20"></mat-spinner>
+          </div>
         </div>
 
         <!-- Input Area -->
         <div class="input-area">
           <div class="input-container">
             <!-- Text Input -->
-            <mat-form-field appearance="outline" class="text-input">
-              <mat-label>Type your message...</mat-label>
+            <mat-form-field class="text-input">
+              <!-- <mat-label>Type your message...</mat-label> -->
               <textarea
                 matInput
                 [(ngModel)]="messageText"

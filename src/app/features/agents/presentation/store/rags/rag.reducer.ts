@@ -124,7 +124,16 @@ export const ragReducer = createReducer(
   // Send Rag text message
   on(RagsActions.sendRagTextMessage, (state, { textMessage }) => ({
     ...state,
-    loading: true,
+    selectedConversation: {
+      ...state.selectedConversation!,
+      messages: [...state.selectedConversation?.messages!, {
+        message_type: 'user',
+        content: textMessage,
+        message_date: new Date(),
+        audio_content: '',
+      }],
+    },
+    messageSending: true,
     error: null,
   })),
   on(RagsActions.sendRagTextMessageSuccess, (state, { message }) => ({
@@ -133,19 +142,28 @@ export const ragReducer = createReducer(
       ...state.selectedConversation!,
       messages: [...state.selectedConversation?.messages!, message],
     },
-    loading: false,
+    messageSending: false,
     error: null,
   })),
   on(RagsActions.sendRagTextMessageFailure, (state, { error }) => ({
     ...state,
-    loading: false,
+    selectedConversation: {
+      ...state.selectedConversation!,
+      messages: [...state.selectedConversation?.messages!, {
+        message_type: 'user',
+        content: error.message || 'Error sending message try again',
+        message_date: new Date(),
+        audio_content: '',
+      }],
+    },
+    messageSending: false,
     error,
   })),
 
   // Send Rag audio message
   on(RagsActions.sendRagAudioMessage, (state, { audioMessage }) => ({
     ...state,
-    loading: true,
+    messageSending: true,
     error: null,
   })),
   on(RagsActions.sendRagAudioMessageSuccess, (state, { message }) => ({
@@ -154,12 +172,12 @@ export const ragReducer = createReducer(
       ...state.selectedConversation!,
       messages: [...state.selectedConversation?.messages!, message],
     },
-    loading: false,
+    messageSending: false,
     error: null,
   })),
   on(RagsActions.sendRagAudioMessageFailure, (state, { error }) => ({
     ...state,
-    loading: false,
+    messageSending: false,
     error,
   })),
 );

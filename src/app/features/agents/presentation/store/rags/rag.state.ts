@@ -14,6 +14,7 @@ export interface RagState {
   conversationsPagination: PaginationMetadata | null;
   selectedConversation: RagConversationEntity | null;
   selectedConversationId: string | null;
+  messageSending: boolean;
   loading: boolean;
   error: ApiError | null;
 }
@@ -66,6 +67,7 @@ export const initialRagState: RagState = {
   },
   selectedConversationId: 'dummy-conversation-123',
   conversationsPagination: null,
+  messageSending: false,
   loading: false,
   error: null,
 };

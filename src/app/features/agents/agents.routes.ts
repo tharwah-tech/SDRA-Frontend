@@ -54,7 +54,7 @@ export const AGENTS_ROUTES: Routes = [
         title: 'Complete Interview',
       },
       {
-        path: 'agent/:id/chat/:conversationId',
+        path: 'agent/:agentId/chat/:conversationId',
         component: AgnetChatPageComponent,
         title: 'Agent Chat',
       },

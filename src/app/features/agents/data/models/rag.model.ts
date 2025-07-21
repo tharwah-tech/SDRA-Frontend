@@ -18,6 +18,16 @@ export interface RagConversationMessageModel {
   message_date: string;
 }
 
+export interface RagConversationMessageReplyModel {
+  id:              string;
+  conversation_id: string;
+  type:            string;
+  time:            Date;
+  content:         string;
+  media_content:   string | null;
+}
+
+
 export interface RagConversationSummaryModel {
   id: string;
   conversation_title: string;

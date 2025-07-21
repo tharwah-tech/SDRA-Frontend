@@ -7,6 +7,6 @@ export interface RagConversationEntity {
 export interface RagConversationMessageEntity {
   message_type:  string;
   content:       string;
-  audio_content: string;
+  audio_content: string| null;
   message_date:  Date;
 }

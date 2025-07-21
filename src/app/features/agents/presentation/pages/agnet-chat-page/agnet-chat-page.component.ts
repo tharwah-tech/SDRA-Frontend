@@ -1,4 +1,13 @@
-import { Component, DestroyRef, input, OnInit, ViewChild, ElementRef, AfterViewInit, inject } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  input,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+  inject,
+} from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -13,6 +22,7 @@ import { LanguageService } from '../../../../../core/services/language.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
   selectRagLoading,
+  selectRagMessageSending,
   selectRagSelectedConversation,
 } from '../../store/rags/rag.selectors';
 import { selectRagError } from '../../store/rags/rag.selectors';
@@ -28,6 +38,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RagsActions } from '../../store/rags/rag.actions';
 import { filter, tap } from 'rxjs';
 import { TextFieldModule } from '@angular/cdk/text-field';
+import { AgentEntity } from '../../../domain/entities/agent.entity';
+import { selectSelectedAgent } from '../../store/agents/agents.selectors';
+import { AgentsActions } from '../../store/agents/agents.actions';
 
 @Component({
   selector: 'app-agnet-chat-page',
@@ -57,9 +70,11 @@ export class AgnetChatPageComponent implements OnInit, AfterViewInit {
   conversationId = input<string>();
   error$: Observable<ApiError | null>;
   loading$: Observable<boolean>;
+  messageSending$: Observable<boolean>;
   selectedConversation$: Observable<RagConversationEntity | null>;
   conversation: RagConversationEntity | null = null;
-
+  selectedAgent$: Observable<AgentEntity | null>;
+  agent: AgentEntity | null = null;
   // Chat properties
   messageText: string = '';
   isRecording: boolean = false;
@@ -84,6 +99,8 @@ export class AgnetChatPageComponent implements OnInit, AfterViewInit {
     this.selectedConversation$ = this.store.select(
       selectRagSelectedConversation
     );
+    this.messageSending$ = this.store.select(selectRagMessageSending);
+    this.selectedAgent$ = this.store.select(selectSelectedAgent);
   }
 
   ngOnInit(): void {
@@ -96,6 +113,15 @@ export class AgnetChatPageComponent implements OnInit, AfterViewInit {
       // Start a new conversation if no conversationId
       this.startNewConversation();
     }
+    this.selectedAgent$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((agent) => {
+        if (agent) {
+          this.agent = agent as AgentEntity;
+        }else{
+          this.store.dispatch(AgentsActions.loadAgent({ id: this.agentId() }));
+        }
+      });
 
     this.selectedConversation$
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -144,6 +170,7 @@ export class AgnetChatPageComponent implements OnInit, AfterViewInit {
     this.store.dispatch(
       RagsActions.sendRagTextMessage({
         agentId: this.agentId(),
+        conversationId: this.conversationId()!,
         textMessage: this.messageText.trim(),
       })
     );
@@ -184,7 +211,7 @@ export class AgnetChatPageComponent implements OnInit, AfterViewInit {
       this.mediaRecorder.onstop = () => {
         const audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
         this.sendAudioMessage(audioBlob);
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach((track) => track.stop());
       };
 
       this.mediaRecorder.start();
@@ -192,7 +219,10 @@ export class AgnetChatPageComponent implements OnInit, AfterViewInit {
       this.startRecordingTimer();
     } catch (error) {
       console.error('Error starting recording:', error);
-      this.toastr.error('Failed to start recording. Please check microphone permissions.', 'Error');
+      this.toastr.error(
+        'Failed to start recording. Please check microphone permissions.',
+        'Error'
+      );
     }
   }
 
@@ -234,6 +264,7 @@ export class AgnetChatPageComponent implements OnInit, AfterViewInit {
       this.store.dispatch(
         RagsActions.sendRagAudioMessage({
           agentId: this.agentId(),
+          conversationId: this.conversationId()!,
           audioMessage: audioData,
         })
       );
@@ -248,7 +279,8 @@ export class AgnetChatPageComponent implements OnInit, AfterViewInit {
   private scrollToBottom(): void {
     setTimeout(() => {
       if (this.messagesContainer) {
-        this.messagesContainer.nativeElement.scrollTop = this.messagesContainer.nativeElement.scrollHeight;
+        this.messagesContainer.nativeElement.scrollTop =
+          this.messagesContainer.nativeElement.scrollHeight;
       }
     }, 100);
   }
@@ -258,6 +290,10 @@ export class AgnetChatPageComponent implements OnInit, AfterViewInit {
       { path: `/${this.lang()}/agents`, label: 'AI Agents' },
       {
         path: `/${this.lang()}/agents/agent/${this.agentId()}`,
+        label: 'RAG Agent',
+      },
+      {
+        path: `/${this.lang()}/agents/agent/${this.agentId()}/chat/${this.conversationId()}`,
         label: 'Agent Chat',
       },
     ];

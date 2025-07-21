@@ -138,13 +138,17 @@
     flex-direction: row-reverse;
 
     .message-content {
-      background-color: #3b82f6;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+      background-color: var(--accent-color);
       color: #ffffff;
       border-radius: 16px 16px 4px 16px;
     }
 
     .message-avatar {
-      background-color: #3b82f6;
+      background-color: var(--accent-color);
       color: #ffffff;
     }
   }
@@ -160,6 +164,9 @@
     }
 
     .message-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
       background-color: #10b981;
       color: #ffffff;
     }
@@ -349,7 +356,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {

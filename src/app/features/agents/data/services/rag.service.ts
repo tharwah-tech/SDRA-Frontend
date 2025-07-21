@@ -15,6 +15,7 @@ import {
   RagConversationMessageModel,
   RagConversationSummaryModel,
   CreateRagConversationModel,
+  RagConversationMessageReplyModel,
 } from '../models/rag.model';
 import { ApiResponse } from '../../../../core/models/api-response.model';
 import { handleResponse } from '../../../../shared/utils/handle-reponses.util';
@@ -137,30 +138,37 @@ export class RagService implements RagRepository {
   }
 
   sendRagTextMessage(
+    agentId: string,
     conversationId: string,
     textMessage: string
   ): Observable<RagConversationMessageEntity> {
-    const response$ = this.http.post<ApiResponse<RagConversationMessageModel>>(
-      `${this.apiUrl}/conversations/${conversationId}/messages/text`,
-      { message: textMessage }
+    const params = new HttpParams().set('agent_id', agentId);
+    const url = `${this.apiUrl}/conversations/${conversationId}/send_message/`
+    const response$ = this.http.post<ApiResponse<RagConversationMessageReplyModel>>(
+      url,
+      { message: textMessage },
+      { params }
     );
 
     return handleResponse<
-      RagConversationMessageModel,
+    RagConversationMessageReplyModel,
       RagConversationMessageEntity
-    >(response$, this.mapConversationMessageModelToEntity.bind(this));
+    >(response$, this.mapConversationMessageReplyModelToEntity.bind(this));
   }
 
   sendRagAudioMessage(
+    agentId: string,
     conversationId: string,
     audioMessage: string
   ): Observable<RagConversationMessageEntity> {
     const formData = new FormData();
     formData.append('audio', audioMessage);
-
+    const params = new HttpParams().set('agent_id', agentId);
+    const url = `${this.apiUrl}/conversations/${conversationId}/send_message/`
     const response$ = this.http.post<ApiResponse<RagConversationMessageModel>>(
-      `${this.apiUrl}/conversations/${conversationId}/messages/audio`,
-      formData
+      url,
+      formData,
+      { params }
     );
 
     return handleResponse<
@@ -200,6 +208,17 @@ export class RagService implements RagRepository {
       content: model.content,
       audio_content: model.audio_content,
       message_date: new Date(model.message_date),
+    };
+  }
+
+  private mapConversationMessageReplyModelToEntity(
+    model: RagConversationMessageReplyModel
+  ): RagConversationMessageEntity {
+    return {
+      message_type: model.type,
+      content: model.content,
+      audio_content: model.media_content,
+      message_date: new Date(model.time),
     };
   }
 
