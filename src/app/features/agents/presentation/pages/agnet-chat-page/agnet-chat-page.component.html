@@ -12,18 +12,72 @@
       <!-- Chat Interface -->
       <div *ngIf="!(loading$ | async)" class="chat-interface">
         <!-- Conversation Header -->
-        <div class="conversation-header">
-          <div class="conversation-info">
-            <h2>{{ conversation?.conversation_title || 'New Conversation' }}</h2>
-            <p class="conversation-subtitle">Chat with AI Agent</p>
+        <div
+          class="flex justify-between items-center p-4 bg-white shadow-sm rounded-[20px] mb-1"
+        >
+          <div class="flex flex-row justify-start items-center gap-4">
+            <div
+              class="!flex !flex-row !justify-end !items-center !p-2 !border !border-gray-200 !rounded-lg hover:bg-gray-100 active:bg-gray-300 active:scale-95 active:shadow-sm cursor-pointer"
+            >
+              <img
+                src="../../../../../../assets/images/icons/arrow-left.svg"
+                alt="edit"
+                class="w-full h-full object-cover"
+              />
+            </div>
+            <div class="flex flex-col justify-center items-start gap-1">
+              <h2 class="conversation-title">
+                {{ conversation?.conversation_title || "New Conversation" }}
+              </h2>
+              <div class="flex flex-row justify-start items-center gap-2">
+                <p class="conversation-subtitle">Chat with {{ agent?.name }} Agent</p>
+                <div class="flex flex-row justify-center items-center p-2 bg-[#F59E0B1A] border border-[#FFEBC9] rounded-lg w-fit">
+                  <span class="rag-txt">RAG Agent</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="conversation-actions">
-            <button
-              mat-icon-button
-              (click)="startNewConversation()"
-              matTooltip="Start New Conversation">
-              <mat-icon>add</mat-icon>
-            </button>
+          <div class="flex flex-row justify-end items-center gap-2">
+            <div
+              class="!flex !flex-row !justify-end !items-center !p-2 !border !border-gray-200 !rounded-lg hover:bg-gray-100 active:bg-gray-300 active:scale-95 active:shadow-sm cursor-pointer"
+              matTooltip="Edit Conversation"
+            >
+              <img
+                src="../../../../../../assets/images/icons/edit-03.svg"
+                alt="edit"
+                class="w-full h-full object-cover"
+              />
+            </div>
+            <div
+              class="!flex !flex-row !justify-end !items-center !p-2 !border !border-gray-200 !rounded-lg hover:bg-gray-100 active:bg-gray-300 active:scale-95 active:shadow-sm cursor-pointer"
+              matTooltip="Download Conversation"
+            >
+              <img
+                src="../../../../../../assets/images/icons/download-01.svg"
+                alt="download"
+                class="w-full h-full object-cover"
+              />
+            </div>
+            <div
+              class="!flex !flex-row !justify-end !items-center !p-2 !border !border-gray-200 !rounded-lg hover:bg-gray-100 active:bg-gray-300 active:scale-95 active:shadow-sm cursor-pointer"
+              matTooltip="Grave Conversation"
+            >
+              <img
+                src="../../../../../../assets/images/icons/box.svg"
+                alt="grave"
+                class="w-full h-full object-cover"
+              />
+            </div>
+            <div
+              class="!flex !flex-row !justify-end !items-center !p-2 !border !border-gray-200 !rounded-lg hover:bg-gray-100 active:bg-gray-300 active:scale-95 active:shadow-sm cursor-pointer"
+              matTooltip="Delete Conversation"
+            >
+              <img
+                src="../../../../../../assets/images/icons/trash-03.svg"
+                alt="trash"
+                class="w-full h-full object-cover"
+              />
+            </div>
           </div>
         </div>
 
@@ -36,44 +90,78 @@
           </div>
 
           <!-- Messages List -->
-          <div *ngFor="let message of conversation?.messages; trackBy: trackByMessage"
-               class="message-item"
-               [ngClass]="{'user-message': message.message_type === 'user', 'agent-message': message.message_type === 'agent'}">
-
+          <div
+            *ngFor="
+              let message of conversation?.messages;
+              trackBy: trackByMessage
+            "
+            class="message-item"
+            [ngClass]="{
+              'user-message': message.message_type === 'user',
+              'agent-message': message.message_type === 'agent'
+            }"
+          >
             <!-- User Message -->
-            <div *ngIf="message.message_type === 'user'" class="message user-message">
+            <div
+              *ngIf="message.message_type === 'user'"
+              class="message user-message"
+            >
               <div class="message-avatar">
                 <mat-icon>person</mat-icon>
               </div>
-              <div class="message-content" [attr.dir]="languageService.getLanguage() === 'ar' ? 'rtl' : 'rtl'">
+              <div
+                class="message-content"
+                [attr.dir]="
+                  languageService.getLanguage() === 'ar' ? 'rtl' : 'rtl'
+                "
+              >
                 <div class="message-text">{{ message.content }}</div>
-                <div class="message-time">{{ message.message_date | date:'shortTime' }}</div>
+                <div class="message-time">
+                  {{ message.message_date | date : "shortTime" }}
+                </div>
               </div>
             </div>
 
             <!-- Agent Message -->
-            <div *ngIf="message.message_type === 'agent'" class="message agent-message">
+            <div
+              *ngIf="message.message_type === 'agent'"
+              class="message agent-message"
+            >
               <div class="message-avatar">
-                <img  [src]="`https://api.sdra-dev.com/${agent?.avatarUrl}`"
-                [alt]="agent?.name + ' avatar'">
+                <img
+                  [src]="`https://api.sdra-dev.com/${agent?.avatarUrl}`"
+                  [alt]="agent?.name + ' avatar'"
+                  class="w-full h-full object-cover rounded-full"
+                />
               </div>
-              <div class="message-content" [attr.dir]="languageService.getLanguage() === 'ar' ? 'rtl' : 'rtl'">
+              <div
+                class="message-content"
+                [attr.dir]="
+                  languageService.getLanguage() === 'ar' ? 'rtl' : 'rtl'
+                "
+              >
                 <div class="message-text">{{ message.content }}</div>
-                <div class="message-time">{{ message.message_date | date:'shortTime' }}</div>
+                <div class="message-time">
+                  {{ message.message_date | date : "shortTime" }}
+                </div>
               </div>
             </div>
 
             <!-- Audio Message -->
             <div *ngIf="message.audio_content" class="audio-message">
               <audio controls>
-                <source [src]="message.audio_content" type="audio/wav">
+                <source [src]="message.audio_content" type="audio/wav" />
                 Your browser does not support the audio element.
               </audio>
             </div>
           </div>
           <div *ngIf="messageSending$ | async" class="message agent-message">
             <div class="message-avatar">
-              <mat-icon>smart_toy</mat-icon>
+              <img
+                [src]="`https://api.sdra-dev.com/${agent?.avatarUrl}`"
+                [alt]="agent?.name + ' avatar'"
+                class="w-full h-full object-cover rounded-full"
+              />
             </div>
             <mat-spinner diameter="20"></mat-spinner>
           </div>
@@ -93,7 +181,8 @@
                 rows="1"
                 cdkTextareaAutosize
                 cdkAutosizeMinRows="1"
-                cdkAutosizeMaxRows="4">
+                cdkAutosizeMaxRows="4"
+              >
               </textarea>
               <mat-icon matSuffix>message</mat-icon>
             </mat-form-field>
@@ -105,8 +194,11 @@
                 [class.recording]="isRecording"
                 (click)="toggleRecording()"
                 [disabled]="sendingMessage"
-                matTooltip="{{ isRecording ? 'Stop Recording' : 'Record Audio' }}">
-                <mat-icon>{{ isRecording ? 'stop' : 'mic' }}</mat-icon>
+                matTooltip="{{
+                  isRecording ? 'Stop Recording' : 'Record Audio'
+                }}"
+              >
+                <mat-icon>{{ isRecording ? "stop" : "mic" }}</mat-icon>
               </button>
             </div>
 
@@ -116,7 +208,8 @@
               color="primary"
               (click)="sendTextMessage()"
               [disabled]="!messageText.trim() || sendingMessage"
-              class="send-button">
+              class="send-button"
+            >
               <mat-icon>send</mat-icon>
             </button>
           </div>
