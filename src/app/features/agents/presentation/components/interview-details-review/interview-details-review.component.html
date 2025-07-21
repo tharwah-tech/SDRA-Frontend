@@ -1,0 +1,133 @@
+<div class="flex flex-col justify-start items-center w-full h-full gap-2">
+  @if(interviewDetails?.transcriptions?.length === 0){
+  <div
+    class="flex flex-col justify-start items-center w-[512px] h-auto mt-[54px] gap-[32px]"
+  >
+    <img
+      src="../../../../../../assets/images/Notes.svg"
+      alt="interview-review-icon"
+      class="w-[256px] h-[236px]"
+    />
+    <p class="param-value-txt">
+      The transcript, media, and AI summary will appear here once the interview
+      has been completed and processed
+    </p>
+  </div>
+  }@else {
+  <div
+    class="flex flex-col justify-start items-center w-full h-full mt-[24px] gap-[24px] overflow-y-auto"
+  >
+    <!-- summary and recording -->
+    <div
+      class="flex flex-col md:flex-row justify-start items-center w-full h-auto gap-[16px]"
+    >
+      <mat-card class="!w-[calc(50%-8px)] !h-full">
+        <mat-card-header class="!w-full !h-auto !mb-4">
+          <mat-card-title>
+            <div class="flex justify-start items-center w-full h-auto gap-2">
+              <img
+                src="../../../../../../assets/images/icons/star-06.svg"
+                alt="summary-icon"
+              />
+              <h1 class="card-title">
+                {{
+                  translateService.instant(
+                    "interview-details-review.interview-summary"
+                  )
+                }}
+              </h1>
+            </div>
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>
+            {{ interviewDetails?.interview_content_details?.interview_summary }}
+          </p>
+        </mat-card-content>
+      </mat-card>
+      <mat-card
+        *ngIf="
+          interviewDetails?.interview_content_details?.interview_record_url
+        "
+        class="!w-[calc(50%-8px)] !h-full"
+      >
+        <mat-card-content>
+          <video
+            width="100%"
+            height="auto"
+            controls
+            [src]="
+              interviewDetails?.interview_content_details?.interview_record_url
+            "
+          >
+            Your browser does not support the video tag.
+          </video>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- transcriptions -->
+    <mat-card class="!w-full !h-auto">
+      <mat-card-header class="!w-full !h-auto !mb-8">
+        <mat-card-title>
+          <div class="flex justify-start items-center w-full h-auto gap-2">
+            <img
+              src="../../../../../../assets/images/icons/file-06.svg"
+              alt="transcriptions-icon"
+            />
+            <h1 class="card-title">
+              {{
+                translateService.instant(
+                  "interview-details-review.interview-transcriptions"
+                )
+              }}
+            </h1>
+          </div>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content
+        class="!w-full !h-auto !gap-[32px] !flex !flex-col !justify-start !items-start"
+      >
+        @for(transcription of interviewDetails?.transcriptions; track
+        transcription.id){
+        <div
+          class="flex flex-col justify-start items-start w-full h-auto gap-[12px]"
+        >
+          <div class="flex justify-start items-center w-full h-auto gap-2">
+            @if(transcription.message_type === 'user'){
+            <div
+              class="flex justify-center items-center w-[36px] h-[36px] p-2 rounded-full bg-gray-200"
+            >
+              {{
+                getInitials(
+                  interviewDetails?.candidate_info?.full_name ?? "User Name"
+                )
+              }}
+            </div>
+            }@else{
+            <img
+              [src]="`https://api.sdra-dev.com${selectedAgent?.avatarUrl}`"
+              alt="transcription-icon"
+              class="w-[36px] h-[36px] rounded-full bg-gray-600 object-cover"
+            />
+            }
+
+            <h1 class="card-title">
+              @if(transcription.message_type === 'user'){
+              {{ interviewDetails?.candidate_info?.full_name }}
+              }@else{
+              {{ selectedAgent?.name }}
+              }
+            </h1>
+            <span class="time-txt">
+              {{ transcription.timestamp | date : "HH:mm:ss" }}
+            </span>
+          </div>
+          <p class="message-txt">{{ transcription.content }}</p>
+        </div>
+        }
+      </mat-card-content>
+    </mat-card>
+  </div>
+  }
+</div>

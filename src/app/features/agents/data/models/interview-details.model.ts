@@ -1,4 +1,4 @@
-import { InterviewStatus } from '../../domain/entities/interview.entity';
+import { InterviewStatus } from "../../domain/entities/interview.entity";
 
 export interface InterviewDetailsModel {
   id: string;
@@ -14,13 +14,21 @@ export interface InterviewDetailsModel {
   interview_record_url: string | null;
   interview_start_time: Date | null;
   interview_end_time: Date | null;
-  status: string;
+  status: InterviewStatus;
   created_date: Date;
   questions: QuestionModel[];
-  transcriptions: any[];
+  transcriptions: transcriptionModel[];
 }
 
 export interface QuestionModel {
   question_number: number;
   question: string;
+}
+
+export interface transcriptionModel {
+  id: string;
+  content: string;
+  message_type: string;
+  media_url: string | null;
+  timestamp: Date;
 }

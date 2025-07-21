@@ -20,6 +20,7 @@ import { BASE_API_URL } from '../../../../app.config';
 import {
   InterviewDetailsEntity,
   JobInfo,
+  InterviewcontentDetails,
 } from '../../domain/entities/interview-details.entity';
 import { InterviewDetailsModel } from '../models/interview-details.model';
 import { CreateInteviewEntity } from '../../domain/entities/create-interview.entity';
@@ -168,6 +169,13 @@ export class InterviewsService implements InterviewsRepository {
         job_requirements: model.job_requirements,
       } as JobInfo,
       questions: model.questions,
+      interview_content_details: {
+        interview_summary: model.interview_summary,
+        interview_record_url: model.interview_record_url,
+        interview_start_time: model.interview_start_time,
+        interview_end_time: model.interview_end_time,
+      },
+      transcriptions: model.transcriptions,
     } as InterviewDetailsEntity;
   }
 

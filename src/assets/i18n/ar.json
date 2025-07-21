@@ -10,6 +10,11 @@
     "audio": "صوت",
     "transcript": "نص"
   },
+  "interview-details-review": {
+    "interview-summary": "ملخص المقابلة",
+    "interview-recording": "تسجيل المقابلة",
+    "interview-transcriptions": "الترجمات"
+  },
   "RAG": {
     "CONVERSATION_HISTORY": "Conversation History",
     "NEW_CONVERSATION": "New Conversation",

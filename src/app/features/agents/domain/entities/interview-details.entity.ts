@@ -9,6 +9,8 @@ export interface InterviewDetailsEntity {
     candidate_info: CandidateInfo;
     job_info:       JobInfo;
     questions:      Question[];
+    interview_content_details: InterviewcontentDetails;
+    transcriptions: Transcription[];
 }
 
 export interface CandidateInfo {
@@ -28,4 +30,19 @@ export interface JobInfo {
 export interface Question {
     question_number: number;
     question:        string;
+}
+
+export interface InterviewcontentDetails{
+  interview_summary: string | null;
+  interview_record_url: string | null;
+  interview_start_time: Date | null;
+  interview_end_time: Date | null;
+}
+
+export interface Transcription {
+    id: string;
+    content: string;
+    message_type: string;
+    media_url: string | null;
+    timestamp: Date;
 }

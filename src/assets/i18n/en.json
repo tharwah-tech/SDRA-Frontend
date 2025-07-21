@@ -10,6 +10,11 @@
     "audio": "Audio",
     "transcript": "Transcript"
   },
+  "interview-details-review": {
+    "interview-summary": "Interview Summary",
+    "interview-recording": "Interview Recording",
+    "interview-transcriptions": "Interview Transcriptions"
+  },
   "RAG": {
     "CONVERSATION_HISTORY": "Conversation History",
     "NEW_CONVERSATION": "New Conversation",

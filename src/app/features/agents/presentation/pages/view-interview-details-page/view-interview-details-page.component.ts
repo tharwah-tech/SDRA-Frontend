@@ -31,7 +31,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { GenderType, mapGanderType } from '../../../../../core/enums/gender-type.enum';
 import { mapJobTypeIntoString } from '../../../../../core/enums/job-type.enum';
-
+import { InterviewDetailsReviewComponent } from '../../components/interview-details-review/interview-details-review.component';
+enum InterviewDetialsTabs{
+  interviewDetails = 'interviewDetails',
+  interviewReview = 'interviewReview',
+}
 @Component({
   selector: 'app-view-interview-details-page',
   imports: [
@@ -40,6 +44,7 @@ import { mapJobTypeIntoString } from '../../../../../core/enums/job-type.enum';
     MatCardModule,
     MatProgressSpinnerModule,
     MainPageStructureComponent,
+    InterviewDetailsReviewComponent,
     MatIconModule,
     MatButtonModule,
   ],
@@ -57,6 +62,8 @@ export class ViewInterviewDetailsPageComponent
   interviewDetails: InterviewDetailsEntity | null = null;
   loading$: Observable<boolean>;
   errors: Observable<ApiError | null>;
+  InterviewDetialsTabs = InterviewDetialsTabs;
+  interviewDetialsTab : InterviewDetialsTabs = InterviewDetialsTabs.interviewDetails;
   constructor(
     public translateService: TranslateService,
     public languageService: LanguageService,
