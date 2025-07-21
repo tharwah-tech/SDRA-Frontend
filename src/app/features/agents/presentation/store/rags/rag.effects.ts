@@ -212,10 +212,10 @@ export class RagsEffects {
         this.actions$.pipe(
           ofType(RagsActions.sendRagTextMessageSuccess),
           tap((action) => {
-            showSnackbar(this.toastr, {
-              title: action.message.content,
-              type: 'success',
-            });
+            // showSnackbar(this.toastr, {
+            //   title: action.message.content,
+            //   type: 'success',
+            // });
           })
         ),
       { dispatch: false }
