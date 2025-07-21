@@ -1,0 +1,49 @@
+    <div class="logout-dialog">
+      <!-- Dialog Header -->
+      <div class="dialog-header">
+        <div class="dialog-icon">
+          <mat-icon class="logout-header-icon">logout</mat-icon>
+        </div>
+        <div class="dialog-title-section">
+          <h2 class="dialog-title">Confirm Sign Out</h2>
+          <p class="dialog-subtitle">Are you sure you want to sign out?</p>
+        </div>
+      </div>
+
+      <!-- Dialog Content -->
+      <div class="dialog-content">
+        <div class="user-avatar-large">
+          {{ getUserInitials() }}
+        </div>
+        
+        <div class="logout-message">
+          <p class="primary-message">
+            <strong>{{ data.userFirstName }}</strong>, you'll be signed out of your account.
+          </p>
+          <p class="secondary-message">
+            Any unsaved changes may be lost. You can sign back in anytime.
+          </p>
+        </div>
+      </div>
+
+      <!-- Dialog Actions -->
+      <div class="dialog-actions">
+        <button
+          mat-button
+          type="button"
+          class="cancel-btn"
+          (click)="onCancel()"
+        >
+          Cancel
+        </button>
+        <button
+          mat-raised-button
+          type="button"
+          class="signout-btn"
+          (click)="onConfirm()"
+        >
+          <mat-icon class="signout-icon">logout</mat-icon>
+          <span>Sign Out</span>
+        </button>
+      </div>
+    </div>

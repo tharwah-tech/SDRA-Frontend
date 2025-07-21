@@ -7,7 +7,9 @@
       alt="SDRA_LOGO"
     />
   </div>
+  
   <div class="flex flex-col w-full h-full justify-between items-start">
+    <!-- Navigation Items -->
     <div class="flex flex-col gap-[8px] w-full h-auto">
       <app-sidnave-item
         [isActive]="currentActiveTab() === SideNavTabs.SYSTEM_AGENTS"
@@ -74,21 +76,113 @@
         [isDisabled]="false"
       />
     </div>
-    <div
-      class="flex flex-row justify-start items-center w-full gap-[16px] px-[24px]"
-    >
+    
+    <!-- User Profile Section with Logout -->
+    <div class="flex flex-col w-full gap-[16px] px-[24px]">
+      <!-- User Info -->
       <div
-        class="flex flex-row justify-center items-center w-[28px] h-[28px] bg-white rounded-full user-initials-txt"
+        class="flex flex-row justify-start items-center w-full gap-[16px] cursor-pointer"
+        [matMenuTriggerFor]="userMenu"
       >
-        {{ getInitials() }}
+        <div
+          class="flex flex-row justify-center items-center w-[28px] h-[28px] bg-white rounded-full user-initials-txt"
+        >
+          {{ getInitials() }}
+        </div>
+        <div class="flex flex-col justify-start items-start flex-1">
+          <h1 class="username-txt">
+            {{ currentUser().first_name }} {{ currentUser().last_name }}
+          </h1>
+          <h3 class="user-plan-txt">{{ "Free Plan" }}</h3>
+        </div>
       </div>
-      <div class="flex flex-col justify-start items-start">
-        <h1 class="username-txt">
-          {{ currentUser().first_name }} {{ currentUser().last_name }}
-        </h1>
-        <h3 class="user-plan-txt">{{ "Free Plan" }}</h3>
-        <!-- <h3 class="user-plan-txt">{{ currentUser().plan }}</h3> -->
-      </div>
+
+      <!-- User Menu -->
+      <mat-menu #userMenu="matMenu" class="user-dropdown-menu">
+        <div class="user-menu-content">
+          <!-- User Info Header -->
+          <div class="user-info-header">
+            <div class="user-avatar">
+              {{ getInitials() }}
+            </div>
+            <div class="user-details">
+              <div class="user-name">
+                {{ currentUser().first_name }} {{ currentUser().last_name }}
+              </div>
+              <div class="user-email">
+                {{ currentUser().email }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Menu Divider -->
+          <div class="menu-divider"></div>
+
+          <!-- Menu Items -->
+          <div class="menu-items">
+            <button mat-menu-item class="menu-item">
+              <mat-icon class="menu-icon">person</mat-icon>
+              <span class="menu-text">Profile Settings</span>
+            </button>
+            
+            <button mat-menu-item class="menu-item">
+              <mat-icon class="menu-icon">settings</mat-icon>
+              <span class="menu-text">Account Settings</span>
+            </button>
+            
+            <!-- Logout Button -->
+            <button 
+              mat-menu-item 
+              (click)="onLogout()"
+              [disabled]="isLoggingOut$ | async"
+              class="menu-item logout-item"
+            >
+              <!-- Loading Spinner -->
+              <mat-spinner 
+                *ngIf="isLoggingOut$ | async" 
+                diameter="16" 
+                class="menu-icon-spinner">
+              </mat-spinner>
+              
+              <!-- Logout Icon -->
+              <mat-icon 
+                *ngIf="!(isLoggingOut$ | async)" 
+                class="menu-icon logout-icon">
+                logout
+              </mat-icon>
+              
+              <span class="menu-text logout-text">
+                {{ (isLoggingOut$ | async) ? 'Signing out...' : 'Sign Out' }}
+              </span>
+            </button>
+          </div>
+        </div>
+      </mat-menu>
+
+      <!-- Alternative Quick Logout Button (if preferred) -->
+      <!-- Uncomment this section if you prefer a direct logout button instead of dropdown menu -->
+      <!--
+      <button
+        mat-stroked-button
+        color="warn"
+        class="!w-full !text-white !border-red-500 hover:!bg-red-500 hover:!text-white !transition-colors !duration-200"
+        (click)="onLogout()"
+        [disabled]="isLoggingOut$ | async"
+      >
+        <div class="flex items-center justify-center gap-2">
+          <mat-spinner 
+            *ngIf="isLoggingOut$ | async" 
+            diameter="16" 
+            color="warn"
+            class="!w-4 !h-4">
+          </mat-spinner>
+          <mat-icon *ngIf="!(isLoggingOut$ | async)">logout</mat-icon>
+          <span class="text-sm">
+            {{ (isLoggingOut$ | async) ? 'Signing out...' : 'Sign Out' }}
+          </span>
+        </div>
+      </button>
+      -->
     </div>
   </div>
 </div>
