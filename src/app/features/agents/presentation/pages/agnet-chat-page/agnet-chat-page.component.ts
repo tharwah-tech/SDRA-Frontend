@@ -201,7 +201,13 @@ export class AgnetChatPageComponent implements OnInit, AfterViewInit {
   async startRecording(): Promise<void> {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      this.mediaRecorder = new MediaRecorder(stream);
+      // Prefer audio/mp4 (m4a) if supported
+      let options = { mimeType: 'audio/mp4' };
+      if (!MediaRecorder.isTypeSupported('audio/mp4')) {
+        // fallback to default if not supported
+        options = undefined as any;
+      }
+      this.mediaRecorder = new MediaRecorder(stream, options);
       this.audioChunks = [];
 
       this.mediaRecorder.ondataavailable = (event) => {
@@ -255,24 +261,18 @@ export class AgnetChatPageComponent implements OnInit, AfterViewInit {
   private sendAudioMessage(audioBlob: Blob): void {
     this.sendingMessage = true;
 
-    // Convert blob to base64 for API
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64Audio = reader.result as string;
-      const audioData = base64Audio.split(',')[1]; // Remove data URL prefix
+    // Create a File object from the Blob in m4a format
+    const audioFile = new File([audioBlob], 'audio-message.m4a', { type: 'audio/mp4' });
 
-      this.store.dispatch(
-        RagsActions.sendRagAudioMessage({
-          agentId: this.agentId(),
-          conversationId: this.conversationId()!,
-          audioMessage: audioData,
-        })
-      );
+    this.store.dispatch(
+      RagsActions.sendRagAudioMessage({
+        agentId: this.agentId(),
+        conversationId: this.conversationId()!,
+        audioMessage: audioFile,
+      })
+    );
 
-      this.sendingMessage = false;
-    };
-
-    reader.readAsDataURL(audioBlob);
+    this.sendingMessage = false;
   }
 
   // Scroll to bottom of messages

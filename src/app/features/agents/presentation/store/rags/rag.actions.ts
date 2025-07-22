@@ -56,7 +56,7 @@ export const RagsActions = createActionGroup({
     }>(),
     'Send Rag text message Failure': props<{ error: ApiError }>(),
 
-    'Send Rag audio message': props<{ agentId: string; conversationId: string; audioMessage: string }>(),
+    'Send Rag audio message': props<{ agentId: string; conversationId: string; audioMessage: File }>(),
     'Send Rag audio message Success': props<{
       message: RagConversationMessageEntity;
     }>(),

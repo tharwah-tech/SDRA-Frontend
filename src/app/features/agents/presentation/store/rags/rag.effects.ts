@@ -244,10 +244,10 @@ export class RagsEffects {
         this.actions$.pipe(
           ofType(RagsActions.sendRagAudioMessageSuccess),
           tap((action) => {
-            showSnackbar(this.toastr, {
-              title: 'Audio message sent successfully',
-              type: 'success',
-            });
+            // showSnackbar(this.toastr, {
+            //   title: 'Audio message sent successfully',
+            //   type: 'success',
+            // });
           })
         ),
       { dispatch: false }

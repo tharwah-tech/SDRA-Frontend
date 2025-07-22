@@ -37,7 +37,7 @@ export const authInterceptor: HttpInterceptorFn = (
     return store.select(selectAccessToken).pipe(
     take(1),
     switchMap((token) => {
-      if (token) {
+      if (token && !request.url.includes('login')) {
         // Don't override Content-Type for FormData requests
         const headers: { [key: string]: string } = {
           Authorization: `Token ${token}`,

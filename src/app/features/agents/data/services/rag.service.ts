@@ -159,22 +159,22 @@ export class RagService implements RagRepository {
   sendRagAudioMessage(
     agentId: string,
     conversationId: string,
-    audioMessage: string
+    audioMessage: File
   ): Observable<RagConversationMessageEntity> {
     const formData = new FormData();
-    formData.append('audio', audioMessage);
+    formData.append('message', audioMessage);
     const params = new HttpParams().set('agent_id', agentId);
-    const url = `${this.apiUrl}/conversations/${conversationId}/send_message/`
-    const response$ = this.http.post<ApiResponse<RagConversationMessageModel>>(
+    const url = `${this.apiUrl}/conversations/${conversationId}/send_audio_message/`
+    const response$ = this.http.post<ApiResponse<RagConversationMessageReplyModel>>(
       url,
       formData,
       { params }
     );
 
     return handleResponse<
-      RagConversationMessageModel,
+    RagConversationMessageReplyModel,
       RagConversationMessageEntity
-    >(response$, this.mapConversationMessageModelToEntity.bind(this));
+    >(response$, this.mapConversationMessageReplyModelToEntity.bind(this));
   }
 
   // Private mapper methods

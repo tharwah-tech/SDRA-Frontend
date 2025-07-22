@@ -27,6 +27,6 @@ export interface RagRepository {
   sendRagAudioMessage(
     agentId: string,
     conversationId: string,
-    audioMessage: string
+    audioMessage: File
   ): Observable<RagConversationMessageEntity>;
 }

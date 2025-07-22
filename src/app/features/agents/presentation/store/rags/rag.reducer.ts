@@ -163,6 +163,15 @@ export const ragReducer = createReducer(
   // Send Rag audio message
   on(RagsActions.sendRagAudioMessage, (state, { audioMessage }) => ({
     ...state,
+    selectedConversation: {
+      ...state.selectedConversation!,
+      messages: [...state.selectedConversation?.messages!, {
+        message_type: 'user',
+        content: '',
+        message_date: new Date(),
+        audio_content: URL.createObjectURL(audioMessage),
+      }],
+    },
     messageSending: true,
     error: null,
   })),

@@ -30,8 +30,12 @@
                 {{ conversation?.conversation_title || "New Conversation" }}
               </h2>
               <div class="flex flex-row justify-start items-center gap-2">
-                <p class="conversation-subtitle">Chat with {{ agent?.name }} Agent</p>
-                <div class="flex flex-row justify-center items-center p-2 bg-[#F59E0B1A] border border-[#FFEBC9] rounded-lg w-fit">
+                <p class="conversation-subtitle">
+                  Chat with {{ agent?.name }} Agent
+                </p>
+                <div
+                  class="flex flex-row justify-center items-center p-2 bg-[#F59E0B1A] border border-[#FFEBC9] rounded-lg w-fit"
+                >
                   <span class="rag-txt">RAG Agent</span>
                 </div>
               </div>
@@ -120,6 +124,13 @@
                   {{ message.message_date | date : "shortTime" }}
                 </div>
               </div>
+              <!-- Audio Message -->
+              <div *ngIf="message.audio_content" class="audio-message">
+                <audio controls>
+                  <source [src]="message.audio_content" type="audio/mp4" />
+                  Your browser does not support the audio element.
+                </audio>
+              </div>
             </div>
 
             <!-- Agent Message -->
@@ -145,16 +156,17 @@
                   {{ message.message_date | date : "shortTime" }}
                 </div>
               </div>
-            </div>
-
-            <!-- Audio Message -->
-            <div *ngIf="message.audio_content" class="audio-message">
-              <audio controls>
-                <source [src]="message.audio_content" type="audio/wav" />
-                Your browser does not support the audio element.
-              </audio>
+              <!-- Audio Message -->
+              <div *ngIf="message.audio_content" class="audio-message">
+                <audio controls>
+                  <source [src]="message.audio_content" type="audio/mp4" />
+                  Your browser does not support the audio element.
+                </audio>
+              </div>
             </div>
           </div>
+
+          <!-- Loading State for waiting for the agent to respond -->
           <div *ngIf="messageSending$ | async" class="message agent-message">
             <div class="message-avatar">
               <img
