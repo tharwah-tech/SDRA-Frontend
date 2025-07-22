@@ -7,6 +7,9 @@ import {
   ElementRef,
   AfterViewInit,
   inject,
+  ViewChildren,
+  QueryList,
+  AfterViewChecked,
 } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -63,8 +66,9 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   templateUrl: './agnet-chat-page.component.html',
   styleUrl: './agnet-chat-page.component.scss',
 })
-export class AgnetChatPageComponent implements OnInit, AfterViewInit {
+export class AgnetChatPageComponent implements OnInit, AfterViewInit, AfterViewChecked {
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
+  @ViewChildren('audioPlayer') audioPlayersRefs!: QueryList<ElementRef<HTMLAudioElement>>;
 
   SideNavTabs = SideNavTabs;
   agentId = input.required<string>();
@@ -89,6 +93,10 @@ export class AgnetChatPageComponent implements OnInit, AfterViewInit {
   // Audio playback state
   private audioPlayers: { [key: string]: HTMLAudioElement } = {};
   private currentlyPlayingMessageId: string | null = null;
+  // Track which messages have been auto-played
+  private autoPlayedMessages = new Set<string>();
+  private previousMessagesLength: number = 0;
+  private pendingAutoPlayMessageId: string | null = null;
 
   isAudioPlaying(message: any): boolean {
     return this.currentlyPlayingMessageId === this.getMessageId(message);
@@ -111,13 +119,7 @@ export class AgnetChatPageComponent implements OnInit, AfterViewInit {
   autoPlayAudio(message: any, audioElem: HTMLAudioElement): void {
     // Register the audio element
     this.audioPlayers[this.getMessageId(message)] = audioElem;
-    // Only auto-play if the message is from the agent
-    if (message.message_type === 'agent') {
-      if (!this.currentlyPlayingMessageId || this.currentlyPlayingMessageId === this.getMessageId(message)) {
-        audioElem.play();
-        this.currentlyPlayingMessageId = this.getMessageId(message);
-      }
-    }
+    // No auto-play logic here anymore
   }
 
   onAudioEnded(message: any): void {
@@ -152,6 +154,10 @@ export class AgnetChatPageComponent implements OnInit, AfterViewInit {
       navigator.clipboard.writeText(text || '');
       this.toastr.success('Message copied to clipboard');
     }
+  }
+
+  goBack(): void {
+    this.router.navigate([`/${this.lang()}/agents/agent/${this.agentId()}`]);
   }
 
   private route = inject(ActivatedRoute);
@@ -197,6 +203,20 @@ export class AgnetChatPageComponent implements OnInit, AfterViewInit {
     this.selectedConversation$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((conversation) => {
+        const prevLength = this.previousMessagesLength;
+        const newLength = conversation?.messages?.length || 0;
+        // Only auto-play if a new agent message arrives (not on initial load)
+        if (
+          conversation &&
+          conversation.messages &&
+          newLength > prevLength &&
+          conversation.messages[newLength - 1]?.message_type === 'agent'
+        ) {
+          // Set pending auto-play for the last message
+          const lastMsg = conversation.messages[newLength - 1];
+          this.pendingAutoPlayMessageId = this.getMessageId(lastMsg);
+        }
+        this.previousMessagesLength = newLength;
         this.conversation = conversation as RagConversationEntity;
         this.scrollToBottom();
       });
@@ -215,6 +235,33 @@ export class AgnetChatPageComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.scrollToBottom();
+  }
+
+  ngAfterViewChecked(): void {
+    if (this.pendingAutoPlayMessageId) {
+      // Find the audio element for the pending message
+      const audioRef = this.audioPlayersRefs.find(ref => {
+        return ref.nativeElement && this.getMessageIdFromAudio(ref.nativeElement) === this.pendingAutoPlayMessageId;
+      });
+      if (audioRef) {
+        audioRef.nativeElement.play();
+        this.currentlyPlayingMessageId = this.pendingAutoPlayMessageId;
+        this.pendingAutoPlayMessageId = null;
+      }
+    }
+  }
+
+  // Helper to extract messageId from audio element
+  private getMessageIdFromAudio(audioElem: HTMLAudioElement): string | null {
+    if (!this.conversation || !this.conversation.messages) return null;
+    const msg = this.conversation.messages.find(m => {
+      if (!audioElem.src || !m.audio_content) return false;
+      return m.audio_content === audioElem.src || audioElem.src.endsWith(m.audio_content);
+    });
+    if (msg) {
+      return this.getMessageId(msg);
+    }
+    return null;
   }
 
   // Message tracking for ngFor optimization
