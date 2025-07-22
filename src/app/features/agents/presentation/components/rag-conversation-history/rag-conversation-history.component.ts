@@ -181,18 +181,18 @@ export class RAGConversationHistoryComponent implements OnInit {
 
   getStatusColor(status: string | undefined | null): string {
     if (!status) {
-      return 'primary';
+      return 'var(--primary-color)';
     }
 
     switch (status.toLowerCase()) {
       case 'active':
-        return 'accent';
+        return 'var(--accent-color)';
       case 'archived':
-        return 'warn';
+        return 'var(--accent-color)';
       case 'completed':
-        return 'primary';
+        return 'var(--accent-color)';
       default:
-        return 'primary';
+        return 'var(--primary-color)';
     }
   }
 

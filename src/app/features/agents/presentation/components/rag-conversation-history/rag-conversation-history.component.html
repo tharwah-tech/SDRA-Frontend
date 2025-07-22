@@ -1,4 +1,3 @@
-
 <mat-card class="w-full">
   <mat-card-header class="flex flex-row justify-between items-center">
     <mat-card-title>
@@ -37,10 +36,13 @@
             {{ "RAG.CONVERSATION_TITLE" | translate }}
           </th>
           <td mat-cell *matCellDef="let conversation">
-            <div class="flex items-center cursor-pointer" (click)="viewConversation(conversation.id)">
-              <mat-icon class="mr-2 !text-blue-500">chat</mat-icon>
-              <span class="conversation-title-txt text-blue-600 hover:text-blue-800 font-medium">
-                {{ conversation.conversation_title || 'Untitled Conversation' }}
+            <div
+              class="flex items-center cursor-pointer"
+              (click)="viewConversation(conversation.id)"
+            >
+              <mat-icon class="mr-2 !text-gray-500">chat</mat-icon>
+              <span class="conversation-title-txt">
+                {{ conversation.conversation_title || "Untitled Conversation" }}
               </span>
             </div>
           </td>
@@ -67,17 +69,25 @@
             {{ "RAG.STATUS" | translate }}
           </th>
           <td mat-cell *matCellDef="let conversation">
-            <mat-chip-set>
-              <mat-chip
-                [color]="getStatusColor(conversation.status)"
-                class="!text-[#fff]"
+            <div class="flex flex-row justify-start items-center">
+              <div
+                class="flex flex-row justify-center items-center w-auto border rounded-[8px] px-2 py-1"
+                [ngClass]="{
+                  'bg-[#EFFDF4] border-[#B9F8CF]': conversation.status === 'active',
+                  'bg-[#82858A1A] border-[#6464641A]': conversation.status === 'archived',
+                }"
               >
-                <mat-icon matChipAvatar>{{ getStatusIcon(conversation.status) }}</mat-icon>
-                <span class="!text-white">
+                <span
+                  class="status-txt"
+                  [ngClass]="{
+                  'text-[#008236]': conversation.status === 'active',
+                  'text-[#535862]': conversation.status === 'archived',
+                }"
+                >
                   {{ conversation.status }}
                 </span>
-              </mat-chip>
-            </mat-chip-set>
+              </div>
+            </div>
           </td>
         </ng-container>
 
@@ -88,15 +98,20 @@
           </th>
           <td mat-cell *matCellDef="let conversation">
             <div class="flex gap-2">
-              <button
-                mat-icon-button
-                color="primary"
-                (click)="viewConversation(conversation.id)"
-                matTooltip="{{ 'COMMON.VIEW' | translate }}"
-              >
-                <mat-icon>visibility</mat-icon>
-              </button>
               <div
+                *ngIf="conversation.status === 'active'"
+                matTooltip="{{ 'COMMON.VIEW' | translate }}"
+                class="flex flex-row justify-end items-center p-2 border border-[#E0E0E0] rounded-[8px] gap-2 cursor-pointer"
+                (click)="viewConversation(conversation.id)"
+              >
+                <img
+                  src="../../../../../../assets/images/icons/message-square-01.svg"
+                  alt="delete"
+                  class="w-[16px] h-[16px]"
+                />
+              </div>
+              <div
+                matTooltip="{{ 'COMMON.DELETE' | translate }}"
                 (click)="deleteConversation(conversation.id)"
                 class="flex flex-row justify-end items-center p-2 border border-[#E0E0E0] rounded-[8px] gap-2 cursor-pointer"
               >
