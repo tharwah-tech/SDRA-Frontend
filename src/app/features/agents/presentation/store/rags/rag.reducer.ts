@@ -10,6 +10,7 @@ export const ragReducer = createReducer(
   on(RagsActions.loadRagDocuments, (state, { agentId, pageNumber, pageSize }) => ({
     ...state,
     loading: true,
+    isLoadingDocuments: true,
     error: null,
   })),
   on(RagsActions.loadRagDocumentsSuccess, (state, { paginatedDocuments }) => {
@@ -28,12 +29,14 @@ export const ragReducer = createReducer(
       documentsList: paginatedDocuments.items,
       documentsPagination: paginationMetadata,
       loading: false,
+      isLoadingDocuments: false,
       error: null,
     };
   }),
   on(RagsActions.loadRagDocumentsFailure, (state, { error }) => ({
     ...state,
     loading: false,
+    isLoadingDocuments: false,
     error,
   })),
 

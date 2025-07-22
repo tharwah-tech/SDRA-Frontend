@@ -8,6 +8,7 @@ import { catchError, map, Observable, of, switchMap, tap } from 'rxjs';
 import { RagsActions } from './rag.actions';
 import { ToastrService } from 'ngx-toastr';
 import { showSnackbar } from '../../../../../shared/utils/show-snackbar-notification.util';
+import { Store } from '@ngrx/store';
 
 @Injectable()
 export class RagsEffects {
@@ -35,6 +36,7 @@ export class RagsEffects {
   constructor(
     private actions$: Actions,
     @Inject(RAGS_REPOSITORY) private ragRepository: RagRepository,
+    private store: Store,
     private router: Router,
     private route: ActivatedRoute,
     private toastr: ToastrService
@@ -74,7 +76,7 @@ export class RagsEffects {
             .uploadRagDocument(action.agentId, action.file)
             .pipe(
               map((document) =>
-                RagsActions.uploadRagDocumentSuccess({ document })
+                RagsActions.uploadRagDocumentSuccess({ agentId: action.agentId, document })
               ),
               catchError((error) =>
                 of(RagsActions.uploadRagDocumentFailure({ error }))
@@ -88,12 +90,15 @@ export class RagsEffects {
       () =>
         this.actions$.pipe(
           ofType(RagsActions.uploadRagDocumentSuccess),
-          tap((action) => {
-            // Success notification is handled in the component
-            // The component will handle reloading documents after upload success
-          })
-        ),
-      { dispatch: false }
+          switchMap((action) => this.ragRepository.getRagDocuments(action.agentId, 1, 5).pipe(
+            map((paginatedDocuments) =>
+              RagsActions.loadRagDocumentsSuccess({ paginatedDocuments })
+            ),
+            catchError((error) =>
+              of(RagsActions.loadRagDocumentsFailure({ error }))
+            )
+          ))
+        )
     );
 
     this.loadRagConversationSummaries$ = createEffect(() =>

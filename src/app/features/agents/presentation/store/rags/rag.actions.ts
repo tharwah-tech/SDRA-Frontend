@@ -23,7 +23,7 @@ export const RagsActions = createActionGroup({
     'Load Rag Documents Failure': props<{ error: ApiError }>(),
 
     'Upload Rag Document': props<{ agentId: string; file: File }>(),
-    'Upload Rag Document Success': props<{ document: RagDocumentEntity }>(),
+    'Upload Rag Document Success': props<{ agentId: string; document: RagDocumentEntity }>(),
     'Upload Rag Document Failure': props<{ error: ApiError }>(),
 
     'Load Rag Conversations Summaries': props<{
