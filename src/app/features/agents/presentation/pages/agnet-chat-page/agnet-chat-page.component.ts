@@ -41,6 +41,8 @@ import { TextFieldModule } from '@angular/cdk/text-field';
 import { AgentEntity } from '../../../domain/entities/agent.entity';
 import { selectSelectedAgent } from '../../store/agents/agents.selectors';
 import { AgentsActions } from '../../store/agents/agents.actions';
+import { marked } from 'marked';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-agnet-chat-page',
@@ -84,6 +86,74 @@ export class AgnetChatPageComponent implements OnInit, AfterViewInit {
   private mediaRecorder: MediaRecorder | null = null;
   private audioChunks: Blob[] = [];
 
+  // Audio playback state
+  private audioPlayers: { [key: string]: HTMLAudioElement } = {};
+  private currentlyPlayingMessageId: string | null = null;
+
+  isAudioPlaying(message: any): boolean {
+    return this.currentlyPlayingMessageId === this.getMessageId(message);
+  }
+
+  playAudio(message: any): void {
+    // Pause any currently playing audio
+    if (this.currentlyPlayingMessageId && this.audioPlayers[this.currentlyPlayingMessageId]) {
+      this.audioPlayers[this.currentlyPlayingMessageId].pause();
+      this.audioPlayers[this.currentlyPlayingMessageId].currentTime = 0;
+    }
+    // Play the selected audio
+    const audioElem = this.audioPlayers[this.getMessageId(message)];
+    if (audioElem) {
+      audioElem.play();
+      this.currentlyPlayingMessageId = this.getMessageId(message);
+    }
+  }
+
+  autoPlayAudio(message: any, audioElem: HTMLAudioElement): void {
+    // Register the audio element
+    this.audioPlayers[this.getMessageId(message)] = audioElem;
+    // Only auto-play if the message is from the agent
+    if (message.message_type === 'agent') {
+      if (!this.currentlyPlayingMessageId || this.currentlyPlayingMessageId === this.getMessageId(message)) {
+        audioElem.play();
+        this.currentlyPlayingMessageId = this.getMessageId(message);
+      }
+    }
+  }
+
+  onAudioEnded(message: any): void {
+    this.currentlyPlayingMessageId = null;
+  }
+
+  toggleAudio(message: any): void {
+    const messageId = this.getMessageId(message);
+    const audioElem = this.audioPlayers[messageId];
+    if (!audioElem) return;
+    if (this.isAudioPlaying(message)) {
+      audioElem.pause();
+      this.currentlyPlayingMessageId = null;
+    } else {
+      // Pause any currently playing audio
+      if (this.currentlyPlayingMessageId && this.audioPlayers[this.currentlyPlayingMessageId]) {
+        this.audioPlayers[this.currentlyPlayingMessageId].pause();
+        this.audioPlayers[this.currentlyPlayingMessageId].currentTime = 0;
+      }
+      audioElem.play();
+      this.currentlyPlayingMessageId = messageId;
+    }
+  }
+
+  getMessageId(message: any): string {
+    // Use a unique identifier for the message (date+content or a real id if available)
+    return (message.message_date ? message.message_date.toString() : '') + (message.content || '');
+  }
+
+  copyMessageText(text: string): void {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text || '');
+      this.toastr.success('Message copied to clipboard');
+    }
+  }
+
   private route = inject(ActivatedRoute);
 
   constructor(
@@ -92,7 +162,8 @@ export class AgnetChatPageComponent implements OnInit, AfterViewInit {
     private router: Router,
     private toastr: ToastrService,
     private destroyRef: DestroyRef,
-    private store: Store
+    private store: Store,
+    private sanitizer: DomSanitizer
   ) {
     this.error$ = this.store.select(selectRagError);
     this.loading$ = this.store.select(selectRagLoading);
@@ -283,6 +354,11 @@ export class AgnetChatPageComponent implements OnInit, AfterViewInit {
           this.messagesContainer.nativeElement.scrollHeight;
       }
     }, 100);
+  }
+
+  renderMarkdown(content: string): SafeHtml {
+    const html = marked.parse(content || '') as string;
+    return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
   CurrentPagePath(): RouteLink[] {
