@@ -37,7 +37,10 @@
     "UPLOAD_FILE_DATE": "تاريخ الملف",
     "UPLOAD_FILE_STATUS": "حالة الملف",
     "CHOOSE_FILE": "اختر ملف",
-    "UPLOAD": "رفع"
+    "UPLOAD": "رفع",
+    "CLICK_TO_UPLOAD": "اضغط للرفع",
+    "OR_DRAG_AND_DROP": "أو اسحب وأفلت",
+    "UPLOAD_DOCUMENT_SUBTITLE": "رفع وثيقة لتعزيز قاعدة المعرفة للوكيل"
   },
   "COMMON": {
     "ACTIONS": "الإجراءات",
@@ -45,7 +48,8 @@
     "DELETE": "حذف",
     "CANCEL": "إلغاء",
     "COMPLETE": "مكتمل",
-    "CLOSE": "إغلاق"
+    "CLOSE": "إغلاق",
+    "REMOVE": "إزالة"
   },
   "sidenav": {}
 }

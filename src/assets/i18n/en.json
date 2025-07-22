@@ -35,7 +35,10 @@
     "UPLOAD_FILE_DATE": "Upload File Date",
     "UPLOAD_FILE_STATUS": "Upload File Status",
     "CHOOSE_FILE": "Choose File",
-    "UPLOAD": "Upload"
+    "UPLOAD": "Upload",
+    "CLICK_TO_UPLOAD": "Click to upload",
+    "OR_DRAG_AND_DROP": "or drag and drop",
+    "UPLOAD_DOCUMENT_SUBTITLE": "Upload and attach files to this agent"
   },
   "COMMON": {
     "ACTIONS": "Actions",
@@ -43,7 +46,8 @@
     "DELETE": "Delete",
     "CANCEL": "Cancel",
     "COMPLETE": "Complete",
-    "CLOSE": "Close"
+    "CLOSE": "Close",
+    "REMOVE": "Remove"
   },
   "sidenav": {}
 }

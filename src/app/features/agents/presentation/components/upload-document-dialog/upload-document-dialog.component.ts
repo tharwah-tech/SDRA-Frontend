@@ -38,6 +38,7 @@ export class UploadDocumentDialogComponent {
   isUploading = false;
   uploadProgress = 0;
   selectedFile: File | null = null;
+  isDragOver = false;
   private destroyRef = inject(DestroyRef);
 
   constructor(
@@ -51,6 +52,33 @@ export class UploadDocumentDialogComponent {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
     const file = input.files[0];
+    this.validateAndSetFile(file);
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragOver = true;
+  }
+
+  onDragLeave(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragOver = false;
+  }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragOver = false;
+
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      this.validateAndSetFile(files[0]);
+    }
+  }
+
+  private validateAndSetFile(file: File): void {
     // Validate file size (max 10MB)
     const maxSize = 10 * 1024 * 1024; // 10MB
     if (file.size > maxSize) {
@@ -60,6 +88,7 @@ export class UploadDocumentDialogComponent {
       });
       return;
     }
+
     // Validate file type
     const allowedTypes = [
       'application/pdf',
@@ -68,30 +97,59 @@ export class UploadDocumentDialogComponent {
       'text/plain',
       'text/rtf',
       'text/markdown',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     ];
+
     if (!allowedTypes.includes(file.type)) {
       showSnackbar(this.toastr, {
         type: 'error',
         error: {
           message:
-            'Invalid file type. Please upload PDF, DOC, DOCX, TXT, RTF, or MD files only.',
+            'Invalid file type. Please upload PDF, DOC, DOCX, TXT, RTF, MD, XLS, or XLSX files only.',
         } as ApiError,
       });
       return;
     }
+
     this.selectedFile = file;
+  }
+
+  formatFileSize(bytes: number): string {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  }
+
+  getFileIcon(file: File): string {
+    const extension = file.name.split('.').pop()?.toLowerCase();
+    switch (extension) {
+      case 'pdf': return 'picture_as_pdf';
+      case 'doc':
+      case 'docx': return 'description';
+      case 'xls':
+      case 'xlsx': return 'table_chart';
+      case 'txt': return 'text_snippet';
+      case 'md': return 'article';
+      case 'rtf': return 'description';
+      default: return 'insert_drive_file';
+    }
   }
 
   startUpload(): void {
     if (!this.selectedFile) return;
     this.isUploading = true;
     this.uploadProgress = 0;
+
     // Simulate upload progress
     const progressInterval = setInterval(() => {
       if (this.uploadProgress < 90) {
         this.uploadProgress += Math.random() * 10;
       }
     }, 200);
+
     // Dispatch upload action
     this.store.dispatch(
       RagsActions.uploadRagDocument({
@@ -99,6 +157,7 @@ export class UploadDocumentDialogComponent {
         file: this.selectedFile,
       })
     );
+
     // Listen for upload error
     this.store
       .select(selectRagError)
@@ -112,6 +171,7 @@ export class UploadDocumentDialogComponent {
         this.isUploading = false;
         this.selectedFile = null;
       });
+
     // Listen for successful upload completion
     this.store
       .select((state: any) => state.rags)
@@ -127,9 +187,15 @@ export class UploadDocumentDialogComponent {
           this.isUploading = false;
           this.uploadProgress = 0;
           this.selectedFile = null;
-          this.dialogRef.close(true); // Indicate upload success
+          this.dialogRef.close(true);
         }, 500);
       });
+  }
+
+  removeFile(): void {
+    this.selectedFile = null;
+    this.uploadProgress = 0;
+    this.isUploading = false;
   }
 
   cancelUpload(): void {
