@@ -11,6 +11,7 @@
             'bg-[#10B9810D] text-[#10B981] border-[#C5FFEC]': agent().type === AgentType.Summarizer,
             'bg-[#F59E0B0D] text-[#F59E0B] border-[#FFF1D9]': agent().type === AgentType.RAG_Agent,
             'bg-[#8B5CF60D] text-[#8B5CF6] border-[#E7DCFF]': agent().type === AgentType.Responder,
+            'bg-[#9810FA1A] text-[#9810FA] border-[#EDD5FF]': agent().type === AgentType.Complaints,
           }">
           <span>{{ getAgentTypeString(agent().type) }}</span>
         </div>

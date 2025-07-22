@@ -26,14 +26,24 @@
     "UPLOAD_DOCUMENT": "Upload Document",
     "FILENAME": "File Name",
     "TYPE": "Type",
-    "UPLOAD_DATE": "Upload Date"
+    "UPLOAD_DATE": "Upload Date",
+    "UPLOAD_PROGRESS": "Upload Progress",
+    "UPLOAD_FILE": "Upload File",
+    "UPLOAD_FILE_NAME": "Upload File Name",
+    "UPLOAD_FILE_TYPE": "Upload File Type",
+    "UPLOAD_FILE_SIZE": "Upload File Size",
+    "UPLOAD_FILE_DATE": "Upload File Date",
+    "UPLOAD_FILE_STATUS": "Upload File Status",
+    "CHOOSE_FILE": "Choose File",
+    "UPLOAD": "Upload"
   },
   "COMMON": {
     "ACTIONS": "Actions",
     "VIEW": "View",
     "DELETE": "Delete",
     "CANCEL": "Cancel",
-    "COMPLETE": "Complete"
+    "COMPLETE": "Complete",
+    "CLOSE": "Close"
   },
   "sidenav": {}
 }

@@ -3,6 +3,7 @@ export enum AgentType {
   Summarizer = 'summarizer',
   RAG_Agent = 'rag',
   Responder = 'responder',
+  Complaints = 'complaints'
 }
 export function mapAgentType(type: AgentType): string {
   switch (type) {
@@ -14,5 +15,7 @@ export function mapAgentType(type: AgentType): string {
       return 'RAG';
     case AgentType.Responder:
       return 'Responder';
+    case AgentType.Complaints:
+      return 'Complaints';
   }
 }

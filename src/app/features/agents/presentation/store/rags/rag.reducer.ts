@@ -40,17 +40,17 @@ export const ragReducer = createReducer(
   // Upload Rag Document
   on(RagsActions.uploadRagDocument, (state, { agentId, file }) => ({
     ...state,
-    loading: true,
+    documentUploading: true,
     error: null,
   })),
   on(RagsActions.uploadRagDocumentSuccess, (state, { document }) => ({
     ...state,
-    loading: false,
+    documentUploading: false,
     error: null,
   })),
   on(RagsActions.uploadRagDocumentFailure, (state, { error }) => ({
     ...state,
-    loading: false,
+    documentUploading: false,
     error,
   })),
 

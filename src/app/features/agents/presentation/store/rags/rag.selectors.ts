@@ -47,6 +47,11 @@ export const selectRagMessageSending = createSelector(
   (state) => state.messageSending
 );
 
+export const selectRagDocumentUploading = createSelector(
+  selectRagState,
+  (state) => state.documentUploading
+);
+
 export const selectRagError = createSelector(
   selectRagState,
   (state) => state.error

@@ -1,0 +1,53 @@
+<h2 mat-dialog-title>{{ 'RAG.UPLOAD_DOCUMENT' | translate }}</h2>
+<mat-dialog-content>
+  <div *ngIf="!selectedFile">
+    <input
+      type="file"
+      #fileInput
+      (change)="onFileSelected($event)"
+      accept=".pdf,.doc,.docx,.txt,.rtf,.md"
+      style="display: none;"
+    />
+    <button mat-flat-button color="primary" (click)="fileInput.click()" [disabled]="isUploading">
+      <mat-icon>cloud_upload</mat-icon>
+      {{ 'RAG.CHOOSE_FILE' | translate }}
+    </button>
+  </div>
+
+  <div *ngIf="selectedFile">
+    <div class="upload-progress-section p-4 bg-blue-50 border-t border-blue-200">
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center">
+          <mat-icon class="mr-2 text-blue-600">cloud_upload</mat-icon>
+          <span class="font-medium text-blue-800">
+            {{ selectedFile.name }}
+          </span>
+        </div>
+        <button
+          mat-icon-button
+          color="warn"
+          (click)="cancelUpload()"
+          matTooltip="{{ 'COMMON.CANCEL' | translate }}"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <mat-progress-bar
+        mode="determinate"
+        [value]="uploadProgress"
+        color="primary"
+        class="mb-2"
+      ></mat-progress-bar>
+      <div class="text-sm text-blue-600">
+        {{ uploadProgress | number : '1.0-0' }}%
+        {{ 'COMMON.COMPLETE' | translate }}
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onClose()" [disabled]="isUploading">{{ 'COMMON.CLOSE' | translate }}</button>
+  <button mat-flat-button color="primary" (click)="startUpload()" [disabled]="!selectedFile || isUploading">
+    {{ 'RAG.UPLOAD' | translate }}
+  </button>
+</mat-dialog-actions>

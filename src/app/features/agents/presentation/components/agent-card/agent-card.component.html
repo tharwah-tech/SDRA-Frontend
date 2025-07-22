@@ -28,11 +28,13 @@
                 agent.role !== AgentType.Interviewer &&
                 agent.role !== AgentType.Summarizer &&
                 agent.role !== AgentType.RAG_Agent &&
-                agent.role !== AgentType.Responder
+                agent.role !== AgentType.Responder &&
+                agent.role !== AgentType.Complaints
               ),
               'bg-[#10B9810D] text-[#10B981] border-[#C5FFEC]': agent.role === AgentType.Summarizer,
               'bg-[#F59E0B0D] text-[#F59E0B] border-[#FFF1D9]': agent.role === AgentType.RAG_Agent,
-              'bg-[#8B5CF60D] text-[#8B5CF6] border-[#E7DCFF]': agent.role === AgentType.Responder
+              'bg-[#8B5CF60D] text-[#8B5CF6] border-[#E7DCFF]': agent.role === AgentType.Responder,
+              'bg-[#9810FA1A] text-[#9810FA] border-[#EDD5FF]': agent.role === AgentType.Complaints
             }"
           >
             {{ agent.role }}

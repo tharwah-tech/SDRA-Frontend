@@ -15,6 +15,7 @@ import { filter, Observable, tap, take } from 'rxjs';
 import {
   selectRagDocumentsList,
   selectRagDocumentsPagination,
+  selectRagDocumentUploading,
   selectRagError,
   selectRagLoading,
 } from '../../store/rags/rag.selectors';
@@ -29,8 +30,9 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PaginationMetadata } from '../../../../../core/entities/paginator.entity';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
+import { UploadDocumentDialogComponent } from '../upload-document-dialog/upload-document-dialog.component';
 
 @Component({
   selector: 'app-rag-reference-documents-card',
@@ -58,21 +60,15 @@ export class RAGReferenceDocumentsCardComponent implements OnInit {
   agentId = input.required<string>();
   error$: Observable<ApiError | null>;
   loading$: Observable<boolean>;
+  documentUploading$: Observable<boolean>;
   documents$: Observable<RagDocumentEntity[]>;
   pagination$: Observable<PaginationMetadata | null>;
   documentsList: RagDocumentEntity[] = [];
-
-  // Upload properties
-  isUploading = false;
-  uploadProgress = 0;
-  selectedFile: File | null = null;
-  fileInput: HTMLInputElement | null = null;
 
   // Table properties
   displayedColumns: string[] = [
     'filename',
     'type',
-    'status',
     'uploadDate',
     'actions',
   ];
@@ -88,10 +84,12 @@ export class RAGReferenceDocumentsCardComponent implements OnInit {
     private destroyRef: DestroyRef,
     private toastr: ToastrService,
     private router: Router,
-    private store: Store
+    private store: Store,
+    private dialog: MatDialog
   ) {
     this.error$ = this.store.select(selectRagError);
     this.loading$ = this.store.select(selectRagLoading);
+    this.documentUploading$ = this.store.select(selectRagDocumentUploading);
     this.documents$ = this.store.select(selectRagDocumentsList);
     this.pagination$ = this.store.select(selectRagDocumentsPagination);
   }
@@ -123,6 +121,12 @@ export class RAGReferenceDocumentsCardComponent implements OnInit {
         })
       )
       .subscribe();
+
+    this.documentUploading$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((uploading) => {
+        // This subscription is no longer needed as upload logic is removed
+      });
 
     this.error$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((error) => {
       if (error) {
@@ -160,126 +164,15 @@ export class RAGReferenceDocumentsCardComponent implements OnInit {
   }
 
   uploadDocument(): void {
-    // Create a hidden file input if it doesn't exist
-    if (!this.fileInput) {
-      this.fileInput = document.createElement('input');
-      this.fileInput.type = 'file';
-      this.fileInput.accept = '.pdf,.doc,.docx,.txt,.rtf,.md';
-      this.fileInput.style.display = 'none';
-      document.body.appendChild(this.fileInput);
-
-      this.fileInput.addEventListener('change', (event: any) => {
-        const file = event.target.files[0];
-        if (file) {
-          this.handleFileSelection(file);
-        }
-      });
-    }
-
-    this.fileInput.click();
-  }
-
-  handleFileSelection(file: File): void {
-    // Validate file size (max 10MB)
-    const maxSize = 10 * 1024 * 1024; // 10MB
-    if (file.size > maxSize) {
-      showSnackbar(this.toastr, {
-        type: 'error',
-        error: { message: 'File size exceeds 10MB limit' } as ApiError,
-      });
-      return;
-    }
-
-    // Validate file type
-    const allowedTypes = [
-      'application/pdf',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'text/plain',
-      'text/rtf',
-      'text/markdown',
-    ];
-
-    if (!allowedTypes.includes(file.type)) {
-      showSnackbar(this.toastr, {
-        type: 'error',
-        error: {
-          message:
-            'Invalid file type. Please upload PDF, DOC, DOCX, TXT, RTF, or MD files only.',
-        } as ApiError,
-      });
-      return;
-    }
-
-    this.selectedFile = file;
-    this.startUpload();
-  }
-
-  startUpload(): void {
-    if (!this.selectedFile) {
-      return;
-    }
-
-    this.isUploading = true;
-    this.uploadProgress = 0;
-
-    // Simulate upload progress (in real implementation, you'd track actual progress)
-    const progressInterval = setInterval(() => {
-      if (this.uploadProgress < 90) {
-        this.uploadProgress += Math.random() * 10;
+    const dialogRef = this.dialog.open(UploadDocumentDialogComponent, {
+      width: '400px',
+      data: { agentId: this.agentId() },
+      disableClose: true,
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.loadDocuments();
       }
-    }, 200);
-
-    // Dispatch upload action
-    this.store.dispatch(
-      RagsActions.uploadRagDocument({
-        agentId: this.agentId(),
-        file: this.selectedFile,
-      })
-    );
-
-    // Listen for upload error
-    this.error$
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        filter((error) => error !== null)
-      )
-      .subscribe((error) => {
-        clearInterval(progressInterval);
-        this.uploadProgress = 0;
-        this.isUploading = false;
-        this.selectedFile = null;
-      });
-
-    // Listen for successful upload completion
-    this.store
-      .select((state: any) => state.rags)
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        filter((state) => state && state.documentsList && this.isUploading),
-        take(1) // Only take the first emission to prevent infinite loop
-      )
-      .subscribe(() => {
-        clearInterval(progressInterval);
-        this.uploadProgress = 100;
-        setTimeout(() => {
-          this.isUploading = false;
-          this.uploadProgress = 0;
-          this.selectedFile = null;
-          // Reload documents to get fresh data from server
-          this.loadDocuments();
-        }, 500);
-      });
-  }
-
-  cancelUpload(): void {
-    this.isUploading = false;
-    this.uploadProgress = 0;
-    this.selectedFile = null;
-    showSnackbar(this.toastr, {
-      type: 'info',
-      title: 'Info',
-      description: 'Upload cancelled',
     });
   }
 

@@ -28,14 +28,24 @@
     "FILENAME": "اسم الملف",
     "TYPE": "النوع",
     "STATUS": "الحالة",
-    "UPLOAD_DATE": "تاريخ الرفع"
+    "UPLOAD_DATE": "تاريخ الرفع",
+    "UPLOAD_PROGRESS": "تقدم الرفع",
+    "UPLOAD_FILE": "رفع ملف",
+    "UPLOAD_FILE_NAME": "اسم الملف",
+    "UPLOAD_FILE_TYPE": "نوع الملف",
+    "UPLOAD_FILE_SIZE": "حجم الملف",
+    "UPLOAD_FILE_DATE": "تاريخ الملف",
+    "UPLOAD_FILE_STATUS": "حالة الملف",
+    "CHOOSE_FILE": "اختر ملف",
+    "UPLOAD": "رفع"
   },
   "COMMON": {
     "ACTIONS": "الإجراءات",
     "VIEW": "عرض",
     "DELETE": "حذف",
     "CANCEL": "إلغاء",
-    "COMPLETE": "مكتمل"
+    "COMPLETE": "مكتمل",
+    "CLOSE": "إغلاق"
   },
   "sidenav": {}
 }
