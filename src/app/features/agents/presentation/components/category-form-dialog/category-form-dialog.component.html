@@ -1,0 +1,80 @@
+<div class="dialog-container">
+  <!-- Header with Icon -->
+  <div class="dialog-header">
+    <div class="dialog-icon">
+      <mat-icon>folder</mat-icon>
+    </div>
+    
+    <div class="flex flex-col items-center gap-2">
+      <h2 class="dialog-title">New Category</h2>
+      <p class="dialog-description">
+        Create a new category for classifying complaint tickets and email routing
+      </p>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <form [formGroup]="categoryForm" class="dialog-form">
+    <!-- Category Name Field -->
+    <div>
+      <label class="field-label">
+        Category name
+      </label>
+      <mat-form-field appearance="outline">
+        <input
+          matInput
+          placeholder="e.g. Accounting"
+          formControlName="categoryName"
+        />
+        <mat-error *ngIf="categoryForm.get('categoryName')?.touched && categoryForm.get('categoryName')?.errors">
+          {{ getErrorMessage('categoryName') }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Email Address Field -->
+    <div>
+      <label class="field-label">
+        E-mail address
+      </label>
+      <mat-form-field appearance="outline">
+        <input
+          matInput
+          placeholder="Enter address"
+          formControlName="emailAddress"
+          type="email"
+        />
+        <mat-error *ngIf="categoryForm.get('emailAddress')?.touched && categoryForm.get('emailAddress')?.errors">
+          {{ getErrorMessage('emailAddress') }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Default Category Checkbox -->
+    <div class="flex items-center">
+      <mat-checkbox formControlName="isDefault">
+        Mark as default category
+      </mat-checkbox>
+    </div>
+  </form>
+
+  <!-- Action Buttons -->
+  <div class="dialog-actions">
+    <button
+      mat-stroked-button
+      type="button"
+      (click)="onCancel()"
+    >
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      type="button"
+      (click)="onConfirm()"
+      [disabled]="categoryForm.invalid"
+      class="bg-emerald-500"
+    >
+      Confirm
+    </button>
+  </div>
+</div>
