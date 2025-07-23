@@ -31,7 +31,7 @@ import { PaginationMetadata } from '../../../../../core/entities/paginator.entit
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
-import { RagConversationSummaryEntity } from '../../../domain/entities/rag-conversation-summary.entity';
+import { ConversationSummaryEntity } from '../../../domain/entities/conversation-summary.entity';
 
 @Component({
   selector: 'app-rag-conversation-history',
@@ -59,9 +59,9 @@ export class RAGConversationHistoryComponent implements OnInit {
   agentId = input.required<string>();
   error$: Observable<ApiError | null>;
   loading$: Observable<boolean>;
-  conversations$: Observable<RagConversationSummaryEntity[]>;
+  conversations$: Observable<ConversationSummaryEntity[]>;
   pagination$: Observable<PaginationMetadata | null>;
-  conversationsList: RagConversationSummaryEntity[] = [];
+  conversationsList: ConversationSummaryEntity[] = [];
 
   // Table properties
   displayedColumns: string[] = [

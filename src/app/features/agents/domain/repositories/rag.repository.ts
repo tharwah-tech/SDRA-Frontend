@@ -1,8 +1,8 @@
 import { Observable } from 'rxjs';
-import { RagConversationEntity } from '../entities/rag-conversation.entity';
-import { RagConversationMessageEntity } from '../entities/rag-conversation.entity';
-import { RagDocumentEntity } from '../entities/rag-document.enttity';
-import { RagConversationSummaryEntity } from '../entities/rag-conversation-summary.entity';
+import { ConversationEntity } from '../entities/conversation.entity';
+import { ConversationMessageEntity } from '../entities/conversation.entity';
+import { DocumentEntity } from '../entities/document.enttity';
+import { ConversationSummaryEntity } from '../entities/conversation-summary.entity';
 import { PaginatedEntity } from '../../../../core/entities/paginated.entity';
 
 export interface RagRepository {
@@ -10,23 +10,23 @@ export interface RagRepository {
     agentId: string,
     pageNumber: number,
     pageSize: number
-  ): Observable<PaginatedEntity<RagDocumentEntity>>;
-  uploadRagDocument(agentId: string, file: File): Observable<RagDocumentEntity>;
+  ): Observable<PaginatedEntity<DocumentEntity>>;
+  uploadRagDocument(agentId: string, file: File): Observable<DocumentEntity>;
   getRagConversationsSummaries(
     agentId: string,
     pageNumber: number,
     pageSize: number
-  ): Observable<PaginatedEntity<RagConversationSummaryEntity>>;
-  getRagConversation(id: string): Observable<RagConversationEntity>;
-  startRagConversation(agentId: string): Observable<RagConversationSummaryEntity>;
+  ): Observable<PaginatedEntity<ConversationSummaryEntity>>;
+  getRagConversation(id: string): Observable<ConversationEntity>;
+  startRagConversation(agentId: string): Observable<ConversationSummaryEntity>;
   sendRagTextMessage(
     agentId: string,
     conversationId: string,
     textMessage: string
-  ): Observable<RagConversationMessageEntity>;
+  ): Observable<ConversationMessageEntity>;
   sendRagAudioMessage(
     agentId: string,
     conversationId: string,
     audioMessage: File
-  ): Observable<RagConversationMessageEntity>;
+  ): Observable<ConversationMessageEntity>;
 }

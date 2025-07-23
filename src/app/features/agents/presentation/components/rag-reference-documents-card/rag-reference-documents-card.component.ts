@@ -22,7 +22,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { showSnackbar } from '../../../../../shared/utils/show-snackbar-notification.util';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { RagDocumentEntity } from '../../../domain/entities/rag-document.enttity';
+import { DocumentEntity } from '../../../domain/entities/document.enttity';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule, Sort } from '@angular/material/sort';
@@ -61,9 +61,9 @@ export class RAGReferenceDocumentsCardComponent implements OnInit {
   error$: Observable<ApiError | null>;
   loading$: Observable<boolean>;
   documentUploading$: Observable<boolean>;
-  documents$: Observable<RagDocumentEntity[]>;
+  documents$: Observable<DocumentEntity[]>;
   pagination$: Observable<PaginationMetadata | null>;
-  documentsList: RagDocumentEntity[] = [];
+  documentsList: DocumentEntity[] = [];
 
   // Table properties
   displayedColumns: string[] = [

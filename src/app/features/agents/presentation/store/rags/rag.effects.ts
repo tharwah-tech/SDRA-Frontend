@@ -7,7 +7,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, map, Observable, of, switchMap, tap } from 'rxjs';
 import { RagsActions } from './rag.actions';
 import { ToastrService } from 'ngx-toastr';
-import { showSnackbar } from '../../../../../shared/utils/show-snackbar-notification.util';
 import { Store } from '@ngrx/store';
 
 @Injectable()

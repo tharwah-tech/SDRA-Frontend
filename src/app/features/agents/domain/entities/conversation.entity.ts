@@ -1,10 +1,10 @@
-export interface RagConversationEntity {
+export interface ConversationEntity {
   id:                 string;
   conversation_title: string;
-  messages:           RagConversationMessageEntity[];
+  messages:           ConversationMessageEntity[];
 }
 
-export interface RagConversationMessageEntity {
+export interface ConversationMessageEntity {
   message_type:  string;
   content:       string;
   audio_content: string| null;

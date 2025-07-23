@@ -1,18 +1,18 @@
 
 import { ApiError } from "../../../../../core/models/api-error.model";
-import { RagConversationSummaryEntity } from "../../../domain/entities/rag-conversation-summary.entity";
-import { RagConversationEntity } from "../../../domain/entities/rag-conversation.entity";
-import { RagDocumentEntity } from "../../../domain/entities/rag-document.enttity";
+import { ConversationSummaryEntity } from "../../../domain/entities/conversation-summary.entity";
+import { ConversationEntity } from "../../../domain/entities/conversation.entity";
+import { DocumentEntity } from "../../../domain/entities/document.enttity";
 import { PaginationMetadata } from "../../../../../core/entities/paginator.entity";
 
 export const RAG_FEATURE_KEY = 'rags';
 
 export interface RagState {
-  documentsList: RagDocumentEntity[];
+  documentsList: DocumentEntity[];
   documentsPagination: PaginationMetadata | null;
-  conversationSummaryList: RagConversationSummaryEntity[];
+  conversationSummaryList: ConversationSummaryEntity[];
   conversationsPagination: PaginationMetadata | null;
-  selectedConversation: RagConversationEntity | null;
+  selectedConversation: ConversationEntity | null;
   selectedConversationId: string | null;
   documentUploading: boolean;
   messageSending: boolean;

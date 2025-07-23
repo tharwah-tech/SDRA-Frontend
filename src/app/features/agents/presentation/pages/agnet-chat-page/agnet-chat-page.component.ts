@@ -20,7 +20,7 @@ import { Store } from '@ngrx/store';
 import { ToastrService } from 'ngx-toastr';
 import { ApiError } from '../../../../../core/models/api-error.model';
 import { Observable } from 'rxjs';
-import { RagConversationEntity } from '../../../domain/entities/rag-conversation.entity';
+import { ConversationEntity } from '../../../domain/entities/conversation.entity';
 import { LanguageService } from '../../../../../core/services/language.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
@@ -77,8 +77,8 @@ export class AgnetChatPageComponent implements OnInit, AfterViewInit, AfterViewC
   error$: Observable<ApiError | null>;
   loading$: Observable<boolean>;
   messageSending$: Observable<boolean>;
-  selectedConversation$: Observable<RagConversationEntity | null>;
-  conversation: RagConversationEntity | null = null;
+  selectedConversation$: Observable<ConversationEntity | null>;
+  conversation: ConversationEntity | null = null;
   selectedAgent$: Observable<AgentEntity | null>;
   agent: AgentEntity | null = null;
   // Chat properties
@@ -217,7 +217,7 @@ export class AgnetChatPageComponent implements OnInit, AfterViewInit, AfterViewC
           this.pendingAutoPlayMessageId = this.getMessageId(lastMsg);
         }
         this.previousMessagesLength = newLength;
-        this.conversation = conversation as RagConversationEntity;
+        this.conversation = conversation as ConversationEntity;
         this.scrollToBottom();
       });
 

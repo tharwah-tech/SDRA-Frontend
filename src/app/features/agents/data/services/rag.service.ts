@@ -3,12 +3,12 @@ import { RagRepository } from '../../domain/repositories/rag.repository';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { BASE_API_URL } from '../../../../app.config';
 import { Observable } from 'rxjs';
-import { RagDocumentEntity } from '../../domain/entities/rag-document.enttity';
+import { DocumentEntity } from '../../domain/entities/document.enttity';
 import {
-  RagConversationEntity,
-  RagConversationMessageEntity,
-} from '../../domain/entities/rag-conversation.entity';
-import { RagConversationSummaryEntity } from '../../domain/entities/rag-conversation-summary.entity';
+  ConversationEntity,
+  ConversationMessageEntity,
+} from '../../domain/entities/conversation.entity';
+import { ConversationSummaryEntity } from '../../domain/entities/conversation-summary.entity';
 import {
   RagDocumentModel,
   RagConversationModel,
@@ -40,7 +40,7 @@ export class RagService implements RagRepository {
     agentId: string,
     pageNumber: number,
     pageSize: number
-  ): Observable<PaginatedEntity<RagDocumentEntity>> {
+  ): Observable<PaginatedEntity<DocumentEntity>> {
     const params = new HttpParams()
       .set('agent_id', agentId)
       .set('page_number', pageNumber.toString())
@@ -51,9 +51,9 @@ export class RagService implements RagRepository {
 
     return handleResponse<
       PaginatedModel<RagDocumentModel>,
-      PaginatedEntity<RagDocumentEntity>
+      PaginatedEntity<DocumentEntity>
     >(response$, (models) =>
-      mapPaginationModelIntoEntity<RagDocumentModel, RagDocumentEntity>(
+      mapPaginationModelIntoEntity<RagDocumentModel, DocumentEntity>(
         models,
         this.mapDocumentModelToEntity.bind(this)
       )
@@ -63,7 +63,7 @@ export class RagService implements RagRepository {
   uploadRagDocument(
     agentId: string,
     file: File
-  ): Observable<RagDocumentEntity> {
+  ): Observable<DocumentEntity> {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('agent_id', agentId);
@@ -73,7 +73,7 @@ export class RagService implements RagRepository {
       formData
     );
 
-    return handleResponse<RagDocumentModel, RagDocumentEntity>(
+    return handleResponse<RagDocumentModel, DocumentEntity>(
       response$,
       this.mapDocumentModelToEntity.bind(this)
     );
@@ -83,7 +83,7 @@ export class RagService implements RagRepository {
     agentId: string,
     pageNumber: number,
     pageSize: number
-  ): Observable<PaginatedEntity<RagConversationSummaryEntity>> {
+  ): Observable<PaginatedEntity<ConversationSummaryEntity>> {
     const params = new HttpParams()
       .set('agent_id', agentId)
       .set('page_number', pageNumber.toString())
@@ -94,27 +94,27 @@ export class RagService implements RagRepository {
 
     return handleResponse<
       PaginatedModel<RagConversationSummaryModel>,
-      PaginatedEntity<RagConversationSummaryEntity>
+      PaginatedEntity<ConversationSummaryEntity>
     >(response$, (models) =>
       mapPaginationModelIntoEntity<
         RagConversationSummaryModel,
-        RagConversationSummaryEntity
+        ConversationSummaryEntity
       >(models, this.mapConversationSummaryModelToEntity.bind(this))
     );
   }
 
-  getRagConversation(id: string): Observable<RagConversationEntity> {
+  getRagConversation(id: string): Observable<ConversationEntity> {
     const response$ = this.http.get<ApiResponse<RagConversationModel>>(
       `${this.apiUrl}/conversations/${id}`
     );
 
-    return handleResponse<RagConversationModel, RagConversationEntity>(
+    return handleResponse<RagConversationModel, ConversationEntity>(
       response$,
       this.mapConversationModelToEntity.bind(this)
     );
   }
 
-  startRagConversation(agentId: string): Observable<RagConversationSummaryEntity> {
+  startRagConversation(agentId: string): Observable<ConversationSummaryEntity> {
     const params = new HttpParams().set('agent_id', agentId);
     const url = `${this.apiUrl}/conversations/create/`;
     const response$ = this.http.post<ApiResponse<CreateRagConversationModel>>(
@@ -123,7 +123,7 @@ export class RagService implements RagRepository {
       { params }
     );
 
-    return handleResponse<CreateRagConversationModel, RagConversationSummaryEntity>(
+    return handleResponse<CreateRagConversationModel, ConversationSummaryEntity>(
       response$,
       (model) => {
         // Return a placeholder entity that will be replaced by the actual conversation
@@ -141,7 +141,7 @@ export class RagService implements RagRepository {
     agentId: string,
     conversationId: string,
     textMessage: string
-  ): Observable<RagConversationMessageEntity> {
+  ): Observable<ConversationMessageEntity> {
     const params = new HttpParams().set('agent_id', agentId);
     const url = `${this.apiUrl}/conversations/${conversationId}/send_message/`
     const response$ = this.http.post<ApiResponse<RagConversationMessageReplyModel>>(
@@ -152,7 +152,7 @@ export class RagService implements RagRepository {
 
     return handleResponse<
     RagConversationMessageReplyModel,
-      RagConversationMessageEntity
+      ConversationMessageEntity
     >(response$, this.mapConversationMessageReplyModelToEntity.bind(this));
   }
 
@@ -160,7 +160,7 @@ export class RagService implements RagRepository {
     agentId: string,
     conversationId: string,
     audioMessage: File
-  ): Observable<RagConversationMessageEntity> {
+  ): Observable<ConversationMessageEntity> {
     const formData = new FormData();
     formData.append('message', audioMessage);
     const params = new HttpParams().set('agent_id', agentId);
@@ -173,12 +173,12 @@ export class RagService implements RagRepository {
 
     return handleResponse<
     RagConversationMessageReplyModel,
-      RagConversationMessageEntity
+      ConversationMessageEntity
     >(response$, this.mapConversationMessageReplyModelToEntity.bind(this));
   }
 
   // Private mapper methods
-  private mapDocumentModelToEntity(model: RagDocumentModel): RagDocumentEntity {
+  private mapDocumentModelToEntity(model: RagDocumentModel): DocumentEntity {
     return {
       id: model.id,
       filename: model.name,
@@ -190,7 +190,7 @@ export class RagService implements RagRepository {
 
   private mapConversationModelToEntity(
     model: RagConversationModel
-  ): RagConversationEntity {
+  ): ConversationEntity {
     return {
       id: model.id,
       conversation_title: model.conversation_title,
@@ -202,7 +202,7 @@ export class RagService implements RagRepository {
 
   private mapConversationMessageModelToEntity(
     model: RagConversationMessageModel
-  ): RagConversationMessageEntity {
+  ): ConversationMessageEntity {
     return {
       message_type: model.message_type,
       content: model.content,
@@ -213,7 +213,7 @@ export class RagService implements RagRepository {
 
   private mapConversationMessageReplyModelToEntity(
     model: RagConversationMessageReplyModel
-  ): RagConversationMessageEntity {
+  ): ConversationMessageEntity {
     return {
       message_type: model.type,
       content: model.content,
@@ -224,7 +224,7 @@ export class RagService implements RagRepository {
 
   private mapConversationSummaryModelToEntity(
     model: RagConversationSummaryModel
-  ): RagConversationSummaryEntity {
+  ): ConversationSummaryEntity {
     return {
       id: model.id,
       conversation_title: model.conversation_title,

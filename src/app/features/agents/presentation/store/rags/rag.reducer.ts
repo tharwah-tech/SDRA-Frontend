@@ -190,6 +190,15 @@ export const ragReducer = createReducer(
   on(RagsActions.sendRagAudioMessageFailure, (state, { error }) => ({
     ...state,
     messageSending: false,
+    selectedConversation: {
+      ...state.selectedConversation!,
+      messages: [...state.selectedConversation?.messages!, {
+        message_type: 'user',
+        content: error.message || 'Error sending message try again',
+        message_date: new Date(),
+        audio_content: '',
+      }],
+    },
     error,
   })),
 );

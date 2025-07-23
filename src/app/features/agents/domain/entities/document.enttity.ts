@@ -1,4 +1,4 @@
-export interface RagDocumentEntity {
+export interface DocumentEntity {
   id: string;
   filename: string;
   uploadDate: Date;
